@@ -1,0 +1,1307 @@
+================================================================================
+  ChanakyaOS — COMPREHENSIVE TECHNOLOGY STACK DOCUMENT
+  Version: 1.0 | Status: Final | Budget: Zero-Cost / Free-Tier First
+  Updated for 2026–2027 Best Practices
+================================================================================
+
+"Confusion is Expensive. Build it smart. Build it free."
+
+This document defines every technology decision for ChanakyaOS — an AI-powered
+career operating system targeting Indian students and young professionals.
+All choices prioritize FREE tiers, open-source tools, and zero upfront cost
+while maintaining production-grade quality for the full 4-phase roadmap.
+
+================================================================================
+  ARCHITECTURE OVERVIEW
+================================================================================
+
+  ChanakyaOS is a monorepo full-stack web application with:
+  · Public landing + marketing pages (SEO-critical, SSR)
+  · Authenticated app dashboard (CSR-heavy, real-time)
+  · AI pipeline layer (LLM calls, resume parsing, pathway generation)
+  · Data persistence layer (user profiles, career data, vector embeddings)
+  · PWA capabilities in Phase 1; React Native mobile in Phase 4
+
+  ARCHITECTURE PATTERN: Modular Monolith → Microservices (Phase 3+)
+  RENDERING STRATEGY: Hybrid — SSR (landing/SEO) + CSR (dashboard) + ISR (blog)
+
+  HIGH-LEVEL SYSTEM MAP:
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │ BROWSER / PWA                                                            │
+  │  Next.js 15 App Router (SSR + CSR hybrid)                               │
+  │  Tailwind CSS v4 · Framer Motion · shadcn/ui                            │
+  └───────────────────────────┬──────────────────────────────────────────────┘
+                              │ HTTPS / REST / WebSocket
+  ┌───────────────────────────▼──────────────────────────────────────────────┐
+  │ BACKEND LAYER                                                            │
+  │  Next.js 15 API Routes (primary — Phase 1–2)                            │
+  │  Python FastAPI (AI microservice — Phase 2+)                            │
+  └───────┬─────────────────┬──────────────────────────────────────────────┘
+          │                 │
+  ┌───────▼──────┐  ┌───────▼──────────────────────────────────────────────┐
+  │ SUPABASE     │  │ AI LAYER                                              │
+  │ PostgreSQL   │  │ Google Gemini 2.0 Flash (primary — FREE)              │
+  │ pgvector     │  │ Groq + LLaMA 3.3 70B (fallback — FREE)               │
+  │ Auth         │  │ HuggingFace Inference API (embeddings — FREE)         │
+  │ Storage      │  └──────────────────────────────────────────────────────┘
+  │ Realtime     │
+  └──────────────┘
+
+================================================================================
+  SECTION 1 — FRONTEND FRAMEWORK
+================================================================================
+
+  PRIMARY: Next.js 15 (App Router)
+  Version: 15.x (latest stable as of 2026)
+  License: MIT (Free)
+  Cost: $0
+
+  WHY NEXT.JS 15 FOR CHANAKYA OS:
+  ─────────────────────────────────────────────────────────────────────────────
+  1. SEO CRITICAL — Landing pages, blog, and public career content need SSR
+     for Google indexing. Indian users heavily discover via search. Next.js
+     App Router handles SSR + ISR natively.
+
+  2. HYBRID RENDERING — Dashboard pages (CSR) + marketing pages (SSR) in
+     one codebase. No separate frontend/backend split needed at Phase 1.
+
+  3. API ROUTES — Built-in serverless API routes eliminate need for a
+     separate backend server in Phase 1–2, keeping infra cost at $0.
+
+  4. APP ROUTER — React Server Components reduce JS bundle size. Streaming
+     responses match AI-powered features (Suspense + streaming AI output).
+
+  5. TURBOPACK — Development build speed 5–10x faster than Webpack.
+     Critical for a complex dashboard with many components.
+
+  6. IMAGE OPTIMIZATION — next/image handles WebP conversion and lazy
+     loading automatically. Important for Indian users on slower connections.
+
+  7. PWA READY — next-pwa plugin adds service worker + offline support for
+     Phase 1 mobile-first requirement at zero cost.
+
+  8. REACT ECOSYSTEM — Full access to React 19 features: Actions, use(),
+     optimistic updates. Perfect for the AI assistant chat interface.
+
+  9. VERCEL DEPLOYMENT — Free hobby tier on Vercel. Zero-config deployment
+     with edge functions and CDN included.
+
+  KEY NEXT.JS 15 FEATURES TO USE:
+  · Server Components for data-fetch-heavy dashboard sections
+  · Client Components for interactive widgets (score ring, pathway cards)
+  · Parallel Routes for the split dashboard layout (sidebar + main)
+  · Intercepting Routes for modal flows (career pathway detail)
+  · Server Actions for form submissions (onboarding wizard, profile updates)
+  · Streaming with Suspense for AI chat responses (word-by-word output)
+  · Middleware for auth guards on protected routes
+
+  REACT VERSION: React 19 (bundled with Next.js 15)
+
+  FREE ALTERNATIVE (if Next.js complexity is overkill for MVP):
+  → Remix v3 — similar SSR capabilities, simpler mental model
+  → SvelteKit 2 — smaller bundle, faster runtime, steeper learning curve
+  → Recommendation: Stick with Next.js 15. Ecosystem + Vercel free tier win.
+
+================================================================================
+  SECTION 2 — STYLING SOLUTION
+================================================================================
+
+  PRIMARY: Tailwind CSS v4 + CSS Custom Properties
+  Version: 4.x (latest stable)
+  License: MIT (Free)
+  Cost: $0
+
+  WHY TAILWIND CSS v4:
+  ─────────────────────────────────────────────────────────────────────────────
+  1. DESIGN DOC ALIGNMENT — The ChanakyaOS design doc already defines exact
+     CSS custom properties (:root tokens). Tailwind v4 natively supports
+     CSS variables as design tokens — direct 1:1 mapping to the design system.
+
+  2. DARK-FIRST DESIGN — Entire platform is dark (#0B0F19 background).
+     Tailwind dark mode config eliminates toggle complexity.
+
+  3. V4 ENGINE — Lightning CSS-based engine (Rust). No PostCSS overhead.
+     Instant HMR in development. 100x faster than v3 for large projects.
+
+  4. ZERO RUNTIME — Pure utility classes. No CSS-in-JS runtime overhead.
+     Critical for performance on Indian mobile networks.
+
+  5. BENTO GRID SYSTEM — Tailwind's grid utilities (col-span, row-span)
+     map directly to the bento grid layouts defined in the design doc.
+
+  6. GLASSMORPHISM SUPPORT — backdrop-blur, bg-opacity utilities handle
+     all glass card effects specified in the design doc natively.
+
+  TAILWIND v4 CONFIGURATION FOR CHANAKYA OS:
+  ─────────────────────────────────────────────────────────────────────────────
+  In tailwind.config (v4 CSS-first config):
+
+  @theme {
+    /* Map directly from ChanakyaOS design tokens */
+    --color-bg: #0B0F19;
+    --color-surface: #111827;
+    --color-surface-elevated: #1A2236;
+    --color-gold: #D4AF37;
+    --color-gold-muted: #B8972A;
+    --color-blue: #3B82F6;
+    --color-text-primary: #F3F4F6;
+    --color-text-secondary: #9CA3AF;
+    --color-border: #1F2937;
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+
+    --font-display: 'Clash Display', Georgia, serif;
+    --font-body: 'Satoshi', system-ui, sans-serif;
+    --font-data: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  COMPONENT LIBRARY: shadcn/ui
+  Version: Latest (2026)
+  License: MIT (Free)
+  Cost: $0
+
+  WHY SHADCN/UI:
+  · Unstyled base primitives — fully customizable to ChanakyaOS dark theme
+  · Copy-paste components — no npm dependency, own your code
+  · Built on Radix UI — accessible by default (ARIA, keyboard nav)
+  · Works perfectly with Tailwind v4
+  · Covers all needed components: Dialog, Sheet, Tabs, Select, Popover,
+    Progress, Accordion, Tooltip, Toast — all specified in the design doc
+
+  FONTS (Free):
+  · Clash Display — fontshare.com (FREE, no attribution needed)
+  · Satoshi — fontshare.com (FREE, no attribution needed)
+  · Inter — Google Fonts (FREE)
+  · JetBrains Mono — Google Fonts (FREE)
+
+  ANIMATION LIBRARY: Framer Motion v12
+  Version: 12.x (latest stable)
+  License: MIT (Free for commercial use)
+  Cost: $0
+
+  WHY FRAMER MOTION:
+  · Design doc specifies spring animations, translateY hover effects,
+    stroke-dashoffset ring animations, stagger card reveals
+  · Framer Motion handles all these with declarative API
+  · Layout animations for dashboard state changes
+  · Scroll-triggered animations for landing page sections
+  · useMotionValue + useTransform for parallax effects
+
+  ALTERNATIVE (if bundle size concern):
+  → Motion One — smaller, WAAPI-based, free. Use for simpler animations.
+  → CSS transitions only — zero-JS for hover states (already in design doc)
+  → Recommendation: Use Framer Motion for complex (ring, stagger, page
+    transitions) + CSS transitions for hover states (best of both).
+
+================================================================================
+  SECTION 3 — BACKEND TECHNOLOGY
+================================================================================
+
+  PHASE 1–2 BACKEND: Next.js 15 API Routes (Serverless)
+  PHASE 2+ AI BACKEND: Python FastAPI (Microservice)
+
+  ────────────────────────────────────────────────────────────────────────────
+  3A. NEXT.JS API ROUTES (Phase 1 Primary — $0)
+  ────────────────────────────────────────────────────────────────────────────
+
+  WHY NEXT.JS API ROUTES FOR PHASE 1:
+  · Single codebase — no separate backend repo, no DevOps complexity
+  · Serverless by default — no server to manage, scales to zero when idle
+  · Deployed free on Vercel hobby tier
+  · Handles: auth callbacks, user CRUD, AI proxying, resume operations,
+    PDF generation triggers, email sending, webhook handlers
+
+  ROUTE STRUCTURE:
+  /api/auth/[...nextauth]   → Authentication handlers
+  /api/user/profile         → Profile CRUD
+  /api/ai/diagnose          → Career diagnosis AI call
+  /api/ai/pathway           → Pathway generation
+  /api/ai/chat              → Career assistant chat (streaming)
+  /api/ai/resume            → Resume analysis + optimization
+  /api/resume/parse         → Resume PDF parsing
+  /api/resume/generate      → PDF generation
+  /api/linkedin/analyze     → LinkedIn profile optimizer
+  /api/market/trends        → Market intelligence aggregation
+  /api/email/send           → Transactional email trigger
+
+  STREAMING: Use Next.js 15 Route Handlers with ReadableStream for
+  AI chat responses (word-by-word streaming like ChatGPT).
+
+  ────────────────────────────────────────────────────────────────────────────
+  3B. PYTHON FASTAPI (Phase 2+ AI Microservice — $0 on free tiers)
+  ────────────────────────────────────────────────────────────────────────────
+
+  Version: FastAPI 0.115+ with Python 3.12+
+  License: MIT (Free)
+
+  WHY FASTAPI FOR AI WORKLOADS:
+  · Python is the native language of AI/ML libraries
+  · Async-first — handles concurrent AI API calls efficiently
+  · Auto-generated OpenAPI docs — easy API testing and documentation
+  · spaCy, pdfplumber, sentence-transformers all require Python
+  · Type validation via Pydantic v2 (Rust-based, 5–50x faster than v1)
+
+  FASTAPI RESPONSIBILITIES:
+  · Resume PDF parsing (pdfplumber + custom NLP)
+  · Named entity recognition on resumes (spaCy free models)
+  · Embedding generation for vector search (sentence-transformers)
+  · Batch AI processing jobs (pathway generation, bulk analysis)
+  · Market data aggregation pipeline
+  · ATS scoring engine (keyword extraction + scoring algorithm)
+
+  HOSTING OPTIONS FOR FASTAPI (All Free):
+  · Render.com — free tier (750 hrs/month, spins down after 15 min idle)
+  · Railway.app — $5 free credit/month (enough for MVP usage)
+  · Fly.io — free tier (256MB RAM, shared CPU — sufficient for AI proxy)
+  · Koyeb — free tier (512MB RAM, always on, recommended)
+  → RECOMMENDATION: Koyeb for always-on free FastAPI deployment
+
+  ────────────────────────────────────────────────────────────────────────────
+  3C. REAL-TIME FEATURES
+  ────────────────────────────────────────────────────────────────────────────
+
+  TOOL: Supabase Realtime (included in free tier)
+  USE CASES:
+  · Live career readiness score updates
+  · Real-time AI chat message streaming
+  · Progress notifications (stage completion)
+  · Multi-device profile sync
+
+================================================================================
+  SECTION 4 — DATABASE
+================================================================================
+
+  PRIMARY: Supabase (PostgreSQL + pgvector + Auth + Storage + Realtime)
+  Version: Latest managed instance
+  License: Apache 2.0 (Free)
+  Cost: $0 on free tier
+
+  ────────────────────────────────────────────────────────────────────────────
+  WHY SUPABASE AS THE SINGLE DATA PLATFORM:
+  ────────────────────────────────────────────────────────────────────────────
+
+  Supabase free tier (2026) provides:
+  · 500MB PostgreSQL database
+  · pgvector extension (REPLACES Pinecone — saves $70/month)
+  · 1GB file storage (resume PDFs, portfolio assets)
+  · 50,000 MAU authentication (Google + LinkedIn SSO)
+  · Realtime subscriptions (unlimited connections)
+  · Edge Functions (serverless functions — Deno runtime)
+  · 2GB bandwidth/month
+  · Automatic backups (7-day retention)
+
+  ONE PLATFORM REPLACES: PostgreSQL + Redis + Pinecone + Auth0 + AWS S3
+  COST SAVED: ~$150–300/month vs. PRD's original recommended stack
+
+  ────────────────────────────────────────────────────────────────────────────
+  4A. POSTGRESQL (Primary Relational Database)
+  ────────────────────────────────────────────────────────────────────────────
+
+  SCHEMA OVERVIEW:
+
+  users
+  ├── id (uuid, PK)
+  ├── email, name, avatar_url
+  ├── created_at, updated_at
+  ├── plan (free | pro | premium)
+  └── onboarding_completed (bool)
+
+  user_profiles
+  ├── user_id (FK → users)
+  ├── background (commerce | cs | arts | mba | other)
+  ├── current_education, year_of_study
+  ├── skills (jsonb array)
+  ├── certifications (jsonb array)
+  ├── projects (jsonb array)
+  ├── work_experience (jsonb array)
+  └── career_readiness_score (int)
+
+  career_pathways
+  ├── id, user_id (FK)
+  ├── pathway_name, pathway_data (jsonb)
+  ├── compatibility_score, ai_reasoning
+  ├── status (active | saved | archived)
+  └── generated_at
+
+  ai_diagnoses
+  ├── id, user_id (FK)
+  ├── diagnosis_data (jsonb — gap analysis, strengths, weaknesses)
+  ├── model_used, tokens_used
+  └── created_at
+
+  resumes
+  ├── id, user_id (FK)
+  ├── version_name, file_url (Supabase Storage)
+  ├── parsed_data (jsonb)
+  ├── ats_score, ats_feedback (jsonb)
+  └── created_at
+
+  chat_messages
+  ├── id, user_id (FK), session_id
+  ├── role (user | assistant)
+  ├── content (text)
+  ├── tokens_used
+  └── created_at
+
+  portfolio_projects
+  ├── id, user_id (FK)
+  ├── title, description, tags (jsonb)
+  ├── github_url, live_url, thumbnail_url
+  └── visibility (public | private)
+
+  market_trends_cache
+  ├── id, role_name, sector
+  ├── trend_data (jsonb)
+  ├── salary_data (jsonb — India-specific)
+  └── cached_at, expires_at
+
+  ────────────────────────────────────────────────────────────────────────────
+  4B. PGVECTOR (Vector Database — REPLACES Pinecone)
+  ────────────────────────────────────────────────────────────────────────────
+
+  WHAT IT DOES:
+  · Stores semantic embeddings of user profiles and career data
+  · Powers semantic search across pathways, skills, certifications
+  · Enables "find similar career paths to yours" feature
+  · RAG (Retrieval Augmented Generation) for context-aware AI responses
+
+  HOW TO USE:
+  -- Enable pgvector in Supabase
+  CREATE EXTENSION IF NOT EXISTS vector;
+
+  -- User profile embedding for similarity search
+  ALTER TABLE user_profiles ADD COLUMN embedding vector(768);
+
+  -- Career pathway embeddings
+  ALTER TABLE career_pathways ADD COLUMN embedding vector(768);
+
+  -- Similarity search query
+  SELECT * FROM career_pathways
+  ORDER BY embedding <=> query_embedding
+  LIMIT 5;
+
+  EMBEDDING MODEL: all-MiniLM-L6-v2 via HuggingFace Inference API (FREE)
+  Dimensions: 384 (smaller, faster) or 768 (higher quality)
+
+  ────────────────────────────────────────────────────────────────────────────
+  4C. CACHING (REPLACES Redis — $0)
+  ────────────────────────────────────────────────────────────────────────────
+
+  TOOL: Upstash Redis (Serverless Redis)
+  Free Tier: 10,000 commands/day, 256MB storage
+  Cost: $0
+
+  USE CASES:
+  · Rate limiting AI API calls per user (prevent free tier abuse)
+  · Session caching for logged-in users
+  · Market trends data caching (1-hour TTL — avoid repeated scraping)
+  · AI response caching for identical queries (save API quota)
+
+  ALTERNATIVE: Vercel KV (built into Vercel) — free 30MB, 30,000 req/month
+  → Use Vercel KV for Phase 1 (simpler setup), Upstash for Phase 2+
+
+  ────────────────────────────────────────────────────────────────────────────
+  4D. SECONDARY DB OPTION (if Supabase free tier fills up)
+  ────────────────────────────────────────────────────────────────────────────
+
+  ALTERNATIVE: Neon (Serverless PostgreSQL)
+  Free Tier: 512MB storage, unlimited databases, auto-suspend
+  · pgvector supported
+  · Branching for dev/staging environments (like Git for databases)
+  · Better cold-start performance than Supabase for serverless
+  Cost: $0
+
+================================================================================
+  SECTION 5 — AI / LLM LAYER (100% FREE TIER STACK)
+================================================================================
+
+  ────────────────────────────────────────────────────────────────────────────
+  5A. PRIMARY LLM: Google Gemini 2.0 Flash
+  ────────────────────────────────────────────────────────────────────────────
+
+  Model: gemini-2.0-flash (latest stable)
+  Cost: FREE (via Google AI Studio API key)
+
+  FREE TIER LIMITS (2026):
+  · 15 Requests Per Minute (RPM)
+  · 1 million tokens/day
+  · 1,500 requests/day
+
+  WHY GEMINI 2.0 FLASH AS PRIMARY:
+  · 1M token context window — entire resume + profile + conversation in one call
+  · Multimodal — reads resume PDFs as images natively (no parsing middleware)
+  · Fast inference (Flash variant) — low latency for interactive chat
+  · Grounding with Google Search — built-in web search for market trends
+  · Free generous quota sufficient for early user base (1,000–5,000 users)
+  · Function calling support — for AI assistant that triggers platform actions
+
+  USE CASES:
+  · Career diagnosis report generation
+  · Career pathway generation (3–5 pathways per user)
+  · AI career assistant chat (streaming)
+  · Resume optimization feedback
+  · LinkedIn profile analysis
+  · Skill gap analysis
+  · Market trend summarization
+
+  SDK: @google/generative-ai (npm) — official Google package, free
+
+  STREAMING IMPLEMENTATION:
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const result = await model.generateContentStream(prompt);
+  for await (const chunk of result.stream) {
+    process.stdout.write(chunk.text());
+  }
+
+  ────────────────────────────────────────────────────────────────────────────
+  5B. FALLBACK LLM: Groq API (LLaMA 3.3 70B)
+  ────────────────────────────────────────────────────────────────────────────
+
+  Model: llama-3.3-70b-versatile on Groq infrastructure
+  Cost: FREE tier
+
+  FREE TIER LIMITS (2026):
+  · 14,400 RPD (requests per day)
+  · 500,000 tokens/day
+  · 30 RPM (requests per minute)
+
+  WHY GROQ AS FALLBACK:
+  · World's fastest inference (via LPU chips) — <1 second TTFT
+  · Switches in automatically when Gemini quota exhausted
+  · Open-source LLaMA 3.3 model — no vendor lock-in
+  · Excellent at structured JSON output (pathway JSON generation)
+
+  SMART ROUTING LOGIC:
+  // Route AI calls intelligently based on quota and task type
+  async function routeAI(task, prompt) {
+    const geminiUsage = await redis.get('gemini_daily_count');
+    if (geminiUsage < 1400) {
+      return await callGemini(prompt);     // Primary: best quality
+    }
+    return await callGroq(prompt);         // Fallback: fastest free option
+  }
+
+  ────────────────────────────────────────────────────────────────────────────
+  5C. TERTIARY / SPECIALIZED: OpenRouter Free Models
+  ────────────────────────────────────────────────────────────────────────────
+
+  Platform: openrouter.ai
+  Cost: FREE (for open-source models)
+  Free Models Available:
+  · google/gemini-2.0-flash-exp (FREE)
+  · meta-llama/llama-3.3-70b-instruct (FREE)
+  · mistralai/mistral-7b-instruct (FREE)
+  · deepseek/deepseek-r1 (FREE for reasoning tasks)
+
+  USE: Emergency fallback, A/B testing different models, cost-zero
+  embedding generation for low-priority background tasks.
+
+  ────────────────────────────────────────────────────────────────────────────
+  5D. EMBEDDINGS: HuggingFace Inference API
+  ────────────────────────────────────────────────────────────────────────────
+
+  Model: sentence-transformers/all-MiniLM-L6-v2
+  Cost: FREE (up to 30,000 requests/month on free tier)
+
+  USE CASES:
+  · Generate embeddings for user profile data → store in pgvector
+  · Generate embeddings for career pathways → semantic similarity search
+  · "Find similar profiles" feature
+  · Resume skill extraction + embedding for ATS matching
+
+  SDK: @huggingface/inference (npm) — official package, free
+
+  ────────────────────────────────────────────────────────────────────────────
+  5E. RESUME PARSING (Free Alternative to AWS Textract)
+  ────────────────────────────────────────────────────────────────────────────
+
+  STRATEGY: Two-stage parsing pipeline — completely free
+
+  Stage 1 — PDF Text Extraction:
+  TOOL: pdfplumber (Python, MIT License, $0)
+  · Extracts raw text + layout from PDF resumes
+  · Handles multi-column Indian resume formats
+  · Extracts tables (education, experience) with structure intact
+
+  Stage 2 — NLP Entity Extraction:
+  TOOL: Gemini 2.0 Flash (multimodal vision API, FREE)
+  · Send extracted text to Gemini with structured extraction prompt
+  · Returns JSON: {name, email, phone, skills[], education[], experience[],
+    projects[], certifications[], github_url, linkedin_url}
+  · Handles Indian name formats, Indian university names, Indian company names
+  · Far more accurate than spaCy NER for resume-specific entities
+
+  BACKUP PARSING: spaCy (en_core_web_sm — free, open source)
+  · Rule-based fallback for when AI quota exhausted
+  · Custom NER pipeline for Indian resume entities
+
+  ────────────────────────────────────────────────────────────────────────────
+  5F. MARKET INTELLIGENCE (Free Data Sources)
+  ────────────────────────────────────────────────────────────────────────────
+
+  CHALLENGE: Get real-time India job market data without paid APIs.
+  SOLUTION: Multi-source free data aggregation.
+
+  FREE DATA SOURCES:
+  1. LinkedIn Jobs (public job listings — scrape with Playwright/Puppeteer)
+  2. Naukri.com RSS feeds (free, public)
+  3. Indeed.co.in RSS feeds (free, public)
+  4. AmbitionBox API (salary data — partial public access)
+  5. Google Trends API (unofficial — pytrends library, free)
+  6. Glassdoor public job listings (rate-limited scrape)
+  7. GitHub Jobs Archive (skills in demand from job listings)
+  8. Gemini Grounding — built-in Google Search grounding for LLM responses
+
+  IMPLEMENTATION:
+  · Playwright (Python) scrapes job listings nightly (cron job on Render)
+  · Raw job data → stored in PostgreSQL market_trends_cache table
+  · Gemini API summarizes trends from raw data → structured insight JSON
+  · Cache refreshed every 24 hours to respect rate limits
+  · User-facing data always served from cache (fast) not live scrape (slow)
+
+  TOOL: Bright Data (has a free starter plan for web scraping) — alternative
+  TOOL: Apify (free tier, 10 actor runs/month) — for complex scraping tasks
+
+================================================================================
+  SECTION 6 — AUTHENTICATION
+================================================================================
+
+  PRIMARY: Supabase Auth (built into Supabase free tier)
+  Cost: $0 (50,000 MAU free)
+
+  WHY SUPABASE AUTH OVER AUTH0/NEXTAUTH:
+  · Already included in Supabase — zero additional service to manage
+  · Row Level Security (RLS) in PostgreSQL works natively with Supabase Auth
+  · Google OAuth — free, 1-click setup
+  · LinkedIn OAuth — critical for LinkedIn profile import feature
+  · Magic link email auth — good for mobile/India users without Google accounts
+  · JWT tokens managed automatically
+
+  PROVIDERS TO ENABLE:
+  · Google OAuth (primary — most Indian users have Google accounts)
+  · LinkedIn OAuth (critical — enables LinkedIn profile scraping consent)
+  · Email + Password (fallback)
+  · Magic Link (passwordless — better UX on mobile)
+
+  FRONTEND INTEGRATION:
+  // In Next.js — Supabase Auth helper for SSR
+  import { createServerClient } from '@supabase/ssr'
+  // Middleware auto-refreshes sessions on every request
+
+  ROW LEVEL SECURITY POLICY EXAMPLE:
+  -- Users can only read/write their own data
+  CREATE POLICY "Users own their data" ON user_profiles
+    FOR ALL USING (auth.uid() = user_id);
+
+  ALTERNATIVE: NextAuth.js v5 (Authjs)
+  · Use if moving away from Supabase to Neon DB
+  · Supports same OAuth providers
+  · More customizable session handling
+
+================================================================================
+  SECTION 7 — FILE STORAGE
+================================================================================
+
+  PRIMARY: Supabase Storage (included in free tier)
+  Free Tier: 1GB storage + 2GB bandwidth
+  Cost: $0
+
+  STORAGE BUCKETS:
+  · resumes/         — uploaded resume PDFs (private, per-user access)
+  · generated-pdfs/  — AI-generated resume PDFs for download
+  · portfolio/       — portfolio project assets, screenshots
+  · avatars/         — user profile pictures
+
+  FILE POLICIES:
+  -- Only authenticated user can access their own files
+  CREATE POLICY "User files are private"
+  ON storage.objects FOR ALL
+  USING (bucket_id = 'resumes' AND auth.uid()::text = (storage.foldername(name))[1]);
+
+  OVERFLOW: Cloudflare R2 (when Supabase 1GB fills up)
+  Free Tier: 10GB storage + 1M Class A operations/month
+  Cost: $0
+  · S3-compatible API — same code, just change endpoint
+  · No egress fees (unlike AWS S3 — critical cost saving)
+  · Integrate via AWS SDK with custom endpoint
+
+================================================================================
+  SECTION 8 — PDF GENERATION (Resume Builder)
+================================================================================
+
+  PRIMARY: @react-pdf/renderer
+  Version: 4.x (latest)
+  License: MIT (Free)
+  Cost: $0
+
+  WHY REACT-PDF OVER PUPPETEER:
+  · Client-side PDF generation — no server needed (Puppeteer needs a server)
+  · React components describe the PDF layout — reuses design system
+  · Zero server cost — runs in browser or in Next.js API routes serverlessly
+  · Supports custom fonts (Clash Display, Satoshi, Inter — exact match to UI)
+  · Generated PDFs are pixel-perfect and ATS-parseable
+
+  IMPLEMENTATION:
+  // Define resume as React PDF components
+  import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+
+  const Resume = ({ data }) => (
+    <Document>
+      <Page style={styles.page}>
+        <View style={styles.header}>
+          <Text style={styles.name}>{data.name}</Text>
+        </View>
+        {/* ... rest of resume sections */}
+      </Page>
+    </Document>
+  );
+
+  // Generate PDF blob in browser
+  const blob = await pdf(<Resume data={userData} />).toBlob();
+
+  ALTERNATIVE (for complex layouts):
+  · html2canvas + jsPDF — simpler but lower quality
+  · Puppeteer on Render.com free tier — higher quality but server required
+  → Recommendation: @react-pdf/renderer for ATS resumes. Use Puppeteer
+    only if pixel-perfect visual resume templates are needed in Phase 2+.
+
+================================================================================
+  SECTION 9 — EMAIL
+================================================================================
+
+  PRIMARY: Resend
+  Free Tier: 3,000 emails/month, 100/day
+  Cost: $0
+
+  WHY RESEND:
+  · Best-in-class deliverability (built by ex-Postmark engineers)
+  · React Email — write email templates as React components
+  · Simple API: await resend.emails.send({...})
+  · Webhooks for delivery tracking
+  · Sufficient for Phase 1–2 (< 3,000 transactional emails/month)
+
+  USE CASES:
+  · Welcome email after signup
+  · Onboarding completion milestone
+  · Weekly career digest (progress summary)
+  · Goal reminder notifications
+  · Password reset / magic link
+  · AI analysis ready notification
+
+  EMAIL TEMPLATES (React Email — free):
+  // Write emails like React components
+  import { Html, Body, Heading, Text } from '@react-email/components';
+
+  const WelcomeEmail = ({ userName }) => (
+    <Html>
+      <Body style={{ fontFamily: 'Inter', background: '#0B0F19' }}>
+        <Heading style={{ color: '#D4AF37' }}>Welcome to ChanakyaOS</Heading>
+        <Text style={{ color: '#F3F4F6' }}>Hey {userName}, let's build your career.</Text>
+      </Body>
+    </Html>
+  );
+
+  ALTERNATIVE (more free volume):
+  · Brevo (Sendinblue) — 300 emails/day free (9,000/month)
+  · Mailgun — 5,000 emails/month free for 3 months (then paid)
+  · Postmark — 100 emails/month free
+  → Recommendation: Start with Resend. Move to Brevo if volume grows.
+
+================================================================================
+  SECTION 10 — ANALYTICS
+================================================================================
+
+  PRIMARY: PostHog (Open Source)
+  Free Cloud Tier: 1 million events/month
+  Cost: $0
+
+  WHY POSTHOG:
+  · Session recordings — watch real user journeys through the onboarding wizard
+  · Funnels — measure onboarding drop-off, free-to-paid conversion
+  · Feature flags — safely roll out new AI features to % of users
+  · A/B testing — test different pathway UI layouts
+  · Heatmaps — identify where users click on dashboard
+  · Self-hostable on Render.com (free) when data privacy is critical
+  · GDPR/India data law compliant (can self-host to keep data in India)
+
+  KEY EVENTS TO TRACK:
+  · user_signed_up, onboarding_step_completed, diagnosis_generated
+  · pathway_generated, pathway_selected, resume_analyzed
+  · chat_message_sent, pdf_exported, upgrade_clicked
+  · feature_used (per feature for product decisions)
+
+  ALTERNATIVE: Umami Analytics
+  · 100% open source, self-hosted on Vercel (free)
+  · GDPR compliant by design (no cookies, no personal data)
+  · Lightweight (3KB script vs. PostHog's 70KB)
+  · Use Umami for page-level analytics + PostHog for product analytics
+
+================================================================================
+  SECTION 11 — DEPLOYMENT & HOSTING (100% FREE)
+================================================================================
+
+  ────────────────────────────────────────────────────────────────────────────
+  11A. FRONTEND (Next.js): Vercel
+  ────────────────────────────────────────────────────────────────────────────
+  Free Hobby Tier Includes:
+  · Unlimited deployments
+  · 100GB bandwidth/month
+  · Edge Network (global CDN — critical for India latency)
+  · Serverless Functions (Next.js API routes)
+  · Preview deployments on every PR
+  · Custom domain support
+
+  COST: $0 (hobby plan)
+  LATENCY FROM INDIA: ~50–100ms (Vercel has Mumbai edge node)
+
+  VERCEL CONFIGURATION:
+  // vercel.json
+  {
+    "regions": ["bom1"],  // Mumbai — primary India region
+    "functions": {
+      "app/api/**/*.ts": {
+        "maxDuration": 30   // 30s timeout for AI calls
+      }
+    }
+  }
+
+  ────────────────────────────────────────────────────────────────────────────
+  11B. PYTHON FASTAPI BACKEND: Koyeb
+  ────────────────────────────────────────────────────────────────────────────
+  Free Tier: 1 always-on service, 512MB RAM, shared vCPU
+  COST: $0
+  WHY KOYEB: No sleep/spin-down on free tier (unlike Render.com which sleeps
+  after 15min idle). Critical for reliable AI microservice.
+
+  ALTERNATIVE BACKEND HOSTING:
+  · Render.com — free tier but sleeps. Use with keep-alive ping.
+  · Railway.app — $5 free credit/month (~50 hours compute)
+  · Fly.io — free tier, 3 VMs included
+  · Hugging Face Spaces — free GPU/CPU for AI inference endpoints
+  → Recommendation: Koyeb for always-on. Railway for burst compute.
+
+  ────────────────────────────────────────────────────────────────────────────
+  11C. DATABASE: Supabase (managed PostgreSQL)
+  ────────────────────────────────────────────────────────────────────────────
+  Free Tier: 2 projects, 500MB DB, 1GB storage
+  COST: $0
+  REGION: Choose Singapore (ap-southeast-1) — closest to India with low latency
+  BACKUP: Automatic 7-day point-in-time recovery included free
+
+  ────────────────────────────────────────────────────────────────────────────
+  11D. CACHING: Upstash Redis
+  ────────────────────────────────────────────────────────────────────────────
+  Free Tier: 10,000 commands/day, 256MB
+  COST: $0
+
+  ────────────────────────────────────────────────────────────────────────────
+  11E. CDN / IMAGE DELIVERY: Cloudflare (Free Plan)
+  ────────────────────────────────────────────────────────────────────────────
+  Free Tier: Unlimited CDN bandwidth, DDoS protection, WAF
+  COST: $0
+  USE: Point custom domain (chanakyaos.com) through Cloudflare
+  · Protects against DDoS (important once you have 100K users)
+  · Caches static assets at edge (reduces Vercel bandwidth usage)
+  · Analytics included (page views, visitors)
+
+  ────────────────────────────────────────────────────────────────────────────
+  FULL DEPLOYMENT ARCHITECTURE:
+  ────────────────────────────────────────────────────────────────────────────
+
+  USER (India) → Cloudflare (DNS + CDN + WAF)
+               → Vercel Edge (Next.js — Mumbai node)
+               → Supabase (PostgreSQL — Singapore)
+               → Koyeb (FastAPI — global)
+               → Google AI / Groq (LLM APIs)
+               → Upstash (Redis cache — global edge)
+
+  DOMAIN: Purchase from Namecheap (~$10/year for .com) or use free Vercel
+  subdomain (chanakya-os.vercel.app) for Phase 1.
+
+================================================================================
+  SECTION 12 — ESSENTIAL LIBRARIES & PACKAGES
+================================================================================
+
+  ────────────────────────────────────────────────────────────────────────────
+  12A. FRONTEND (Next.js / React) — All Free
+  ────────────────────────────────────────────────────────────────────────────
+
+  CORE:
+  next@15.x                    — Framework
+  react@19.x                   — UI library
+  typescript@5.x               — Type safety (critical for large codebase)
+
+  STYLING:
+  tailwindcss@4.x              — Utility-first CSS
+  @tailwindcss/typography       — Prose styling for blog/content
+  class-variance-authority      — Component variant management (shadcn pattern)
+  clsx                         — Conditional className utility
+  tailwind-merge               — Merge conflicting Tailwind classes
+
+  UI COMPONENTS:
+  @radix-ui/react-*            — Accessible primitives (via shadcn)
+  shadcn/ui                    — Pre-built components (copy-paste, free)
+  lucide-react                 — Icon library (thin stroke, matches design doc)
+  @heroicons/react             — Alternative icons if needed
+
+  ANIMATION:
+  framer-motion@12.x           — Complex animations (ring, stagger, spring)
+  
+  FORMS & VALIDATION:
+  react-hook-form@7.x          — Form state management (zero re-renders)
+  zod@3.x                      — Schema validation (frontend + backend shared)
+  @hookform/resolvers           — Connect Zod to React Hook Form
+
+  STATE MANAGEMENT:
+  zustand@5.x                  — Lightweight global state (no boilerplate)
+  @tanstack/react-query@5.x    — Server state + caching (replaces Redux)
+
+  DATA FETCHING:
+  @supabase/supabase-js         — Database, auth, storage, realtime
+  @supabase/ssr                 — Supabase SSR helpers for Next.js
+  axios@1.x                    — HTTP client for external APIs
+
+  AI / LLM:
+  @google/generative-ai         — Gemini API SDK
+  @ai-sdk/google               — Vercel AI SDK for Gemini (streaming UI)
+  ai@4.x (Vercel AI SDK)       — useChat, useCompletion React hooks for AI UI
+
+  PDF:
+  @react-pdf/renderer@4.x      — PDF generation
+  @react-email/components       — Email template components
+  resend@4.x                   — Email sending SDK
+  pdfjs-dist                   — PDF preview in browser
+
+  CHARTS / DATA VIZ (Dashboard):
+  recharts@2.x                 — Responsive charts (radar, line, bar, area)
+  d3@7.x                       — Custom SVG charts (readiness score ring)
+
+  UTILITIES:
+  date-fns@4.x                 — Date formatting (Indian date formats)
+  lodash-es@4.x                — Utility functions (tree-shakeable ES module)
+  nanoid@5.x                   — ID generation
+
+  PWA:
+  next-pwa@5.x                 — Service worker + offline support
+  
+  DEVELOPMENT:
+  eslint@9.x                   — Linting
+  prettier@3.x                 — Code formatting
+  husky@9.x                    — Git hooks (pre-commit lint)
+  lint-staged@15.x             — Lint only changed files
+
+  ────────────────────────────────────────────────────────────────────────────
+  12B. BACKEND (Python FastAPI) — All Free / Open Source
+  ────────────────────────────────────────────────────────────────────────────
+
+  fastapi@0.115+               — Web framework
+  uvicorn[standard]            — ASGI server
+  pydantic@2.x                 — Data validation (Rust-based, fast)
+  python-multipart             — File upload handling
+  httpx@0.27+                  — Async HTTP client
+
+  AI / NLP:
+  google-generativeai@0.8+     — Gemini API
+  groq@0.11+                   — Groq API (LLaMA fallback)
+  sentence-transformers@3.x    — Local embedding generation
+  spacy@3.x                    — NLP pipeline (en_core_web_sm model — free)
+  pdfplumber@0.11+             — PDF text extraction
+  python-docx@1.x              — DOCX resume parsing
+
+  DATABASE:
+  supabase@2.x                 — Supabase Python client
+  asyncpg@0.29+                — Async PostgreSQL driver
+  pgvector@0.3+                — pgvector Python client
+
+  SCRAPING (Market Intelligence):
+  playwright@1.x               — Browser automation for job site scraping
+  beautifulsoup4@4.x           — HTML parsing
+  pytrends@4.x                 — Google Trends API (unofficial, free)
+  feedparser@6.x               — RSS feed parsing (Naukri, Indeed)
+
+  CACHING / QUEUE:
+  redis@5.x                    — Upstash Redis client
+  celery@5.x                   — Background task queue (Phase 2+)
+
+  UTILITIES:
+  python-dotenv@1.x            — Environment variable management
+  tenacity@8.x                 — Retry logic for API calls (critical for free tiers)
+  loguru@0.7+                  — Better logging
+
+================================================================================
+  SECTION 13 — DEVELOPMENT TOOLS & WORKFLOW
+================================================================================
+
+  ────────────────────────────────────────────────────────────────────────────
+  13A. VERSION CONTROL & COLLABORATION
+  ────────────────────────────────────────────────────────────────────────────
+
+  Git + GitHub (Free)
+  · Private repository (free on GitHub)
+  · Branch strategy: main (production) → develop → feature/* → hotfix/*
+  · GitHub Actions (2,000 min/month free) for CI/CD pipeline
+
+  REPO STRUCTURE (Monorepo):
+  chanakya-os/
+  ├── apps/
+  │   ├── web/          — Next.js 15 app
+  │   └── api/          — FastAPI Python microservice
+  ├── packages/
+  │   ├── ui/           — Shared UI components (shadcn extensions)
+  │   ├── types/        — Shared TypeScript types
+  │   └── utils/        — Shared utility functions
+  ├── .github/workflows/ — CI/CD pipelines
+  └── docs/             — Internal documentation
+
+  MONOREPO TOOL: Turborepo (by Vercel, free, MIT)
+  · Caches build outputs — second build is instant
+  · Parallel builds across apps/packages
+  · Works natively with Vercel deployment
+
+  ────────────────────────────────────────────────────────────────────────────
+  13B. IDE & DEVELOPMENT ENVIRONMENT
+  ────────────────────────────────────────────────────────────────────────────
+
+  VS Code (Free) — primary IDE
+  RECOMMENDED EXTENSIONS:
+  · Tailwind CSS IntelliSense — autocomplete for Tailwind classes
+  · Prisma / Supabase — database schema support
+  · ESLint + Prettier — code quality
+  · Thunder Client — API testing (free Postman alternative)
+  · GitLens — git history visualization
+  · Error Lens — inline error display
+  · Pretty TypeScript Errors — readable TS errors
+
+  ALTERNATIVE IDE: Cursor (AI-powered editor, free tier)
+  · Claude Sonnet + GPT-4 built-in for code completion
+  · Excellent for AI-heavy codebase like ChanakyaOS
+  → Recommendation: Use Cursor for AI-accelerated development
+
+  ────────────────────────────────────────────────────────────────────────────
+  13C. CI/CD PIPELINE (GitHub Actions — Free 2,000 min/month)
+  ────────────────────────────────────────────────────────────────────────────
+
+  # .github/workflows/ci.yml
+  TRIGGERS: Push to main, PR to main
+  STEPS:
+  1. Install dependencies (cached via actions/cache)
+  2. TypeScript type check (tsc --noEmit)
+  3. ESLint (eslint . --fix-dry-run)
+  4. Unit tests (vitest)
+  5. Build check (next build)
+  6. Deploy to Vercel (automatic via Vercel GitHub integration)
+
+  VERCEL INTEGRATION:
+  · Push to main → auto-deploys to production
+  · Push to feature/* → preview deployment URL (share with stakeholders)
+  · No manual deployment needed
+
+  ────────────────────────────────────────────────────────────────────────────
+  13D. TESTING STRATEGY
+  ────────────────────────────────────────────────────────────────────────────
+
+  UNIT TESTING: Vitest (free, MIT)
+  · 10x faster than Jest for Next.js projects
+  · Test AI prompt functions, utility functions, validation schemas
+
+  COMPONENT TESTING: Testing Library (free, MIT)
+  · Test React components in isolation
+  · @testing-library/react + @testing-library/user-event
+
+  E2E TESTING: Playwright (free, MIT)
+  · Test critical user flows: signup → onboarding → pathway generation
+  · Test resume upload → parsing → ATS score generation
+  · Free to run in GitHub Actions CI
+
+  API TESTING: Bruno (free, open source)
+  · Git-friendly Postman alternative
+  · API collections stored in repo alongside code
+
+  ────────────────────────────────────────────────────────────────────────────
+  13E. LOCAL DEVELOPMENT SETUP
+  ────────────────────────────────────────────────────────────────────────────
+
+  PREREQUISITES:
+  · Node.js 22 LTS (use nvm for version management)
+  · Python 3.12 (use pyenv)
+  · pnpm 9.x (faster than npm, free)
+  · Docker (for local Supabase instance during development)
+
+  LOCAL SUPABASE:
+  npx supabase init
+  npx supabase start   → Spins up local PostgreSQL + Studio + Auth
+
+  ENVIRONMENT VARIABLES (.env.local):
+  NEXT_PUBLIC_SUPABASE_URL=
+  NEXT_PUBLIC_SUPABASE_ANON_KEY=
+  SUPABASE_SERVICE_ROLE_KEY=
+  GEMINI_API_KEY=                    # Google AI Studio (free)
+  GROQ_API_KEY=                      # Groq console (free)
+  HUGGINGFACE_API_KEY=               # HuggingFace (free)
+  OPENROUTER_API_KEY=                # OpenRouter (free)
+  UPSTASH_REDIS_REST_URL=
+  UPSTASH_REDIS_REST_TOKEN=
+  RESEND_API_KEY=                    # Resend (free 3K/month)
+  NEXT_PUBLIC_POSTHOG_KEY=           # PostHog (free 1M events)
+  FASTAPI_URL=                       # Local: http://localhost:8000
+
+  STARTUP COMMANDS:
+  # Frontend
+  cd apps/web && pnpm dev       → http://localhost:3000
+
+  # Backend
+  cd apps/api && uvicorn main:app --reload → http://localhost:8000
+
+================================================================================
+  SECTION 14 — PHASE-WISE IMPLEMENTATION PLAN
+================================================================================
+
+  PHASE 1 (Months 1–3) — MVP Stack: $0/month
+  ────────────────────────────────────────────────────────────────────────────
+  ACTIVE:
+  · Next.js 15 + Tailwind v4 + shadcn/ui on Vercel (free)
+  · Supabase (Auth + PostgreSQL + Storage) on Singapore region (free)
+  · Google Gemini 2.0 Flash API (free 1M tokens/day)
+  · Groq fallback (free 500K tokens/day)
+  · Resend email (free 3K/month)
+  · PostHog analytics (free 1M events)
+  · GitHub Actions CI/CD (free)
+  · Cloudflare DNS + CDN (free)
+  NOT YET:
+  · FastAPI microservice (use Next.js API routes for everything)
+  · Koyeb deployment (no separate backend needed yet)
+  · pgvector (not needed until semantic search feature)
+  · Upstash Redis (Vercel KV sufficient for rate limiting)
+
+  GOAL: Deploy in 3 months with zero infra cost.
+  FEATURES: Landing page, signup, onboarding wizard, AI diagnosis,
+            3 career pathways, basic resume builder, AI chat (15 msgs/day free).
+
+  PHASE 2 (Months 4–6) — Core Platform: $0/month
+  ────────────────────────────────────────────────────────────────────────────
+  ADD:
+  · FastAPI on Koyeb (free always-on tier) for resume parsing
+  · pdfplumber + Gemini Vision for resume PDF analysis
+  · pgvector for semantic pathway search (enable in Supabase — free)
+  · HuggingFace embeddings for profile similarity
+  · Upstash Redis for rate limiting (replace Vercel KV)
+  · @react-pdf/renderer for ATS resume PDF generation
+  · LinkedIn OAuth in Supabase Auth (for profile import)
+  FEATURES: Full dashboard, LinkedIn optimizer, portfolio builder,
+            ATS resume, certifications tracker.
+
+  PHASE 3 (Months 7–9) — Intelligence Layer: $0–$10/month
+  ────────────────────────────────────────────────────────────────────────────
+  ADD:
+  · Playwright scraping cron job for market trends (Render.com free)
+  · Celery + Redis for background AI job processing
+  · OpenRouter for model A/B testing
+  · Gemini function calling for advanced AI assistant
+  · Neon DB as overflow if Supabase 500MB fills up
+  FEATURES: Market trends dashboard, salary benchmarks, real-time pathway
+            updates, advanced AI assistant, pathway comparison.
+
+  PHASE 4 (Months 10–12) — Scale: ~$20–50/month (revenue should cover this)
+  ────────────────────────────────────────────────────────────────────────────
+  CONSIDER PAID UPGRADES:
+  · Supabase Pro ($25/month) — 8GB DB, unlimited Auth MAU
+  · Vercel Pro ($20/month) — commercial license, team features
+  · Railway Starter ($5/month) — more reliable backend hosting
+  STILL FREE:
+  · Gemini API (1M tokens/day free limit raised historically)
+  · Groq (generous free tier, open source models)
+  · Cloudflare (always free plan)
+  FEATURES: Community hub, mock interviews, React Native app, B2B partnerships.
+
+================================================================================
+  SECTION 15 — MOBILE STRATEGY
+================================================================================
+
+  PHASE 1: Progressive Web App (PWA) — $0
+
+  TOOL: next-pwa (Workbox-based, MIT)
+  · Installable from browser on Android/iOS (Add to Home Screen)
+  · Offline-capable (cached dashboard, last AI diagnosis)
+  · Push notifications via Web Push API (Chrome + Firefox + Edge)
+  · Service worker auto-generated from next-pwa config
+
+  PWA CONFIGURATION:
+  // next.config.js
+  const withPWA = require('next-pwa')({
+    dest: 'public',
+    register: true,
+    skipWaiting: true,
+    disable: process.env.NODE_ENV === 'development',
+    runtimeCaching: [...] // Cache AI responses, user profile data
+  });
+
+  PHASE 4: React Native (Expo) — $0
+
+  WHY EXPO:
+  · Expo Go — test on real device without App Store publish
+  · Expo Router — same file-based routing as Next.js
+  · Expo EAS Build — free tier for 30 builds/month
+  · Shared business logic with web (Zustand stores, API calls, Zod schemas)
+  · Expo Notifications (free) for mobile push notifications
+
+  CODE SHARING STRATEGY:
+  · API layer (Supabase calls, AI calls) — 100% shared between web + native
+  · Business logic (Zustand stores, validation) — 100% shared
+  · UI components — separate (web uses shadcn, native uses React Native Paper)
+  · Design tokens — shared (CSS vars in web, StyleSheet in native)
+
+================================================================================
+  SECTION 16 — SECURITY BEST PRACTICES
+================================================================================
+
+  1. ENVIRONMENT VARIABLES — Never expose API keys to client-side code
+     · GEMINI_API_KEY — server-only, proxied through /api/ai/* routes
+     · SUPABASE_SERVICE_ROLE_KEY — server-only, never in browser
+     · Use NEXT_PUBLIC_ prefix ONLY for truly public values
+
+  2. ROW LEVEL SECURITY — All Supabase tables have RLS policies enabled
+     · Users can only read/write their own data
+     · Service role key bypasses RLS — only use in server-side code
+
+  3. RATE LIMITING — Protect AI APIs from abuse
+     · Upstash Redis rate limiter on all /api/ai/* routes
+     · Free users: 15 AI requests/hour
+     · Pro users: 100 AI requests/hour
+     · Premium: 500 AI requests/hour
+
+  4. INPUT VALIDATION — Zod schemas on all API endpoints
+     · Validate + sanitize all user inputs before passing to LLM
+     · Prompt injection protection: strip HTML + special chars from inputs
+
+  5. CORS — Restrict API routes to own domain
+     · next.config.js: allowedOrigins: ['https://chanakyaos.com']
+
+  6. FILE UPLOAD SECURITY
+     · Max file size: 5MB for resumes
+     · Allowed types: application/pdf, application/msword only
+     · Scan with VirusTotal API (free tier, 500 scans/day) before processing
+
+================================================================================
+  SECTION 17 — PERFORMANCE TARGETS (India-Specific)
+================================================================================
+
+  CORE WEB VITALS TARGETS:
+  · LCP (Largest Contentful Paint): < 2.5s on 4G (India avg: 20 Mbps)
+  · FID (First Input Delay): < 100ms
+  · CLS (Cumulative Layout Shift): < 0.1
+  · TTFB (Time to First Byte): < 600ms
+
+  OPTIMIZATION STRATEGIES:
+  1. next/image — all images WebP, lazy loaded, correct dimensions
+  2. next/font — fonts loaded with font-display: swap
+  3. Route prefetching — next/link prefetches on hover automatically
+  4. React Server Components — zero JS sent to client for static sections
+  5. Tailwind v4 — generates minimal CSS (only used utilities)
+  6. Code splitting — each dashboard section loaded on demand
+  7. Supabase CDN — static assets served from Supabase CDN edge
+  8. Cloudflare caching — HTML pages cached at edge with Cache-Control headers
+  9. AI streaming — users see first word in <500ms via streaming responses
+  10. Vercel Edge Functions — critical API routes run at edge in Mumbai
+
+================================================================================
+  SECTION 18 — COMPLETE FREE TIER COST BREAKDOWN
+================================================================================
+
+  SERVICE               FREE TIER LIMIT              MONTHLY COST
+  ─────────────────────────────────────────────────────────────────────────────
+  Vercel (Hobby)        100GB bandwidth, unlimited    $0
+  Supabase (Free)       500MB DB, 1GB storage, 50K   $0
+  Google Gemini API     1M tokens/day, 1,500 req/day  $0
+  Groq API              500K tokens/day, 14.4K req/d  $0
+  HuggingFace API       30K requests/month            $0
+  OpenRouter            Free models (Llama, Gemini)   $0
+  Upstash Redis         10K commands/day              $0
+  Koyeb                 1 service, 512MB RAM          $0
+  Resend                3,000 emails/month            $0
+  PostHog               1M events/month               $0
+  GitHub                Unlimited private repos       $0
+  GitHub Actions        2,000 minutes/month           $0
+  Cloudflare            Unlimited CDN bandwidth       $0
+  Playwright Scraping   Self-hosted on free tier      $0
+  ─────────────────────────────────────────────────────────────────────────────
+  TOTAL MONTHLY COST AT LAUNCH:                        $0
+  ─────────────────────────────────────────────────────────────────────────────
+  SCALING POINT (10K+ users): ~$25–50/month
+  (Supabase Pro $25/month covers most scaling needs)
+
+================================================================================
+  SECTION 19 — TECHNOLOGY DECISION LOG (WHY NOT X)
+================================================================================
+
+  ❌ OpenAI GPT-4 — REJECTED. No meaningful free tier. $0.03/1K tokens.
+     → REPLACED BY: Google Gemini 2.0 Flash (1M tokens/day free)
+
+  ❌ Pinecone — REJECTED. $70/month minimum on paid plan.
+     → REPLACED BY: Supabase pgvector (free, included in PostgreSQL)
+
+  ❌ AWS Textract — REJECTED. $1.50 per 1,000 pages.
+     → REPLACED BY: pdfplumber + Gemini Vision (free)
+
+  ❌ Auth0 — REJECTED. Free tier limited to 7,500 MAU.
+     → REPLACED BY: Supabase Auth (50,000 MAU free, + integrated with DB)
+
+  ❌ AWS S3 — REJECTED. Egress fees add up quickly.
+     → REPLACED BY: Supabase Storage + Cloudflare R2 (both free)
+
+  ❌ Redis (self-hosted) — REJECTED. Requires always-on VPS (~$5/month).
+     → REPLACED BY: Upstash Serverless Redis (10K commands/day free)
+
+  ❌ SendGrid — REJECTED. Free tier is 100 emails/day only.
+     → REPLACED BY: Resend (3,000/month free with much better DX)
+
+  ❌ Mixpanel — REJECTED. Very limited free tier (20M events then steep cost).
+     → REPLACED BY: PostHog (1M events/month free + self-host option)
+
+  ❌ Railway (backend) — REJECTED as primary. Only $5 free credit/month.
+     → REPLACED BY: Koyeb (always-on free tier, no credit expiry)
+
+  ❌ Anthropic Claude API — REJECTED for AI primary. No free tier.
+     → NOTE: Gemini 2.0 Flash performs comparably on career-guidance tasks.
+     → USE WHEN: Revenue starts → Claude 3.5 Haiku (~$0.25/M tokens) excellent.
+
+  ❌ Puppeteer for PDF — REJECTED as primary. Needs server with Chrome.
+     → REPLACED BY: @react-pdf/renderer (client-side, zero server cost)
+
+  ❌ Redux Toolkit — REJECTED. Excessive boilerplate for this use case.
+     → REPLACED BY: Zustand (5x less code) + TanStack Query (server state)
+
+================================================================================
+  QUICK REFERENCE SUMMARY
+================================================================================
+
+  FRAMEWORK:          Next.js 15 (App Router, React 19)
+  LANGUAGE:           TypeScript 5.x (frontend) + Python 3.12 (AI backend)
+  STYLING:            Tailwind CSS v4 + shadcn/ui + Framer Motion
+  DATABASE:           Supabase PostgreSQL + pgvector
+  CACHE:              Upstash Redis (serverless)
+  AUTH:               Supabase Auth (Google + LinkedIn OAuth)
+  STORAGE:            Supabase Storage + Cloudflare R2
+  PRIMARY AI:         Google Gemini 2.0 Flash (FREE 1M tokens/day)
+  FALLBACK AI:        Groq + LLaMA 3.3 70B (FREE 500K tokens/day)
+  EMBEDDINGS:         HuggingFace sentence-transformers (FREE)
+  RESUME PARSE:       pdfplumber + Gemini Vision (FREE)
+  PDF GENERATE:       @react-pdf/renderer (FREE)
+  EMAIL:              Resend (FREE 3K/month)
+  ANALYTICS:          PostHog (FREE 1M events/month)
+  FRONTEND HOST:      Vercel Hobby (FREE)
+  BACKEND HOST:       Koyeb (FREE always-on)
+  CDN / DNS:          Cloudflare Free Plan
+  PACKAGE MANAGER:    pnpm (frontend) + pip (backend)
+  MONOREPO:           Turborepo
+  CI/CD:              GitHub Actions (FREE 2K min/month)
+  MOBILE (Phase 1):   PWA via next-pwa
+  MOBILE (Phase 4):   React Native via Expo
+  TOTAL COST:         $0/month at launch
+
+================================================================================
+  END OF CHANAKYA OS TECH STACK DOCUMENT — v1.0
+  "Build smart. Scale free. Win the market."
+================================================================================

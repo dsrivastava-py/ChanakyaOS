@@ -1,0 +1,293 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* === CORE COLORS === */
+  --color-background:           #0B0F19;
+  --color-surface:              #111827;
+  --color-surface-elevated:     #1A2236;
+  --color-surface-subtle:       #0F1520;
+  --color-accent:               #D4AF37;
+  --color-accent-muted:         #B8972A;
+  --color-blue:                 #3B82F6;
+  --color-blue-muted:           #2563EB;
+  --color-text-primary:         #F3F4F6;
+  --color-text-secondary:       #9CA3AF;
+  --color-text-muted:           #6B7280;
+  --color-border:               #1F2937;
+  --color-success:              #10B981;
+  --color-warning:              #F59E0B;
+  --color-error:                #EF4444;
+
+  /* === FONTS === */
+  --font-sans:    'Satoshi', system-ui, sans-serif;
+  --font-display: 'Clash Display', Georgia, serif;
+  --font-data:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   ROOT CSS VARIABLES (for inline usage)
+   ============================================================ */
+:root {
+  --background:     #0B0F19;
+  --foreground:     #F3F4F6;
+  --gold:           #D4AF37;
+  --gold-muted:     #B8972A;
+  --surface:        #111827;
+  --surface-hi:     #1A2236;
+  --border:         #1F2937;
+}
+
+/* ============================================================
+   BASE RESET
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+.font-display { font-family: var(--font-display); }
+.font-data    { font-family: var(--font-data); }
+.font-mono    { font-family: var(--font-mono); }
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #F3F4F6 0%, #D4AF37 50%, #F3F4F6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gold { color: #D4AF37; }
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #D4AF37;
+}
+
+/* ============================================================
+   GLASSMORPHISM UTILITIES
+   ============================================================ */
+.glass-card {
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.glass-nav {
+  background: rgba(11, 15, 25, 0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+}
+
+/* ============================================================
+   GRADIENT UTILITIES
+   ============================================================ */
+.gradient-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #B8972A 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, #111827 0%, #0F1520 100%);
+}
+
+.gradient-hero-glow {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(212,175,55,0.12) 0%, transparent 70%);
+}
+
+.gradient-strategic-grid {
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(31,41,55,0.2) 39px, rgba(31,41,55,0.2) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(31,41,55,0.2) 39px, rgba(31,41,55,0.2) 40px);
+}
+
+/* ============================================================
+   SHADOW UTILITIES
+   ============================================================ */
+.shadow-gold {
+  box-shadow: 0 0 20px rgba(212,175,55,0.25), 0 0 60px rgba(212,175,55,0.08);
+}
+
+.shadow-gold-sm {
+  box-shadow: 0 0 8px rgba(212,175,55,0.2);
+}
+
+/* ============================================================
+   BUTTON BASE STYLES
+   ============================================================ */
+.btn-primary {
+  background: linear-gradient(135deg, #D4AF37 0%, #B8972A 100%);
+  color: #0B0F19;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(212,175,55,0.3), 0 4px 12px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #E0BC42 0%, #C4A030 100%);
+  box-shadow: 0 0 30px rgba(212,175,55,0.45), 0 6px 20px rgba(0,0,0,0.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 0 12px rgba(212,175,55,0.2);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(212,175,55,0.4);
+  color: #D4AF37;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background: rgba(212,175,55,0.08);
+  border-color: rgba(212,175,55,0.65);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   CARD UTILITIES
+   ============================================================ */
+.card-standard {
+  background: #111827;
+  border: 1px solid #1F2937;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-standard:hover {
+  border-color: rgba(212,175,55,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,175,55,0.1);
+  transform: translateY(-2px);
+}
+
+.card-feature {
+  background: linear-gradient(135deg, #111827 0%, #0F1520 100%);
+  border: 1px solid #1F2937;
+  border-radius: 20px;
+  padding: 32px;
+  min-height: 200px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-feature:hover {
+  border-color: rgba(212,175,55,0.25);
+  background: linear-gradient(135deg, #1A2236 0%, #111827 100%);
+  box-shadow: 0 0 8px rgba(212,175,55,0.2);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes gold-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212,175,55,0.25); }
+  50%       { box-shadow: 0 0 40px rgba(212,175,55,0.5), 0 0 80px rgba(212,175,55,0.15); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes draw-line {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.animate-float        { animation: float 4s ease-in-out infinite; }
+.animate-float-delay  { animation: float-delayed 4s ease-in-out 0.5s infinite; }
+.animate-gold-pulse   { animation: gold-pulse 3s ease-in-out infinite; }
+.animate-spin-slow    { animation: spin-slow 4s linear infinite; }
+.animate-fade-in-up   { animation: fade-in-up 0.6s ease-out forwards; }
+
+/* ============================================================
+   CONTAINER
+   ============================================================ */
+.container-marketing {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+@media (max-width: 1023px) {
+  .container-marketing { padding: 0 32px; }
+}
+
+@media (max-width: 639px) {
+  .container-marketing { padding: 0 16px; }
+}
+
+/* ============================================================
+   GOLD SPINNER (for canvas preload)
+   ============================================================ */
+.gold-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid rgba(212,175,55,0.15);
+  border-top-color: #D4AF37;
+  animation: spin-slow 0.7s linear infinite;
+  box-shadow: 0 0 20px rgba(212,175,55,0.3);
+}

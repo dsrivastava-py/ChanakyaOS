@@ -1,0 +1,1511 @@
+---
+name: ChanakyaOS Elite Design System
+colors:
+  surface: '#16130b'
+  surface-dim: '#16130b'
+  surface-bright: '#3d392f'
+  surface-container-lowest: '#110e07'
+  surface-container-low: '#1f1b13'
+  surface-container: '#231f17'
+  surface-container-high: '#2d2a21'
+  surface-container-highest: '#38342b'
+  on-surface: '#eae1d4'
+  on-surface-variant: '#d0c5af'
+  inverse-surface: '#eae1d4'
+  inverse-on-surface: '#343027'
+  outline: '#99907c'
+  outline-variant: '#4d4635'
+  surface-tint: '#e9c349'
+  primary: '#f2ca50'
+  on-primary: '#3c2f00'
+  primary-container: '#d4af37'
+  on-primary-container: '#554300'
+  inverse-primary: '#735c00'
+  secondary: '#adc6ff'
+  on-secondary: '#002e6a'
+  secondary-container: '#0566d9'
+  on-secondary-container: '#e6ecff'
+  tertiary: '#bfcdff'
+  on-tertiary: '#082b72'
+  tertiary-container: '#97b0ff'
+  on-tertiary-container: '#254188'
+  error: '#EF4444'
+  on-error: '#690005'
+  error-container: '#93000a'
+  on-error-container: '#ffdad6'
+  primary-fixed: '#ffe088'
+  primary-fixed-dim: '#e9c349'
+  on-primary-fixed: '#241a00'
+  on-primary-fixed-variant: '#574500'
+  secondary-fixed: '#d8e2ff'
+  secondary-fixed-dim: '#adc6ff'
+  on-secondary-fixed: '#001a42'
+  on-secondary-fixed-variant: '#004395'
+  tertiary-fixed: '#dbe1ff'
+  tertiary-fixed-dim: '#b4c5ff'
+  on-tertiary-fixed: '#00174b'
+  on-tertiary-fixed-variant: '#27438a'
+  background: '#16130b'
+  on-background: '#eae1d4'
+  surface-variant: '#38342b'
+  bg-base: '#0B0F19'
+  surface-card: '#111827'
+  surface-elevated: '#1A2236'
+  surface-subtle: '#0F1520'
+  accent-gold: '#D4AF37'
+  accent-gold-muted: '#B8972A'
+  accent-blue: '#3B82F6'
+  text-primary: '#F3F4F6'
+  text-secondary: '#9CA3AF'
+  text-muted: '#6B7280'
+  border-default: '#1F2937'
+  border-gold-focus: rgba(212, 175, 55, 0.19)
+  success: '#10B981'
+  warning: '#F59E0B'
+typography:
+  display-2xl:
+    fontFamily: metropolis
+    fontSize: 72px
+    fontWeight: '700'
+    lineHeight: '1.05'
+    letterSpacing: -0.03em
+  display-xl:
+    fontFamily: metropolis
+    fontSize: 56px
+    fontWeight: '700'
+    lineHeight: '1.08'
+    letterSpacing: -0.03em
+  display-lg:
+    fontFamily: metropolis
+    fontSize: 48px
+    fontWeight: '600'
+    lineHeight: '1.10'
+    letterSpacing: -0.03em
+  display-md:
+    fontFamily: metropolis
+    fontSize: 40px
+    fontWeight: '600'
+    lineHeight: '1.12'
+    letterSpacing: -0.02em
+  heading-xl:
+    fontFamily: hankenGrotesk
+    fontSize: 28px
+    fontWeight: '600'
+    lineHeight: '1.20'
+    letterSpacing: -0.01em
+  heading-lg:
+    fontFamily: hankenGrotesk
+    fontSize: 24px
+    fontWeight: '600'
+    lineHeight: '1.25'
+    letterSpacing: -0.01em
+  body-lg:
+    fontFamily: hankenGrotesk
+    fontSize: 18px
+    fontWeight: '400'
+    lineHeight: '1.65'
+  body-md:
+    fontFamily: hankenGrotesk
+    fontSize: 16px
+    fontWeight: '400'
+    lineHeight: '1.65'
+  body-sm:
+    fontFamily: hankenGrotesk
+    fontSize: 14px
+    fontWeight: '400'
+    lineHeight: '1.60'
+  data-lg:
+    fontFamily: inter
+    fontSize: 20px
+    fontWeight: '700'
+    lineHeight: '1.30'
+  mono-md:
+    fontFamily: jetbrainsMono
+    fontSize: 14px
+    fontWeight: '400'
+    lineHeight: '1.60'
+  eyebrow:
+    fontFamily: hankenGrotesk
+    fontSize: 12px
+    fontWeight: '500'
+    lineHeight: '1'
+    letterSpacing: 0.12em
+rounded:
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
+  full: 9999px
+spacing:
+  base: 8px
+  unit-1: 4px
+  unit-2: 8px
+  unit-3: 12px
+  unit-4: 16px
+  unit-6: 24px
+  unit-8: 32px
+  unit-12: 48px
+  unit-16: 64px
+  unit-20: 80px
+  container-max: 1280px
+  sidebar-expanded: 240px
+  sidebar-collapsed: 64px
+  nav-height: 64px
+---
+
+================================================================================
+  ChanakyaOS — COMPREHENSIVE DESIGN DOCUMENT
+  Version: 1.0 | Status: Final | Audience: Developers & AI Build Tools
+================================================================================
+
+"An elite AI command center for career strategy."
+— Not a student portal. Not an EdTech dashboard. A strategic intelligence platform.
+
+BRAND ARCHETYPES: The Strategist · The Mentor · The Oracle · The Operator
+TARGET FEEL: "This platform understands my future better than I do."
+REFERENCE PRODUCTS TO STUDY: Linear · Notion AI · Perplexity AI · Attio · Ramp · Vercel
+
+================================================================================
+  SECTION 1 — COLOR PALETTE
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+1.1 CORE PALETTE (Primary)
+────────────────────────────────────────────────────────────────────────────────
+
+  ROLE                  HEX         RGB                 USAGE
+  ─────────────────────────────────────────────────────────────────────────────
+  Background            #0B0F19     rgb(11, 15, 25)     Page/app base background
+  Surface (Cards)       #111827     rgb(17, 24, 39)     Cards, panels, modals
+  Surface Elevated      #1A2236     rgb(26, 34, 54)     Hover states, dropdowns, tooltips
+  Surface Subtle        #0F1520     rgb(15, 21, 32)     Sidebar, inactive sections
+  Accent Gold           #D4AF37     rgb(212, 175, 55)   Primary brand accent, CTA glow, icons
+  Gold Muted            #B8972A     rgb(184, 151, 42)   Gold hover state, secondary gold
+  Gold Faint            #D4AF3715   rgba(212,175,55,.08)Gold tinted card backgrounds
+  Strategic Blue        #3B82F6     rgb(59, 130, 246)   AI features, links, info states
+  Blue Muted            #2563EB     rgb(37, 99, 235)    Blue hover state
+  Blue Faint            #3B82F610   rgba(59,130,246,.06)Blue tinted areas
+  Text Primary          #F3F4F6     rgb(243, 244, 246)  Main body text, headings
+  Text Secondary        #9CA3AF     rgb(156, 163, 175)  Subtext, labels, placeholders
+  Text Muted            #6B7280     rgb(107, 114, 128)  Disabled text, hints
+  Text Inverse          #0B0F19     rgb(11, 15, 25)     Text on gold buttons
+  Border Default        #1F2937     rgb(31, 41, 55)     Card borders, dividers
+  Border Subtle         #111827     rgb(17, 24, 39)     Very subtle separators
+  Border Gold           #D4AF3730   rgba(212,175,55,.19)Gold-tinted border on focus
+  Border Blue           #3B82F640   rgba(59,130,246,.25)Blue-tinted border on AI elements
+
+────────────────────────────────────────────────────────────────────────────────
+1.2 SEMANTIC / STATE COLORS
+────────────────────────────────────────────────────────────────────────────────
+
+  ROLE                  HEX         USAGE
+  ─────────────────────────────────────────────────────────────────────────────
+  Success               #10B981     Stage completion, verified status, green badges
+  Success Bg            #10B98115   Success state backgrounds
+  Warning               #F59E0B     Incomplete tasks, attention needed
+  Warning Bg            #F59E0B15   Warning state backgrounds
+  Error                 #EF4444     Errors, missing critical items, red indicators
+  Error Bg              #EF444415   Error state backgrounds
+  Info                  #3B82F6     AI tips, informational callouts
+  Info Bg               #3B82F610   Info state backgrounds
+
+────────────────────────────────────────────────────────────────────────────────
+1.3 GRADIENT DEFINITIONS
+────────────────────────────────────────────────────────────────────────────────
+
+  NAME                  DEFINITION
+  ─────────────────────────────────────────────────────────────────────────────
+  Gold Glow             linear-gradient(135deg, #D4AF37 0%, #B8972A 100%)
+  Gold Subtle           linear-gradient(135deg, #D4AF3720 0%, #D4AF3705 100%)
+  Blue Glow             linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)
+  Blue Subtle           linear-gradient(135deg, #3B82F610 0%, #3B82F603 100%)
+  Dark Depth            linear-gradient(180deg, #0B0F19 0%, #060810 100%)
+  Card Gradient         linear-gradient(135deg, #111827 0%, #0F1520 100%)
+  Hero Overlay          radial-gradient(ellipse 80% 60% at 50% 0%, #D4AF3715 0%, transparent 70%)
+  Strategic Grid        repeating-linear-gradient(
+                          0deg, transparent, transparent 39px,
+                          #1F293720 39px, #1F293720 40px
+                        ),
+                        repeating-linear-gradient(
+                          90deg, transparent, transparent 39px,
+                          #1F293720 39px, #1F293720 40px
+                        )
+  Sidebar Gradient      linear-gradient(180deg, #0B0F19 0%, #0F1520 100%)
+
+────────────────────────────────────────────────────────────────────────────────
+1.4 GLASSMORPHISM TOKENS (use subtly — not on every element)
+────────────────────────────────────────────────────────────────────────────────
+
+  Glass Card:
+    background: rgba(17, 24, 39, 0.75)
+    backdrop-filter: blur(12px)
+    -webkit-backdrop-filter: blur(12px)
+    border: 1px solid rgba(212, 175, 55, 0.12)
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4)
+
+  Glass Nav:
+    background: rgba(11, 15, 25, 0.85)
+    backdrop-filter: blur(16px)
+    border-bottom: 1px solid rgba(31, 41, 55, 0.8)
+
+================================================================================
+  SECTION 2 — TYPOGRAPHY
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+2.1 FONT STACK
+────────────────────────────────────────────────────────────────────────────────
+
+  USAGE             FONT                SOURCE              FALLBACK
+  ─────────────────────────────────────────────────────────────────────────────
+  Display/Headings  Clash Display       fontshare.com       Georgia, serif
+  Body / UI         Satoshi             fontshare.com       system-ui, sans-serif
+  Dashboard Data    Inter               Google Fonts        system-ui, sans-serif
+  Code / Metrics    JetBrains Mono      Google Fonts        monospace
+
+  CSS IMPORT (add to global stylesheet):
+    @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,600,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  CSS VARIABLES:
+    --font-display: 'Clash Display', Georgia, serif;
+    --font-body:    'Satoshi', system-ui, sans-serif;
+    --font-data:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+────────────────────────────────────────────────────────────────────────────────
+2.2 TYPE SCALE
+────────────────────────────────────────────────────────────────────────────────
+
+  TOKEN           SIZE        LINE-HEIGHT   WEIGHT    FONT              USAGE
+  ─────────────────────────────────────────────────────────────────────────────
+  display-2xl     72px        1.05          700       Clash Display     Hero mega headlines
+  display-xl      56px        1.08          700       Clash Display     Primary hero headline
+  display-lg      48px        1.10          600       Clash Display     Section heroes
+  display-md      40px        1.12          600       Clash Display     Page titles
+  display-sm      32px        1.15          600       Clash Display     Sub-section headers
+  heading-xl      28px        1.20          600       Satoshi           Major in-page headers
+  heading-lg      24px        1.25          600       Satoshi           Card headers, section titles
+  heading-md      20px        1.30          600       Satoshi           Sub-headers
+  heading-sm      18px        1.35          600       Satoshi           Component headers
+  body-lg         18px        1.65          400       Satoshi           Featured body text
+  body-md         16px        1.65          400       Satoshi           Standard body text
+  body-sm         14px        1.60          400       Satoshi           Secondary text, labels
+  body-xs         12px        1.55          400       Satoshi           Captions, footnotes
+  data-lg         20px        1.30          700       Inter             Key metrics, scores
+  data-md         16px        1.35          600       Inter             Dashboard values
+  data-sm         13px        1.35          500       Inter             Micro-data labels
+  mono-md         14px        1.60          400       JetBrains Mono    Code, technical values
+  mono-sm         12px        1.55          400       JetBrains Mono    Inline code snippets
+
+────────────────────────────────────────────────────────────────────────────────
+2.3 LETTER SPACING
+────────────────────────────────────────────────────────────────────────────────
+
+  Display text (72–48px):   letter-spacing: -0.03em  (tight for impact)
+  Large headings (40–32px): letter-spacing: -0.02em
+  Medium headings (28–20px): letter-spacing: -0.01em
+  Body text (16–14px):      letter-spacing: 0em      (default)
+  Labels / caps:            letter-spacing: 0.08em   (uppercase labels, wide tracking)
+  Badges / tags:            letter-spacing: 0.06em
+
+────────────────────────────────────────────────────────────────────────────────
+2.4 SPECIAL TEXT STYLES
+────────────────────────────────────────────────────────────────────────────────
+
+  Gold Accent Text:
+    color: #D4AF37;
+    font-weight: 600;
+
+  Gradient Headline (hero use):
+    background: linear-gradient(135deg, #F3F4F6 0%, #D4AF37 50%, #F3F4F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+  Label / Eyebrow Text (above headlines):
+    font: 500 12px/1 'Satoshi', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #D4AF37;
+
+  Metric Display (readiness score, percentages):
+    font: 700 48–72px 'Inter', sans-serif;
+    color: #D4AF37;
+    letter-spacing: -0.03em;
+
+================================================================================
+  SECTION 3 — LAYOUT & GRID SYSTEM
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+3.1 BREAKPOINTS
+────────────────────────────────────────────────────────────────────────────────
+
+  NAME        WIDTH           CSS MEDIA QUERY
+  ─────────────────────────────────────────────────────────────────────────────
+  Mobile      < 640px         @media (max-width: 639px)
+  Tablet      640px – 1023px  @media (min-width: 640px) and (max-width: 1023px)
+  Laptop      1024px – 1279px @media (min-width: 1024px) and (max-width: 1279px)
+  Desktop     1280px – 1535px @media (min-width: 1280px)
+  Wide        ≥ 1536px        @media (min-width: 1536px)
+
+────────────────────────────────────────────────────────────────────────────────
+3.2 GRID SYSTEM
+────────────────────────────────────────────────────────────────────────────────
+
+  PROPERTY        MOBILE      TABLET      LAPTOP      DESKTOP     WIDE
+  ─────────────────────────────────────────────────────────────────────────────
+  Columns         4           8           12          12          12
+  Gutter          16px        20px        24px        32px        40px
+  Margin          16px        32px        48px        80px        120px
+  Max Content     100%        100%        100%        1280px      1440px
+
+  CSS Grid Setup (standard):
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 80px;   /* desktop */
+    }
+    @media (max-width: 1023px) { .container { padding: 0 32px; } }
+    @media (max-width: 639px)  { .container { padding: 0 16px; } }
+
+────────────────────────────────────────────────────────────────────────────────
+3.3 BENTO GRID SYSTEM (for feature sections & dashboard)
+────────────────────────────────────────────────────────────────────────────────
+
+  Bento grid uses CSS Grid with named areas. Standard bento patterns:
+
+  2-col bento (equal):
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+  3-col bento (2:1:1):
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+
+  Hero bento (feature-heavy):
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
+    /* Cell 1 spans 2 cols, 2 rows = "hero cell" */
+
+  Dashboard bento:
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    /* Readiness score card: col-span-2 row-span-2 */
+
+────────────────────────────────────────────────────────────────────────────────
+3.4 DASHBOARD LAYOUT (Sidebar + Main)
+────────────────────────────────────────────────────────────────────────────────
+
+  Structure:
+    ┌────────────────────────────────────────────────────────┐
+    │  NAV BAR (top, 64px, full width, glass effect)         │
+    ├──────────┬─────────────────────────────────────────────┤
+    │          │                                             │
+    │ SIDEBAR  │         MAIN CONTENT AREA                  │
+    │ 240px    │         flex-1, overflow-y: auto            │
+    │          │         padding: 32px                       │
+    │          │                                             │
+    └──────────┴─────────────────────────────────────────────┘
+
+  Sidebar width:    240px (desktop) | 64px collapsed (laptop) | drawer (mobile)
+  Content padding:  32px (desktop) | 24px (tablet) | 16px (mobile)
+  Nav height:       64px
+  Min page height:  100vh
+
+────────────────────────────────────────────────────────────────────────────────
+3.5 SPACING SCALE (8px base unit)
+────────────────────────────────────────────────────────────────────────────────
+
+  TOKEN       VALUE   USAGE
+  ─────────────────────────────────────────────────────────────────────────────
+  space-1     4px     Micro gaps (icon to text, input padding)
+  space-2     8px     Tight component internal spacing
+  space-3     12px    Default inline spacing
+  space-4     16px    Standard component padding
+  space-5     20px    Card internal padding (mobile)
+  space-6     24px    Card internal padding (desktop), section sub-gaps
+  space-8     32px    Between major components, card gaps
+  space-10    40px    Section internal padding
+  space-12    48px    Between sections (mobile)
+  space-16    64px    Between sections (desktop)
+  space-20    80px    Major section separations
+  space-24    96px    Hero padding tops
+  space-32    128px   Very large vertical rhythm
+
+  RULE: Never use values outside this scale. Compose spacing from these tokens.
+
+================================================================================
+  SECTION 4 — UI COMPONENT SPECIFICATIONS
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+4.1 BORDER RADIUS SCALE
+────────────────────────────────────────────────────────────────────────────────
+
+  TOKEN           VALUE   USAGE
+  ─────────────────────────────────────────────────────────────────────────────
+  radius-sm       4px     Badges, tags, tiny chips
+  radius-md       8px     Buttons (small), input fields
+  radius-lg       12px    Standard buttons, small cards
+  radius-xl       16px    Cards, panels, modals
+  radius-2xl      20px    Large cards, bento cells
+  radius-3xl      24px    Feature cards, hero cards
+  radius-full     9999px  Pills, avatar rings, toggle switches
+
+────────────────────────────────────────────────────────────────────────────────
+4.2 SHADOW / DEPTH SCALE
+────────────────────────────────────────────────────────────────────────────────
+
+  TOKEN           VALUE
+  ─────────────────────────────────────────────────────────────────────────────
+  shadow-sm       0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2)
+  shadow-md       0 4px 12px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2)
+  shadow-lg       0 10px 32px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.2)
+  shadow-xl       0 20px 60px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.25)
+  shadow-gold     0 0 20px rgba(212,175,55,0.25), 0 0 60px rgba(212,175,55,0.08)
+  shadow-gold-sm  0 0 8px rgba(212,175,55,0.2)
+  shadow-blue     0 0 20px rgba(59,130,246,0.25), 0 0 60px rgba(59,130,246,0.08)
+  shadow-inset    inset 0 1px 0 rgba(255,255,255,0.04)
+
+================================================================================
+  SECTION 5 — COMPONENT SPECIFICATIONS (DETAILED)
+================================================================================
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 1: NAVIGATION BAR
+════════════════════════════════════════════════════════════════════════════════
+
+  STRUCTURE:
+    [Logo + Wordmark]     [Nav Links (center)]     [CTA + Avatar]
+
+  DIMENSIONS:
+    Height:               64px (fixed, sticky top)
+    Width:                100vw
+    Content max-width:    1280px, centered
+
+  COLORS:
+    Background:           rgba(11, 15, 25, 0.85)
+    Backdrop-filter:      blur(16px) saturate(180%)
+    Border-bottom:        1px solid #1F2937
+    Scroll-triggered:     border-bottom changes to 1px solid rgba(212,175,55,0.15)
+
+  LOGO:
+    Font:                 Clash Display, 700
+    Size:                 22px
+    Color:                #F3F4F6
+    "OS" suffix:          color: #D4AF37
+    Logo mark:            Optional geometric icon, gold + navy, 32x32px
+    Left padding:         80px (desktop), 32px (tablet), 16px (mobile)
+
+  NAV LINKS (desktop only, hidden mobile):
+    Font:                 Satoshi, 500, 15px
+    Color default:        #9CA3AF
+    Color hover:          #F3F4F6
+    Color active:         #D4AF37
+    Transition:           color 0.2s ease
+    Gap between links:    32px
+    Underline on active:  2px solid #D4AF37, below text, 4px gap
+
+  CTA BUTTON (nav):
+    Text:                 "Analyze My Career"
+    Style:                Gold filled (see Button specs below)
+    Size:                 Small (height 36px, px 16px)
+
+  AVATAR (logged in):
+    Size:                 36x36px, border-radius: full
+    Border:               1.5px solid #D4AF37
+    Background:           initials on #1A2236
+
+  MOBILE NAV:
+    Hamburger icon:       24px, color #9CA3AF
+    Drawer:               full-screen overlay, bg #0B0F19, slides from right
+    Drawer width:         100vw
+    Links:                stacked, font 20px Satoshi 500, py-16px each
+    Close button:         top-right, 48x48px touch target
+
+  HOVER STATES:
+    Link hover:           color transition 0.2s, no underline
+    CTA hover:            see Button specs — gold hover
+    Scroll effect:        glass effect intensifies (backdrop-filter: blur(20px))
+
+  RESPONSIVE:
+    Desktop (≥1024px):    Full horizontal nav with links + CTA
+    Tablet (640–1023px):  Logo + CTA + hamburger, links hidden
+    Mobile (<640px):      Logo + hamburger only, CTA moves inside drawer
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 2: HERO SECTION
+════════════════════════════════════════════════════════════════════════════════
+
+  STRUCTURE:
+    ┌─────────────────────────────────────────────────────────┐
+    │  EYEBROW LABEL                                          │
+    │  MEGA HEADLINE (2–3 lines)                              │
+    │  SUBHEADING                                             │
+    │  [PRIMARY CTA]  [SECONDARY CTA]                         │
+    │  SOCIAL PROOF (x users · x pathways generated)          │
+    ├─────────────────┬───────────────────────────────────────┤
+    │  (text: 55%)    │  HERO VISUAL (45%): floating          │
+    │                 │  dashboard / pathway map               │
+    └─────────────────┴───────────────────────────────────────┘
+
+  DIMENSIONS:
+    Min-height:           100vh (first screen)
+    Padding-top:          96px (nav height + breathing room)
+    Padding-bottom:       80px
+
+  BACKGROUND:
+    Base:                 #0B0F19
+    Radial glow (top):    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,175,55,0.12) 0%, transparent 60%)
+    Grid overlay:         Strategic Grid pattern (see Section 1.3) at 40% opacity
+    Noise texture:        url('/noise.png'), opacity 0.025, blend-mode: overlay
+
+  EYEBROW LABEL:
+    Text example:         "AI-Powered Career Intelligence"
+    Font:                 Satoshi, 500, 12px, letter-spacing 0.12em, uppercase
+    Color:                #D4AF37
+    Before icon:          8px gold dot (●) or spark icon
+    Margin-bottom:        20px
+    Badge style:          border: 1px solid rgba(212,175,55,0.25), border-radius: full
+                          padding: 6px 14px, background: rgba(212,175,55,0.06)
+
+  HEADLINE:
+    Font:                 Clash Display, 700
+    Size:                 Desktop 64px | Tablet 48px | Mobile 36px
+    Line-height:          1.06
+    Letter-spacing:       -0.03em
+    Color:                #F3F4F6 (base)
+    Accent word:          wrapped in <span> with Gold Gradient Text style
+    Max-width:            640px
+    Example:
+      "Your career deserves
+       strategy, not guesswork."
+    (word "strategy" → gradient gold text)
+
+  SUBHEADING:
+    Font:                 Satoshi, 400, 18px (desktop) | 16px (mobile)
+    Line-height:          1.7
+    Color:                #9CA3AF
+    Max-width:            500px
+    Margin-top:           20px
+    Margin-bottom:        40px
+    Example:
+      "ChanakyaOS analyzes your profile, identifies your gaps,
+       and builds the smartest pathway to your career goals."
+
+  CTA BUTTONS (hero):
+    Primary:              "Analyze My Career" — Gold Filled (see Button specs)
+    Primary size:         Large (height 52px)
+    Secondary:            "See How It Works" — Ghost/Outline (see Button specs)
+    Button gap:           16px
+    Arrangement:          flex-row (desktop), flex-col (mobile, 100% width)
+
+  SOCIAL PROOF BAR:
+    Margin-top:           48px
+    Layout:               flex-row, gap 24px, align-items center
+    Divider:              1px vertical, color #1F2937
+    Item format:          [BOLD NUMBER] [description text]
+    Font (number):        Inter, 700, 18px, color #F3F4F6
+    Font (label):         Satoshi, 400, 13px, color #9CA3AF
+    Example items:
+      "12,000+ Students" · "3 Career Pathways Avg" · "85% Report Clarity"
+    Avatar row:           5 small avatar circles (30px, overlapping -8px) before text
+
+  HERO VISUAL (right side):
+    Type:                 Floating UI card stack with animation
+    Content:              Readiness Score ring + mini career pathway map + metric cards
+    Background:           Transparent / glass cards
+    Width:                45% of hero (desktop), full width (mobile, below text)
+    Animation:
+      - Cards float on translateY(-6px / +6px) infinite 4s ease-in-out
+      - Stagger delay: 0.5s between floating cards
+      - Subtle gold glow pulse on readiness ring: box-shadow animation
+    Visual elements:
+      · Circular readiness score ring (67% filled, gold stroke)
+      · Career paths branching node tree (SVG, animated path drawing)
+      · Skill gap radar chart preview (spider chart, 5 axes)
+      · 3 floating metric cards: "ATS Score", "LinkedIn Health", "Stage Progress"
+    Mobile:               Full-width below CTA section, max-height 300px, static (no float)
+
+  RESPONSIVE:
+    Desktop:              Side-by-side (55/45 split), both in viewport
+    Tablet:               Text left 60%, visual right 40%, visual scaled down
+    Mobile:               Text full width stacked, visual below, simplified
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 3: CALL-TO-ACTION BUTTONS
+════════════════════════════════════════════════════════════════════════════════
+
+  3A. PRIMARY BUTTON — Gold Filled
+  ─────────────────────────────────
+    Background:           linear-gradient(135deg, #D4AF37 0%, #B8972A 100%)
+    Text color:           #0B0F19 (dark, for contrast)
+    Font:                 Satoshi, 600
+    Border:               none
+    Border-radius:        12px
+    Box-shadow:           0 0 20px rgba(212,175,55,0.3), 0 4px 12px rgba(0,0,0,0.3)
+
+    SIZE VARIANTS:
+      Small:   height 36px, padding 0 16px, font-size 13px
+      Medium:  height 44px, padding 0 24px, font-size 14px  ← default
+      Large:   height 52px, padding 0 32px, font-size 16px
+      XL:      height 60px, padding 0 40px, font-size 18px  ← hero only
+
+    HOVER STATE:
+      Background:         linear-gradient(135deg, #E0BC42 0%, #C4A030 100%)
+      Box-shadow:         0 0 30px rgba(212,175,55,0.45), 0 6px 20px rgba(0,0,0,0.35)
+      Transform:          translateY(-1px)
+      Transition:         all 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+    ACTIVE STATE:
+      Transform:          translateY(0px)
+      Box-shadow:         0 0 12px rgba(212,175,55,0.2)
+
+    DISABLED STATE:
+      Opacity:            0.4
+      Cursor:             not-allowed
+      Box-shadow:         none
+
+    LOADING STATE:
+      Show spinner (gold ring, 16px, spinning 0.7s linear infinite)
+      Text replaced with spinner
+      Background:         opacity 0.8
+
+    ICON INSIDE:
+      Icon size:          16px (small) | 18px (medium) | 20px (large)
+      Icon gap:           8px from text
+      Position:           right of text (action icons) or left (navigation icons)
+
+  ─────────────────────────────────
+  3B. SECONDARY BUTTON — Ghost / Outline
+  ─────────────────────────────────
+    Background:           transparent
+    Border:               1px solid rgba(212,175,55,0.4)
+    Text color:           #D4AF37
+    Font:                 Satoshi, 600
+    Border-radius:        12px
+
+    HOVER STATE:
+      Background:         rgba(212,175,55,0.08)
+      Border:             1px solid rgba(212,175,55,0.65)
+      Transform:          translateY(-1px)
+      Transition:         all 0.2s ease
+
+  ─────────────────────────────────
+  3C. TERTIARY BUTTON — Ghost Blue (AI actions)
+  ─────────────────────────────────
+    Background:           transparent
+    Border:               1px solid rgba(59,130,246,0.35)
+    Text color:           #3B82F6
+    Font:                 Satoshi, 500
+
+    HOVER STATE:
+      Background:         rgba(59,130,246,0.08)
+      Border:             1px solid rgba(59,130,246,0.6)
+
+  ─────────────────────────────────
+  3D. ICON BUTTON (square/round)
+  ─────────────────────────────────
+    Size:                 36x36px (sm) | 44x44px (md) | 52x52px (lg)
+    Border-radius:        8px (square variant) | 9999px (round variant)
+    Background:           #1A2236
+    Border:               1px solid #1F2937
+    Icon color:           #9CA3AF
+
+    HOVER STATE:
+      Background:         #1F2937
+      Icon color:         #F3F4F6
+      Border:             1px solid #374151
+
+  ─────────────────────────────────
+  3E. TEXT LINK BUTTON
+  ─────────────────────────────────
+    Color:                #D4AF37
+    Font:                 Satoshi, 500, underline-offset: 3px
+    Text-decoration:      none (default)
+
+    HOVER:
+      Text-decoration:    underline
+      Color:              #E0BC42
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 4: CARDS / CONTENT BLOCKS
+════════════════════════════════════════════════════════════════════════════════
+
+  4A. STANDARD CARD
+  ─────────────────────────────────
+    Background:           #111827
+    Border:               1px solid #1F2937
+    Border-radius:        16px
+    Padding:              24px
+    Box-shadow:           0 4px 16px rgba(0,0,0,0.3)
+
+    HOVER STATE:
+      Border:             1px solid rgba(212,175,55,0.2)
+      Box-shadow:         0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,175,55,0.1)
+      Transform:          translateY(-2px)
+      Transition:         all 0.25s cubic-bezier(0.4, 0, 0.2, 1)
+
+    CARD HEADER:
+      Title font:         Satoshi, 600, 16px, color #F3F4F6
+      Subtitle font:      Satoshi, 400, 13px, color #9CA3AF
+      Icon (if present):  20px, color #D4AF37, in 36x36 bg:#1A2236 border-radius:8px container
+      Header margin-bottom: 16px
+      Divider (optional): 1px solid #1F2937, margin: 16px 0
+
+    CARD BODY:
+      Font:               Satoshi, 400, 14px, color #9CA3AF, line-height 1.65
+      Spacing between elements: 12px
+
+    CARD FOOTER:
+      Margin-top:         20px
+      Padding-top:        16px (if divider used)
+      Border-top:         1px solid #1F2937
+
+  ─────────────────────────────────
+  4B. FEATURE CARD (landing page bento)
+  ─────────────────────────────────
+    Background:           linear-gradient(135deg, #111827 0%, #0F1520 100%)
+    Border:               1px solid #1F2937
+    Border-radius:        20px
+    Padding:              32px
+    Min-height:           200px
+
+    ACCENT ELEMENT:
+      Top-left colored bar: 3px x 32px, border-radius 2px, color #D4AF37
+      OR top icon in gold circle: 48x48px, bg rgba(212,175,55,0.1), border-radius 12px
+
+    HOVER STATE:
+      Border:             1px solid rgba(212,175,55,0.25)
+      Background:         linear-gradient(135deg, #1A2236 0%, #111827 100%)
+      Box-shadow:         shadow-gold-sm
+
+    TITLE:                Satoshi, 600, 18px, #F3F4F6
+    DESCRIPTION:          Satoshi, 400, 14px, #9CA3AF, line-height 1.7
+
+  ─────────────────────────────────
+  4C. GLASS CARD (hero area / dashboard highlights)
+  ─────────────────────────────────
+    Background:           rgba(17, 24, 39, 0.75)
+    Backdrop-filter:      blur(12px)
+    Border:               1px solid rgba(212,175,55,0.12)
+    Border-radius:        16px
+    Box-shadow:           0 8px 32px rgba(0,0,0,0.4)
+    Padding:              20px 24px
+
+  ─────────────────────────────────
+  4D. METRIC / STAT CARD (dashboard)
+  ─────────────────────────────────
+    Background:           #111827
+    Border:               1px solid #1F2937
+    Border-radius:        12px
+    Padding:              20px
+    Width:                standard grid cell
+
+    LAYOUT:               flex-col
+    LABEL:                Satoshi, 500, 12px, #9CA3AF, letter-spacing 0.06em, uppercase
+    VALUE:                Inter, 700, 32px, #F3F4F6 (or #D4AF37 for key metric)
+    CHANGE INDICATOR:
+      Positive:           font 500 13px, color #10B981, "↑ 12%" format
+      Negative:           font 500 13px, color #EF4444, "↓ 3%" format
+    SPARKLINE (optional): 48px height SVG, color #D4AF3760, stroke-width 1.5
+
+  ─────────────────────────────────
+  4E. READINESS SCORE RING CARD (key dashboard element)
+  ─────────────────────────────────
+    Card background:      #111827, border-radius 16px, padding 28px
+    Ring size:            140px diameter (desktop) | 100px (mobile)
+    Ring stroke width:    10px (desktop) | 8px (mobile)
+    Ring track color:     #1F2937
+    Ring fill color:      gradient gold (#D4AF37 → #B8972A)
+    Ring cap:             round (stroke-linecap: round)
+    Center text (score):  Inter, 700, 36px, #D4AF37
+    Center label:         Satoshi, 400, 11px, #9CA3AF, "CAREER READY"
+    Ring animation:       stroke-dashoffset transition 1.2s cubic-bezier(0.4,0,0.2,1) on mount
+    Glow:                 filter: drop-shadow(0 0 8px rgba(212,175,55,0.4))
+
+  ─────────────────────────────────
+  4F. PATHWAY CARD (career explorer)
+  ─────────────────────────────────
+    Background:           #111827
+    Border:               1px solid #1F2937
+    Border-radius:        16px
+    Padding:              24px
+    ACTIVE state border:  2px solid #D4AF37, box-shadow: shadow-gold
+
+    TOP ROW:
+      Role title:         Satoshi, 600, 18px, #F3F4F6
+      Compatibility badge: bg rgba(16,185,129,0.1), color #10B981, border 1px solid rgba(16,185,129,0.25)
+                           font 12px Satoshi 600, border-radius full, padding 3px 10px
+
+    METRICS ROW (3 cols):
+      Timeline:           Inter, 600, 14px, #F3F4F6 + label 11px #9CA3AF
+      Salary:             Inter, 600, 14px, #D4AF37 + label 11px #9CA3AF
+      Difficulty:         bar graph (5 dots), filled dots: #D4AF37, empty: #1F2937
+
+    SKILLS PREVIEW:
+      3–4 pill tags: bg #1A2236, border 1px solid #1F2937, font 12px Satoshi 400 #9CA3AF
+      border-radius: full, padding: 3px 10px
+
+    CTA ROW:
+      "View Full Pathway" → Text link (gold)
+      "Select This Path" → Primary button (medium)
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 5: FORMS
+════════════════════════════════════════════════════════════════════════════════
+
+  5A. INPUT FIELD (standard)
+  ─────────────────────────────────
+    Background:           #0F1520
+    Border:               1px solid #1F2937
+    Border-radius:        10px
+    Height:               48px
+    Padding:              0 16px
+    Font:                 Satoshi, 400, 15px
+    Text color:           #F3F4F6
+    Placeholder color:    #6B7280
+
+    LABEL:
+      Font:               Satoshi, 500, 13px
+      Color:              #9CA3AF
+      Margin-bottom:      6px
+      Transform (float):  N/A — use above-field labels, not floating labels
+
+    FOCUS STATE:
+      Border:             1px solid rgba(212,175,55,0.5)
+      Box-shadow:         0 0 0 3px rgba(212,175,55,0.1)
+      Outline:            none
+      Transition:         border 0.15s ease, box-shadow 0.15s ease
+
+    ERROR STATE:
+      Border:             1px solid rgba(239,68,68,0.6)
+      Box-shadow:         0 0 0 3px rgba(239,68,68,0.1)
+
+    SUCCESS STATE:
+      Border:             1px solid rgba(16,185,129,0.5)
+      Box-shadow:         0 0 0 3px rgba(16,185,129,0.1)
+
+    HELPER TEXT (below field):
+      Font:               Satoshi, 400, 12px
+      Color (default):    #6B7280
+      Color (error):      #EF4444
+      Color (success):    #10B981
+      Margin-top:         5px
+
+    DISABLED STATE:
+      Background:         #0B0F19
+      Border:             1px solid #1F2937
+      Text color:         #6B7280
+      Cursor:             not-allowed
+
+  ─────────────────────────────────
+  5B. TEXTAREA
+  ─────────────────────────────────
+    Same as Input Field
+    Min-height:           120px
+    Padding:              12px 16px
+    Resize:               vertical only
+
+  ─────────────────────────────────
+  5C. SELECT / DROPDOWN
+  ─────────────────────────────────
+    Same styling as Input
+    Custom chevron icon:  #9CA3AF, 16px, right 14px
+    Dropdown panel:
+      Background:         #111827
+      Border:             1px solid #1F2937
+      Border-radius:      10px
+      Box-shadow:         shadow-lg
+      Max-height:         240px, overflow-y: scroll
+
+    Option:
+      Padding:            10px 16px
+      Font:               Satoshi, 400, 14px, #F3F4F6
+      Hover bg:           #1A2236
+      Selected bg:        rgba(212,175,55,0.08)
+      Selected text:      #D4AF37
+
+  ─────────────────────────────────
+  5D. CHECKBOX & RADIO
+  ─────────────────────────────────
+    Size:                 18x18px
+    Border:               1.5px solid #374151
+    Border-radius:        5px (checkbox) | full (radio)
+    Background:           transparent
+
+    CHECKED STATE:
+      Background:         #D4AF37
+      Border:             #D4AF37
+      Checkmark:          white, 10px, stroke-width 2
+      Transition:         0.15s ease
+
+    FOCUS STATE:
+      Box-shadow:         0 0 0 3px rgba(212,175,55,0.2)
+
+  ─────────────────────────────────
+  5E. TOGGLE / SWITCH
+  ─────────────────────────────────
+    Track size:           48px x 26px, border-radius full
+    Track OFF:            background #1F2937
+    Track ON:             background linear-gradient(135deg, #D4AF37, #B8972A)
+    Thumb:                22px, white, border-radius full, shadow-md
+    Transition:           0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+  ─────────────────────────────────
+  5F. FORM LAYOUT
+  ─────────────────────────────────
+    Form card:            #111827, border-radius 16px, padding 32px, border 1px solid #1F2937
+    Field gap:            20px (between form fields)
+    Section gap:          32px (between form sections)
+    Form max-width:       480px (single col) | 640px (two-col)
+    Two-col grid:         grid-template-columns: 1fr 1fr, gap 20px
+    Mobile form:          always single column
+
+  ─────────────────────────────────
+  5G. FILE UPLOAD (resume)
+  ─────────────────────────────────
+    Zone:
+      Background:         rgba(212,175,55,0.03)
+      Border:             2px dashed rgba(212,175,55,0.2)
+      Border-radius:      12px
+      Padding:            40px
+      Text-align:         center
+
+    Icon:                 48px upload icon, color #D4AF37
+    Primary text:         Satoshi 500 16px #F3F4F6, "Drop your resume here"
+    Secondary text:       Satoshi 400 13px #9CA3AF, "PDF or DOCX · Max 5MB"
+    Button:               Ghost gold (medium) — "Browse Files"
+
+    DRAG OVER STATE:
+      Border:             2px dashed #D4AF37
+      Background:         rgba(212,175,55,0.06)
+      Box-shadow:         shadow-gold-sm
+
+    UPLOADED STATE:
+      Shows file name + size
+      Success icon (green checkmark)
+      "Remove" link (red text, 12px)
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 6: SIDEBAR (Dashboard)
+════════════════════════════════════════════════════════════════════════════════
+
+  DIMENSIONS:
+    Width:                240px (expanded) | 64px (collapsed) | 0 (mobile, drawer)
+    Height:               100vh - 64px (below nav)
+    Position:             fixed left, top 64px
+
+  BACKGROUND:
+    Base:                 linear-gradient(180deg, #0B0F19 0%, #0F1520 100%)
+    Right border:         1px solid #1F2937
+
+  LOGO / BRAND (top):
+    Height:               56px
+    Padding:              0 16px
+    Border-bottom:        1px solid #1F2937
+
+  NAV SECTION HEADER:
+    Font:                 Satoshi, 500, 10px, letter-spacing 0.12em, uppercase
+    Color:                #6B7280
+    Padding:              20px 20px 8px
+    (Hidden when sidebar collapsed)
+
+  NAV ITEM:
+    Height:               44px
+    Padding:              0 16px
+    Border-radius:        10px (within 8px margin each side)
+    Font:                 Satoshi, 500, 14px
+    Color default:        #9CA3AF
+    Icon:                 18px, same color as text
+
+    HOVER STATE:
+      Background:         rgba(255,255,255,0.04)
+      Color:              #F3F4F6
+      Icon color:         #F3F4F6
+
+    ACTIVE STATE:
+      Background:         rgba(212,175,55,0.08)
+      Color:              #D4AF37
+      Icon color:         #D4AF37
+      Left accent bar:    3px wide x 24px tall, color #D4AF37, border-radius 2px, absolute left-0
+
+    BADGE (count):
+      Background:         #D4AF3720
+      Color:              #D4AF37
+      Font:               Inter, 600, 11px
+      Border-radius:      full
+      Padding:            2px 7px
+
+  BOTTOM SECTION:
+    Fixed to bottom of sidebar
+    Contains: User avatar + name + plan badge + settings icon
+    Border-top:           1px solid #1F2937
+    Padding:              16px
+
+════════════════════════════════════════════════════════════════════════════════
+  COMPONENT 7: FOOTER
+════════════════════════════════════════════════════════════════════════════════
+
+  STRUCTURE:
+    ┌─────────────────────────────────────────────────────────┐
+    │  [Logo + Tagline]  [Links col]  [Links col]  [Social]  │
+    ├─────────────────────────────────────────────────────────┤
+    │  Copyright                          Legal links          │
+    └─────────────────────────────────────────────────────────┘
+
+  DIMENSIONS:
+    Padding:              80px 0 40px
+    Border-top:           1px solid #1F2937
+
+  BACKGROUND:
+    #0B0F19 (same as page bg)
+    Optional top fade: linear-gradient(to bottom, transparent, #0B0F19) above footer
+
+  LOGO + TAGLINE:
+    Logo:                 Same as nav (Clash Display 700, 20px)
+    Tagline:              Satoshi, 400, 14px, #6B7280, line-height 1.6
+    Tag example:          "The operating system for career dominance."
+    Column width:         ~30% of footer
+
+  LINK COLUMNS:
+    Column header:        Satoshi, 600, 12px, #F3F4F6, letter-spacing 0.08em, uppercase
+    Link:                 Satoshi, 400, 14px, #9CA3AF
+    Link hover:           color #D4AF37, transition 0.2s
+    Link gap:             10px vertical
+    Column gap:           80px horizontal
+
+  SOCIAL ICONS:
+    Size:                 20px icon in 40x40px container
+    Container bg:         #111827
+    Container border:     1px solid #1F2937
+    Container radius:     10px
+    Icon color:           #9CA3AF
+    HOVER:                bg #1A2236, icon color #D4AF37, border rgba(212,175,55,0.2)
+    Social links:         Twitter/X · LinkedIn · Instagram · GitHub
+
+  BOTTOM BAR:
+    Border-top:           1px solid #1F2937
+    Padding:              24px 0 0
+    Copyright:            Satoshi, 400, 13px, #6B7280
+    Legal links:          Satoshi, 400, 13px, #6B7280, hover: #9CA3AF
+    Legal link gap:       24px
+
+  RESPONSIVE:
+    Desktop:              4-column grid (30% + 3 equal cols)
+    Tablet:               2-column grid (logo+tagline | links stacked)
+    Mobile:               Single column, stacked, links accordion optional
+
+================================================================================
+  SECTION 6 — MOTION DESIGN SPECIFICATIONS
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+6.1 EASING FUNCTIONS
+────────────────────────────────────────────────────────────────────────────────
+
+  --ease-out:        cubic-bezier(0.4, 0, 0.2, 1)   ← standard for UI elements
+  --ease-in:         cubic-bezier(0.4, 0, 1, 1)
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1)   ← for floating cards
+  --ease-smooth:     cubic-bezier(0.25, 0.46, 0.45, 0.94)
+
+────────────────────────────────────────────────────────────────────────────────
+6.2 ANIMATION TOKENS
+────────────────────────────────────────────────────────────────────────────────
+
+  TOKEN               DURATION    EASING          USE
+  ─────────────────────────────────────────────────────────────────────────────
+  anim-instant        80ms        ease-out        Hover color change
+  anim-fast           150ms       ease-out        Button hover, icon change
+  anim-normal         250ms       ease-out        Card hover, menu open
+  anim-slow           400ms       ease-smooth     Page transition, modal open
+  anim-reveal         600ms       ease-out        On-scroll reveals
+  anim-score          1200ms      ease-out        Readiness ring fill on mount
+  anim-float          4000ms      ease-in-out     Hero visual card float (infinite)
+  anim-glow-pulse     3000ms      ease-in-out     Gold glow on brand elements (infinite)
+  anim-path-draw      1500ms      ease-out        SVG path drawing animation
+
+────────────────────────────────────────────────────────────────────────────────
+6.3 SPECIFIC ANIMATION BEHAVIORS
+────────────────────────────────────────────────────────────────────────────────
+
+  PAGE TRANSITIONS:
+    Type:               fade + slight translateY(8px → 0)
+    Duration:           300ms ease-out
+    Implementation:     CSS or Framer Motion (AnimatePresence)
+
+  SCROLL REVEAL:
+    Elements:           fade-in + translateY(20px → 0)
+    Trigger:            IntersectionObserver, threshold 0.1
+    Duration:           500ms ease-out
+    Stagger delay:      0.1s per element in a group
+    Once:               true (don't re-animate on scroll up)
+
+  FLOATING HERO VISUAL:
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-8px); }
+    }
+    animation: float 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    Different cards have different delays: 0s, 0.8s, 1.6s
+
+  GRADIENT PULSE (background hero):
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.6; }
+      50%       { opacity: 1.0; }
+    }
+    animation: pulse-glow 4s ease-in-out infinite;
+
+  SCORE RING FILL (on page load):
+    stroke-dasharray = circumference (2πr)
+    stroke-dashoffset animates from circumference → (circumference × (1 - score/100))
+    Duration: 1200ms, ease-out, 300ms delay
+
+  NUMBER COUNT-UP (metrics):
+    Duration: 1000ms ease-out, triggered by IntersectionObserver
+    Implementation: requestAnimationFrame loop
+
+  AVOID:
+    - bounce (spring) on any non-playful element
+    - flashy entrance animations on body text
+    - animation on every element simultaneously
+    - any animation > 600ms for UI feedback
+
+================================================================================
+  SECTION 7 — PAGE-SPECIFIC DESIGN GUIDELINES
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+7.1 LANDING PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+  SECTION ORDER:
+    1. Hero (100vh, dark, gold glow, grid overlay)
+    2. Social proof ticker / logos bar
+    3. Problem statement (dark, large typography, emotional copy)
+    4. Solution / How it Works (bento grid, 3-column)
+    5. Feature deep-dives (alternating left/right layout, 2-3 features)
+    6. Career pathways showcase (pathway cards, horizontal scroll on mobile)
+    7. Readiness score demo / interactive preview
+    8. Testimonials (glass cards, 3-column)
+    9. Pricing section (3 tiers side-by-side)
+    10. Final CTA (full-width, gold background section)
+    11. Footer
+
+  SECTION ALTERNATION:
+    Odd sections:         bg #0B0F19
+    Even sections:        bg #0B0F19 with subtle #111827 panels inside
+    Do NOT alternate page background colors (keep dark throughout)
+
+  PROBLEM STATEMENT SECTION:
+    Large text: Clash Display, 700, 48px, max-width 800px, centered
+    Key pain words: wrapped in gold color
+    Background: #0B0F19 with grid overlay
+    Padding: 96px 0
+
+  HOW IT WORKS SECTION:
+    3 steps in bento grid
+    Step number: Inter 700, 64px, #D4AF3715 (faint gold background digit)
+    Connecting line between steps: dashed 1px #1F2937 horizontal
+
+  PRICING SECTION:
+    3-column layout
+    Free tier card: standard border #1F2937
+    Pro tier card (recommended): border 2px solid #D4AF37, shadow-gold, badge "Most Popular"
+    Premium tier card: border 1px solid #3B82F640
+    Recommended badge: bg #D4AF37, color #0B0F19, Satoshi 700 12px, border-radius full
+
+────────────────────────────────────────────────────────────────────────────────
+7.2 ONBOARDING WIZARD PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+  LAYOUT:
+    Centered card, max-width 640px, padding 40px
+    Background: #111827, border-radius 20px, border 1px solid #1F2937
+    Full-screen page bg: #0B0F19 with radial gold glow
+
+  PROGRESS INDICATOR:
+    Steps bar at top of card
+    Active step: gold filled dot (12px) + gold line connection
+    Completed step: checkmark icon (12px, green) + solid line
+    Future step: gray dot + dashed line
+    Step label below: Satoshi 400 11px #6B7280
+
+  STEP TITLE:         Satoshi, 600, 22px, #F3F4F6
+  STEP SUBTITLE:      Satoshi, 400, 14px, #9CA3AF
+  STEP PADDING:       margin-top 32px
+
+  NEXT/BACK BUTTONS:
+    Next:             Primary gold button (medium), aligned right
+    Back:             Ghost text link, aligned left
+    Skip:             Text link muted, center or right
+
+────────────────────────────────────────────────────────────────────────────────
+7.3 CAREER DASHBOARD PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+  GREETING HEADER (top of main content):
+    NOT: "Welcome back, Devansh! 😊"
+    YES: "Your profile is 67% market-ready for Data Analytics."
+    Font: Satoshi 400 18px #9CA3AF
+    Score bold: Inter 700 18px #D4AF37
+    Below: "Last updated 2 hours ago · Refresh Analysis →" (13px, muted)
+
+  MAIN BENTO LAYOUT:
+    Row 1 (3 cols + 1 span):
+      Col 1–2: Readiness Score Ring Card (larger)
+      Col 3: AI Suggestion of the Day card
+      Col 4: Market Trend Alert card
+
+    Row 2 (4 cols):
+      Stage Progress card
+      Resume ATS Score card
+      LinkedIn Health Score card
+      Next Action card
+
+    Row 3 (2 cols):
+      Career Pathway Progress (wide)
+      Certifications Queue (narrow)
+
+  STAGE CHECKLIST:
+    Stage container: #111827, border-radius 12px, border 1px solid #1F2937
+    Stage header: Satoshi 600 15px #F3F4F6, left gold dot indicator
+    Task item height: 44px
+    Completed task: text line-through, color #6B7280, checkmark #10B981
+    Current task: gold background on left 3px accent, text #F3F4F6
+    Locked task: icon 🔒, text #6B7280
+
+────────────────────────────────────────────────────────────────────────────────
+7.4 AI CAREER ASSISTANT CHAT PAGE
+────────────────────────────────────────────────────────────────────────────────
+
+  LAYOUT:
+    Left: conversation history list (240px)
+    Right: chat interface (flex-1)
+
+  CHAT FEEL: Calm · Intelligent · Predictive · Strategic (NOT friendly chatbot mascot)
+
+  USER MESSAGE BUBBLE:
+    Background:           rgba(212,175,55,0.08)
+    Border:               1px solid rgba(212,175,55,0.15)
+    Border-radius:        16px 16px 4px 16px
+    Padding:              12px 16px
+    Font:                 Satoshi, 400, 15px, #F3F4F6
+    Alignment:            right
+
+  AI MESSAGE BUBBLE:
+    Background:           #111827
+    Border:               1px solid #1F2937
+    Border-radius:        16px 16px 16px 4px
+    Padding:              16px 20px
+    Font:                 Satoshi, 400, 15px, #F3F4F6
+    AI avatar:            24px, gold ring icon (not cartoon)
+    Alignment:            left
+
+  INPUT BAR:
+    Background:           #111827
+    Border-top:           1px solid #1F2937
+    Input field:          same as form input, no border on focus ring (contained)
+    Send button:          Gold icon button (round)
+    Quick-action chips:   above input, horizontal scroll, ghost pills
+
+  TYPING INDICATOR:
+    3 animated dots, color #D4AF37, scale pulse animation
+
+================================================================================
+  SECTION 8 — VISUAL MOTIFS & ICONOGRAPHY
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+8.1 STRATEGIC VISUAL LANGUAGE
+────────────────────────────────────────────────────────────────────────────────
+
+  USE THESE VISUALS:
+    · Path maps (branching career routes, SVG line trees)
+    · Node networks (skill connection graphs)
+    · Progression trees (stage unlock trees like tech trees in strategy games)
+    · Trajectory graphs (growth curves, readiness progress over time)
+    · Career constellations (dot-network maps of career possibilities)
+    · Intelligence grids (background grid overlay — subtle, dark)
+    · Radar / spider charts (skill gap visualization)
+    · Circular ring scores (readiness, ATS, LinkedIn health)
+
+  AVOID THESE:
+    · Graduation caps
+    · Books and pencils
+    · Classroom settings
+    · Certificate illustrations
+    · Generic human silhouettes
+    · Emoji-heavy interfaces
+    · Stock photography
+
+────────────────────────────────────────────────────────────────────────────────
+8.2 ICON STYLE
+────────────────────────────────────────────────────────────────────────────────
+
+  Library:              Lucide Icons (recommended) or Phosphor Icons
+  Style:                Thin to medium stroke, not filled/solid
+  Stroke width:         1.5px (standard) | 1.75px (emphasized)
+  Size grid:            16px | 20px | 24px | 32px | 48px
+  Color:                Inherits from context (text-secondary default)
+  Active/brand:         #D4AF37
+
+  AVOID: Filled solid icons (too heavy), colorful multi-tone icons, skeuomorphic icons
+
+────────────────────────────────────────────────────────────────────────────────
+8.3 ILLUSTRATION / VISUAL APPROACH
+────────────────────────────────────────────────────────────────────────────────
+
+  NOT stock illustrations. Not cartoon characters.
+  USE: Floating UI screenshots, SVG diagram maps, abstract geometric data visuals.
+
+  Hero section approach:
+    Build the hero visual as actual UI components (React/HTML) that float and animate.
+    This is far more authentic and premium than any illustration.
+
+  Section dividers:
+    Between sections use:
+    · Very subtle grid/dots pattern (SVG, 2% opacity)
+    · Gradient fades into next section background
+    · Gold horizontal rule (1px, 40px wide, centered, opacity 40%)
+
+  Background texture (optional):
+    Noise SVG filter at 1.5–2% opacity on hero sections
+    Subtle diagonal line pattern on certain dark cards
+
+================================================================================
+  SECTION 9 — DESIGN PERSONALITY MATRIX
+================================================================================
+
+  ATTRIBUTE         LEVEL     IMPLICATIONS FOR DESIGN
+  ─────────────────────────────────────────────────────────────────────────────
+  Premium           10/10     No clutter. Generous whitespace. Every element earns its place.
+  Strategic         10/10     Data-forward UI. Numbers lead. Clarity over decoration.
+  Futuristic        8/10      Dark UI, AI aesthetics, subtle glow effects. Not sci-fi overload.
+  Emotional         4/10      Trust through calm authority. Not warm/playful. Confident.
+  Academic          6/10      Smart tone. No cartoons. Readable typography hierarchy.
+  Corporate         5/10      Professional but NOT stiff. Startup energy within structure.
+  Startup           9/10      Fast, clean, modern. Linear / Notion / Vercel aesthetic.
+
+  THE GOLDEN RULE:
+    "Apple-designed Indian strategic intelligence software."
+    NOT "Mahabharata-themed startup."
+
+    Use Sanskrit geometry and philosophy as BACKGROUND inspiration for structure
+    and layout logic — not as literal decoration.
+
+================================================================================
+  SECTION 10 — CSS DESIGN TOKENS (FULL REFERENCE)
+================================================================================
+
+  Paste this into your root CSS / design system globals:
+
+  :root {
+    /* ── Colors ── */
+    --color-bg:              #0B0F19;
+    --color-surface:         #111827;
+    --color-surface-elevated:#1A2236;
+    --color-surface-subtle:  #0F1520;
+    --color-gold:            #D4AF37;
+    --color-gold-muted:      #B8972A;
+    --color-gold-faint:      rgba(212, 175, 55, 0.08);
+    --color-blue:            #3B82F6;
+    --color-blue-muted:      #2563EB;
+    --color-blue-faint:      rgba(59, 130, 246, 0.06);
+    --color-text-primary:    #F3F4F6;
+    --color-text-secondary:  #9CA3AF;
+    --color-text-muted:      #6B7280;
+    --color-text-inverse:    #0B0F19;
+    --color-border:          #1F2937;
+    --color-border-subtle:   #111827;
+    --color-success:         #10B981;
+    --color-warning:         #F59E0B;
+    --color-error:           #EF4444;
+
+    /* ── Typography ── */
+    --font-display:          'Clash Display', Georgia, serif;
+    --font-body:             'Satoshi', system-ui, sans-serif;
+    --font-data:             'Inter', system-ui, sans-serif;
+    --font-mono:             'JetBrains Mono', monospace;
+
+    /* ── Spacing ── */
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-8:  32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+    --space-24: 96px;
+    --space-32: 128px;
+
+    /* ── Border Radius ── */
+    --radius-sm:   4px;
+    --radius-md:   8px;
+    --radius-lg:   12px;
+    --radius-xl:   16px;
+    --radius-2xl:  20px;
+    --radius-3xl:  24px;
+    --radius-full: 9999px;
+
+    /* ── Shadows ── */
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md:   0 4px 12px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2);
+    --shadow-lg:   0 10px 32px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.2);
+    --shadow-xl:   0 20px 60px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.25);
+    --shadow-gold: 0 0 20px rgba(212,175,55,0.25), 0 0 60px rgba(212,175,55,0.08);
+    --shadow-gold-sm: 0 0 8px rgba(212,175,55,0.2);
+    --shadow-blue: 0 0 20px rgba(59,130,246,0.25), 0 0 60px rgba(59,130,246,0.08);
+
+    /* ── Transitions ── */
+    --ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --t-fast:      150ms;
+    --t-normal:    250ms;
+    --t-slow:      400ms;
+
+    /* ── Layout ── */
+    --nav-height:        64px;
+    --sidebar-width:     240px;
+    --sidebar-collapsed: 64px;
+    --content-max-width: 1280px;
+  }
+
+================================================================================
+  QUICK REFERENCE SUMMARY
+================================================================================
+
+  DARK BACKGROUND:      #0B0F19
+  CARD SURFACE:         #111827
+  GOLD ACCENT:          #D4AF37
+  BLUE AI:              #3B82F6
+  TEXT PRIMARY:         #F3F4F6
+  TEXT SECONDARY:       #9CA3AF
+  BORDER:               #1F2937
+
+  HEADING FONT:         Clash Display (fontshare.com)
+  BODY FONT:            Satoshi (fontshare.com)
+  DATA FONT:            Inter (Google Fonts)
+
+  PRIMARY CTA:          Gold filled button, #0B0F19 text
+  SECONDARY CTA:        Gold outline, #D4AF37 text
+  CARD HOVER:           Gold border glow + translateY(-2px)
+  INPUT FOCUS:          Gold border + gold glow ring
+
+  OVERALL FEEL:
+    Strategic. Premium. Intelligent. Dark. Gold-accented.
+    "AI command center for career dominance."
+    Reference: Linear + Notion AI + Perplexity + Vercel aesthetic.
+
+================================================================================
+  END OF CHANAKYA OS DESIGN DOCUMENT — v1.0
+================================================================================

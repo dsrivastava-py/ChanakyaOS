@@ -1,0 +1,365 @@
+| **ChanakyaOS** — Product Requirements Document | **CONFIDENTIAL  │  v1.0** |
+| --- | --- |
+
+**PRODUCT REQUIREMENTS DOCUMENT**
+
+**ChanakyaOS**
+
+*The AI-Powered Career Operating System*
+
+*for Students **&** Young Professionals*
+
+| **Version** | 1.0 — Initial Release |
+| --- | --- |
+| **Status** | Draft — Ready for Development |
+| **Domain** | EdTech / Career Intelligence / AI SaaS |
+| **Target Market** | India (Primary) │ Global (Future Expansion) |
+| **Taglines** | Confusion is Expensive. Wisdom Over Luck. The Wise Move First. |
+
+# **1. PROJECT OVERVIEW ****&**** GOALS**
+
+## **1.1 Vision Statement**
+
+ChanakyaOS is an AI-powered career operating system designed to help students and young professionals build the right profile, roadmap, and proof of readiness required to secure internships, jobs, and long-term career success. Named after Chanakya — India's ancient master of strategy and wisdom — the platform embodies the principle that the smartest, most prepared person wins the career game, not just the luckiest.
+
+## **1.2 Core Problem Statement**
+
+The biggest problem in today's internship and job market is NOT the lack of opportunities. The real problem is that most students are simply not career-ready in a structured and optimized way.
+
+### **Students Consistently Suffer From:**
+
+- No clear career path — following random YouTube advice instead of structured guidance
+
+- Incomplete or weak resumes — failing ATS systems and recruiter scans
+
+- Unoptimized LinkedIn profiles — invisible to recruiters
+
+- Irrelevant certifications — spending money on credentials that don't matter
+
+- No project portfolio — lacking proof-of-work that employers demand
+
+- No roadmap — learning skills without direction or sequence
+
+- Background-career misalignment — e.g. Commerce student competing blindly with CS engineers
+
+## **1.3 The Solution**
+
+ChanakyaOS becomes a complete, one-stop career-building ecosystem that analyzes the student's current position, identifies every gap in their profile, generates multiple realistic career pathways tailored to their background, and guides them step-by-step through becoming genuinely employable — not just qualified on paper.
+
+## **1.4 Strategic Goals**
+
+| **#** | **Goal** | **Measurable Outcome** |
+| --- | --- | --- |
+| **G1** | Be the #1 AI career platform for Indian students | 100K registered users in 12 months |
+| **G2** | Reduce career confusion for students from all academic backgrounds | 85%+ users report clarity post-onboarding survey |
+| **G3** | Drive measurable career outcomes (internship/job secured) | 30%+ users secure internship/job within 6 months of active use |
+| **G4** | Build a defensible AI layer through continuous profile + market analysis | AI recommendations rated relevant by 80%+ users |
+| **G5** | Create a sustainable SaaS revenue model with strong retention | < 15% monthly churn on paid plans |
+
+# **2. TARGET AUDIENCE DEFINITION**
+
+## **2.1 Primary User Segments**
+
+| **Segment** | **Profile** | **Core Pain Point** | **Value ChanakyaOS Provides** |
+| --- | --- | --- | --- |
+| **School Students (Class 10–12)** | Age 15–18, planning higher education | No idea which stream/degree/college to choose | Career path + degree mapping + entrance exam guidance |
+| **Undergraduate Students** | B.Tech, BBA, B.Com, BA — Age 18–22 | Generic resumes, no projects, lost among peers | Skill gap analysis + pathway + resume + portfolio builder |
+| **MBA Students** | Finance/Marketing/HR — pivoting to Analytics/Tech | Don't know how to leverage MBA for new-age roles | Background-aware hybrid pathway recommendations |
+| **Fresh Graduates (0–2 years)** | Recently graduated, first job hunt | Degree doesn't match market expectations | ATS resume + LinkedIn optimizer + job readiness score |
+| **Career Switchers** | 2–5 years experience, changing fields | Unsure of transferable skills, afraid of pay cut | Skill transfer mapping + re-entry pathway planning |
+| **Non-Tech Students Entering Tech** | Commerce/Arts wanting Data/Product/Marketing roles | No CS background, don't know entry points | Alternative pathway generation without CS degree requirement |
+
+## **2.2 User Personas**
+
+### **Persona 1 — Ananya (Commerce → Data Science)**
+
+- B.Com 2nd Year, Mumbai. No Math background. Loves numbers but chose Commerce.
+
+- Wants to break into Data Analytics but competing against CS graduates.
+
+- Needs: Alternative pathway, non-math entry certifications, portfolio projects, positioning strategy.
+
+### **Persona 2 — Rohan (Class 12 → Career Planning)**
+
+- CBSE Class 12, Science stream. Confused about CSE vs Data Science vs IIT vs Private college.
+
+- Needs: Degree recommendation, university comparison, entrance exam roadmap, 5-year career vision.
+
+### **Persona 3 — Priya (MBA Finance → Analytics Pivot)**
+
+- MBA Finance, 1 year experience in investment banking. Wants to move into Financial Analytics.
+
+- Needs: MBA-leveraged pivot strategy, relevant certifications, project portfolio for analytics roles.
+
+### **Persona 4 — Vikram (B.Tech Fresher → First Job)**
+
+- B.Tech CSE, just graduated. 50+ applications sent, 0 responses. Resume not ATS-optimized.
+
+- Needs: ATS resume fix, LinkedIn overhaul, job readiness score, application strategy.
+
+# **3. COMPLETE LIST OF REQUIRED PAGES**
+
+## **3.1 Public Pages (Pre-Login)**
+
+| **#** | **Page** | **Purpose** | **Priority** |
+| --- | --- | --- | --- |
+| **1** | **Landing / Home Page** | Brand story, value proposition, hero CTA, social proof, feature highlights, demo video, testimonials, pricing preview | **Must-Have** |
+| **2** | **How It Works Page** | Step-by-step visual walkthrough of the 6-phase process with animations, diagrams, before/after examples | **Must-Have** |
+| **3** | **Pricing Page** | Free vs Pro vs Premium tier comparison table with feature matrix, FAQ, testimonials, CTA | **Must-Have** |
+| **4** | **About Us Page** | Founder story, mission, vision, Chanakya philosophy, team section, credibility builders | **Must-Have** |
+| **5** | **Features Overview Page** | Detailed breakdown of all platform features with visuals, use case examples, target persona tags | **Must-Have** |
+| **6** | **Blog / Resource Hub** | Career guides, roadmaps, industry insights, certification reviews — SEO-driven inbound funnel | **Should-Have** |
+| **7** | **Testimonials / Success Stories** | Detailed case studies of users who used ChanakyaOS to land internships/jobs | **Should-Have** |
+| **8** | **Contact / Support Page** | Contact form, FAQ, support email, social links, live chat widget | **Must-Have** |
+| **9** | **Privacy Policy ****&**** Terms** | Legal compliance pages for data handling, user agreements, cookie policy | **Must-Have** |
+| **10** | **Careers Page** | For future team hiring | **Nice-to-Have** |
+
+## **3.2 Authenticated App Pages (Post-Login)**
+
+| **#** | **Page** | **Purpose** | **Priority** |
+| --- | --- | --- | --- |
+| **11** | **Onboarding Wizard** | Multi-step profile builder: resume upload, background, goals, constraints, career interests — creates Professional Identity Map | **Must-Have** |
+| **12** | **Career Dashboard (Home)** | Central hub: readiness score, active pathway progress, AI suggestions, next steps, recent activity | **Must-Have** |
+| **13** | **AI Profile Diagnosis Page** | Full audit report: skill gaps, resume weaknesses, LinkedIn issues, ATS score, competitive positioning | **Must-Have** |
+| **14** | **Career Pathway Explorer** | Browse and compare multiple AI-generated career paths with timelines, difficulty, salary projections | **Must-Have** |
+| **15** | **Selected Pathway Tracker** | Stage-by-stage career checklist with progress bars, completion status, due dates, locked/unlocked stages | **Must-Have** |
+| **16** | **Skill Gap Analyzer** | Detailed skill comparison: current skills vs. role requirements, priority order for learning, recommended resources | **Must-Have** |
+| **17** | **Resume Builder ****&**** Optimizer** | AI resume editor: ATS score, keyword suggestions, section-by-section improvement, multiple version generator | **Must-Have** |
+| **18** | **LinkedIn Optimizer** | AI-powered LinkedIn profile analysis and optimization engine: headline, summary, skills, keywords | **Must-Have** |
+| **19** | **AI Career Assistant Chat** | Contextual AI chatbot: career questions, next-step guidance, certification advice, market insights | **Must-Have** |
+| **20** | **Portfolio ****&**** Project Builder** | Recommended projects by career path with templates, roadmaps, evaluation criteria, GitHub link tracker | **Should-Have** |
+| **21** | **Market Trends Dashboard** | Real-time trending skills, salary data, hiring demand by role, emerging tools, declining technologies | **Should-Have** |
+| **22** | **Saved Pathways ****&**** Comparison** | Side-by-side pathway comparison: effort, salary, timeline, required skills, risk level | **Should-Have** |
+| **23** | **Certifications Tracker** | Recommended certifications by path, cost, provider rating, completion tracking, relevance score | **Should-Have** |
+| **24** | **Profile ****&**** Settings Page** | Account settings, notification preferences, privacy controls, subscription management | **Must-Have** |
+| **25** | **Community Hub (Future)** | Peer groups, accountability partners, alumni network, discussion forums, event board | **Nice-to-Have** |
+| **26** | **Mentorship Marketplace (Future)** | Book 1:1 sessions with verified industry mentors, mock interviews, resume reviews | **Nice-to-Have** |
+
+# **4. CORE FEATURES — DETAILED BREAKDOWN**
+
+Each feature below includes full description, user interaction flow, technical requirements, priority level, and success criteria.
+
+| **F1 — AI-Powered Onboarding ****&**** Professional Identity Map****   [Must-Have]** |
+| --- |
+| **Description** A multi-step onboarding wizard that collects comprehensive user data including resume, LinkedIn export, academic background, certifications, skills, career interests, financial constraints, geographic preferences, personality traits, and long-term ambitions. The wizard creates a complete 'Professional Identity Map' — the user's AI-analyzed professional DNA that powers all downstream recommendations. The wizard is adaptive: it changes subsequent questions based on prior answers (e.g. if user selects 'Commerce background', it skips programming-heavy questions and focuses on analytical skills). |
+| **User Interaction Flow** User lands on onboarding page post-registration Step 1: Select academic background type (School / UG / MBA / Graduate / Career Switcher) Step 2: Upload resume (PDF/DOCX) — AI auto-parses key sections Step 3: Input career interests, preferred industries, target roles Step 4: Add existing skills, certifications, projects (manual + LinkedIn import) Step 5: Set constraints (budget, geography, math background, time availability) Step 6: Personality & work-style preferences (structured quiz) Step 7: AI generates Professional Identity Map — user reviews and confirms User lands on Career Dashboard with initial AI diagnosis triggered |
+| **Technical Requirements** NLP-based resume parser (SpaCy, AWS Comprehend, or GPT-4 function calling) LinkedIn OAuth integration for profile data import Adaptive questionnaire engine with branching logic (conditional steps) User profile database with full versioning history Background classification ML model (Commerce / Science / Arts / Engineering / MBA) Session state preservation (user can pause and resume onboarding) File upload service supporting PDF and DOCX resume formats Validation layer for incomplete data with intelligent prompts **Success Criteria** 85%+ of users complete the onboarding wizard without dropping off Resume parsing accuracy > 90% for standard format resumes User-reported satisfaction with initial diagnosis > 4.2/5 Average onboarding completion time < 12 minutes |
+
+| **F2 — AI Profile Diagnosis ****&**** Skill Gap Analysis****   [Must-Have]** |
+| --- |
+| **Description** The engine analyzes the user's Professional Identity Map against real-world industry benchmarks for their target role(s). It produces a comprehensive diagnosis report identifying: missing technical skills, certification gaps, weak resume sections, LinkedIn optimization opportunities, ATS score with specific improvement points, industry-role mismatch issues, market competitiveness score (percentile vs. peers targeting same roles), and a prioritized action plan. The Skill Gap Analyzer compares the user's current skill set against a role's requirements and surfaces a ranked, prioritized list of what to learn first — with rationale for each item. |
+| **User Interaction Flow** Triggered automatically after onboarding wizard completion User views a full-page Diagnosis Report with sections: Profile Health Score, Resume Score, LinkedIn Score, Skill Gap Summary, Competitiveness Percentile Each score card is expandable — user clicks to see line-by-line details and specific improvement suggestions Skill Gap section shows: Have / Missing / Priority table per target role User can change target role and run a new diagnosis in real-time User receives email summary of diagnosis with top 3 action items Diagnosis re-runs automatically when user updates their profile |
+| **Technical Requirements** Role requirement database populated from job descriptions scraped via LinkedIn/Indeed APIs + curated by career experts ML model for ATS scoring calibrated against real recruiter feedback data Real-time skill benchmarking engine that updates as market trends shift Report generation pipeline with PDF export capability Notification system for periodic re-diagnosis recommendations A/B testable diagnosis UI (card vs. dashboard vs. report formats) **Success Criteria** Skill gap identification accuracy validated by career domain experts > 80% Users who act on diagnosis recommendations show 2x improvement in profile scores within 30 days Diagnosis report viewed fully by > 70% of users who receive it Report PDF exported by > 40% of users |
+
+| **F3 — Personalized Multi-Path Career Generation Engine****   [Must-Have]** |
+| --- |
+| **Description** The platform's core differentiator. Instead of a single rigid career suggestion, ChanakyaOS generates 3–6 distinct, realistic career pathways customized to the user's specific background, financial capacity, geographic preferences, and career ambitions. Each pathway is a complete strategic plan — not just a job title suggestion. Pathways include required skills, certifications, project ideas, degree suggestions (if applicable), difficulty rating, estimated timeline to first opportunity, expected salary range, and market demand score. The engine also supports budget-aware filtering (low / moderate / premium) and India vs. Foreign study filtering. |
+| **User Interaction Flow** After diagnosis, user lands on 'Career Pathway Explorer' page 3–6 pathway cards displayed, each showing: Role title, Compatibility score with current profile, Timeline, Salary range, Difficulty, Budget required User can apply filters: Budget range, India vs. Global, Background match, Timeline preference User clicks on any pathway card to see full detailed breakdown (stages, skills, certifications, projects) User can save up to 3 pathways to their 'Saved Pathways' library Comparison tool lets user view 2 pathways side-by-side on a structured matrix User selects one pathway as their 'Active Path' — this activates the Career Dashboard tracker |
+| **Technical Requirements** LLM-powered pathway generation (GPT-4 / Claude API) with structured output templates Career ontology database mapping roles, skills, certifications, and transition paths Budget filtering engine with cost database of certifications, courses, degrees (India + global) Pathway compatibility scoring algorithm using cosine similarity between user profile and role requirements Caching layer for common pathway combinations to minimize LLM API calls Pathway versioning — as market shifts, existing saved pathways auto-update with change notifications Salary data integration (Glassdoor API, AmbitionBox, LinkedIn Salary Insights) **Success Criteria** Users who receive pathways have > 75% 'pathway relevance' rating Average of 2.5+ pathways saved per active user Pathway selection-to-active rate > 60% within 48 hours of generation Pathway engine covers 95%+ of academic background combinations in target demographic |
+
+| **F4 — Career Dashboard ****&**** Stage-Based Progress Tracker****   [Must-Have]** |
+| --- |
+| **Description** Once the user selects an active career pathway, ChanakyaOS transforms into their personal career operating dashboard. The dashboard tracks every dimension of career readiness: certifications completed, projects built, resume version quality, LinkedIn score, internship applications submitted, mock interviews completed, and an overall Career Readiness Score (0–100). The Stage-Based Career Checklist breaks the pathway into clearly defined stages (e.g. Stage 1: Foundation Skills, Stage 2: Projects, Stage 3: Resume Ready, Stage 4: Applications). Each stage has a set of tasks, resources, and a completion gate before unlocking the next stage. |
+| **User Interaction Flow** User lands on Dashboard as their default home post-login Top section shows: Career Readiness Score with visual gauge, Active Pathway name, days active Stage tracker shows current stage with completion percentage, remaining tasks, estimated completion time Completed tasks show green checkmarks; locked stages show lock icons with requirements Quick-action cards: 'Improve Resume', 'Check LinkedIn Score', 'Ask AI Assistant', 'Find Certifications' Activity feed shows recent updates, achievements unlocked, AI suggestions of the day User completes a task (e.g. adds a certification) → dashboard updates in real-time Weekly digest email sent with progress summary and next week's recommended focus |
+| **Technical Requirements** Real-time progress tracking database with event-driven updates Gamification engine: badges, streaks, readiness level labels (e.g. 'Career Starter' → 'Career Ready' → 'Market Leader') WebSocket or polling for live score updates when user makes profile changes Push notification system (web + email) for streak reminders, milestone achievements Dashboard analytics tracking which sections users engage with most Mobile-responsive dashboard layout (target mobile usage > 60% for Indian student demographic) **Success Criteria** Daily active user rate > 35% among users with active pathway Users with > 3 stage completions show 3x higher internship application rate Career Readiness Score improvement of > 15 points in first 30 days for active users Weekly digest email open rate > 45% |
+
+| **F5 — AI Resume Builder ****&**** ATS Optimization Engine****   [Must-Have]** |
+| --- |
+| **Description** A powerful AI-driven resume creation and optimization tool that does more than score resumes — it actively helps users rewrite and improve them. The system generates role-specific resume versions, provides line-by-line improvement suggestions, optimizes keyword density for ATS systems, flags structural issues, and produces multiple targeted resume variants from a single master profile. Users can generate internship resumes, startup-focused resumes, technical resumes, research resumes — all tailored to specific job descriptions when pasted in. |
+| **User Interaction Flow** User navigates to 'Resume Builder' from Dashboard or Profile Diagnosis Option 1: Upload existing resume for optimization │ Option 2: Build fresh from profile data AI scans resume and displays an ATS Score (0–100) with section-by-section breakdown Each section shows specific issues: weak action verbs, missing keywords, formatting problems, ATS-incompatible elements User clicks 'AI Improve' on any section — AI suggests rewritten version which user can accept/edit User can input a specific job description to get a targeted version optimized for that role Resume generator creates final formatted PDF in multiple ATS-safe templates Version manager stores all past resume versions with version notes One-click LinkedIn sync: applies resume improvements to LinkedIn profile sections |
+| **Technical Requirements** NLP-based resume analysis engine with domain-specific vocabulary banks per career field ATS simulation engine trained on common ATS systems (Taleo, Workday, Greenhouse, Lever) Resume template library (minimum 10 clean, ATS-safe templates) stored as HTML/CSS renderable to PDF GPT-4 fine-tuned or prompt-engineered for resume rewriting with industry-specific tone calibration Job description parser for keyword extraction and targeted optimization PDF generation service (Puppeteer or WeasyPrint) Version control system for all user resume iterations **Success Criteria** Users see average ATS score improvement of 25+ points after applying AI suggestions Resume-to-interview conversion rate improves for users who use AI optimization vs. those who don't (A/B measurable via optional tracking) 90%+ of AI-generated resume suggestions rated 'helpful' or 'very helpful' by users Resume download rate > 80% among users who enter Resume Builder |
+
+| **F6 — LinkedIn Profile Optimizer****   [Should-Have]** |
+| --- |
+| **Description** A dedicated LinkedIn optimization engine that analyzes every key section of the user's LinkedIn profile and provides specific, actionable improvements. The system improves headlines, summary statements, skill section, experience descriptions, certification positioning, and overall profile completeness score. It also provides keyword optimization strategies to increase recruiter search visibility. Users can see before/after comparisons for every suggested change. |
+| **User Interaction Flow** User connects LinkedIn or pastes profile URL / manually enters sections AI scans and generates a LinkedIn Health Score (0–100) with section breakdown Prioritized improvement list displayed: High Impact, Medium Impact, Quick Wins User clicks any improvement item → sees specific AI-written suggestion with explanation Headline optimizer: generates 5 variation headlines based on target role + current experience Summary writer: generates 3 summary options in different tones (Professional / Conversational / Achievement-focused) Skill suggestions: recommends up to 10 skills to add based on target role + trending demand User can download a full LinkedIn Optimization Checklist PDF |
+| **Technical Requirements** LinkedIn data access via manual input forms (due to LinkedIn API restrictions for scraping) NLP analysis of profile text: readability score, action verb density, quantification ratio Headline and summary generation via fine-tuned LLM with role-specific prompt templates Keyword search frequency data integration (LinkedIn Recruiter keyword trends via approved API) PDF checklist generation with user-specific recommendations embedded **Success Criteria** LinkedIn Health Score improvement > 20 points on average after applying recommendations 80%+ of users report increased recruiter messages after LinkedIn optimization LinkedIn Optimizer feature used by > 60% of active users within first 2 weeks User satisfaction rating for LinkedIn suggestions > 4.3/5 |
+
+| **F7 — AI Career Assistant Chatbot****   [Must-Have]** |
+| --- |
+| **Description** A contextually-aware AI career assistant that knows the user's full profile, their active pathway, their current stage, and their market context. Unlike generic ChatGPT, this assistant gives hyper-personalized answers. Ask it 'What certification should I do next?' and it responds based on YOUR pathway, YOUR budget, YOUR background — not a generic list. The assistant also proactively suggests next steps, reacts to market changes (e.g. 'Data Analyst roles now require Power BI — here's how to add it to your profile'), and helps with specific tasks like drafting cold emails to recruiters, preparing mock interview Q&As, and generating project ideas. |
+| **User Interaction Flow** AI Chat widget accessible from any page via floating button OR full-page Chat interface First interaction: assistant introduces itself and references user's name + active pathway User types question in natural language — response cites user's specific profile data Suggested quick-questions displayed based on current stage (e.g. 'What should I learn next?', 'How do I improve my ATS score?') Assistant can perform actions: 'Add this certification to my tracker', 'Update my resume keywords', 'Open LinkedIn Optimizer' Conversation history saved and searchable Assistant sends proactive messages when: market trend changes affect user's pathway, user has been inactive for 3+ days, user completes a stage |
+| **Technical Requirements** LLM backend (GPT-4 Turbo / Claude 3.5 Sonnet) with full user context injected as system prompt User context injection: profile snapshot, active pathway, current stage, recent activity, skill gaps Function calling for in-app actions (update tracker, open optimizer, save certification) Conversation history stored per user with token window management for long conversations Market trend database connected to assistant context for real-time advice Rate limiting: Free tier (15 messages/day), Pro (unlimited) Feedback mechanism: thumbs up/down on each response for quality improvement **Success Criteria** AI assistant used by > 65% of active users at least weekly Average conversation rating > 4.1/5 Actionable suggestions (where user takes follow-up action) > 50% of conversations Zero instances of hallucinated career advice in quality reviews (human review sample each week) |
+
+| **F8 — Portfolio ****&**** Project Builder****   [Should-Have]** |
+| --- |
+| **Description** Many students have no proof-of-work — they have skills but nothing to show for them. This feature recommends personalized project ideas based on the user's career pathway, provides project templates and structured roadmaps for each project, and helps users track project progress. Recommended projects are matched to what recruiters in the target field actively look for. The system also integrates with GitHub for engineering-track students and provides documentation templates that make projects look professional. |
+| **User Interaction Flow** User navigates to 'Portfolio' section from Dashboard AI recommends 5–8 personalized project ideas based on active pathway + skill level Each project card shows: Description, Skills demonstrated, Estimated time, Difficulty, Recruiter impact score User clicks 'Start Project' → gets full roadmap: Week 1 tasks, Week 2 tasks, tools needed, dataset links, completion criteria User marks project stages as complete and adds final project link (GitHub / Live URL / PDF) Completed projects appear on user's profile and auto-suggest to include in resume/LinkedIn Portfolio page generated that user can share with recruiters (public URL with privacy controls) |
+| **Technical Requirements** Project recommendation engine using NLP to match project types to pathway requirements Project database: minimum 200 project templates across 15 career domains GitHub OAuth integration for engineering-track users Portfolio page generator with public URL, customizable theme, and project cards Project progress tracker with stage-completion events feeding into Career Dashboard **Success Criteria** Users with 2+ completed portfolio projects show 40% higher response rate in applications Project Builder used by > 50% of active users within 30 days Portfolio page shared externally by > 35% of users who complete a project Average project relevance rating from users > 4.0/5 |
+
+| **F9 — Market Trends Dashboard ****&**** Intelligence Feed****   [Should-Have]** |
+| --- |
+| **Description** A real-time market intelligence dashboard that keeps users aligned with the actual job market — not last year's advice. Tracks trending skills by domain, emerging tools gaining traction, salary benchmarks for target roles, hiring demand by company tier and city, declining technologies to deprioritize, and new certification releases that are gaining recruiter attention. The dashboard is personalized — it surfaces only the trends relevant to the user's active pathway and target roles. |
+| **User Interaction Flow** User navigates to 'Market Trends' from Dashboard sidebar Personalized feed shows: 'Trending in Your Field This Week' cards, salary movement alerts, new in-demand skills Trending skills shown with: demand growth %, avg salary impact, time to learn estimate, top companies hiring for this skill User can click any trend to get: detailed breakdown, recommended certification/course, impact on their current pathway Market Alerts: user sets alerts for specific roles/skills — gets notified when significant shifts occur Salary Benchmark Tool: input role + city + years of experience → get salary range with percentile breakdown |
+| **Technical Requirements** Web scraping pipeline for job descriptions (LinkedIn, Naukri, Indeed) to extract skill demand trends NLP trend extraction model identifying emerging vs. declining skills per domain Salary data aggregation from public APIs (AmbitionBox, Glassdoor, LinkedIn Salary Insights) Personalization engine routing only relevant trends to each user based on profile Weekly data refresh cycle with daily updates for high-volatility fields (AI/ML, Fintech) Alert system via email and in-app notifications **Success Criteria** Market Trends dashboard visited by > 55% of active users weekly Trend recommendations rated relevant by > 75% of users Market alert click-through rate > 40% Salary benchmark tool used by > 60% of active users at least once |
+
+# **5. USER JOURNEY MAPPING**
+
+## **5.1 Complete User Journey — First 90 Days**
+
+The following table maps the full user experience across 7 stages from first discovery to career-ready status.
+
+| **Stage** | **User Action** | **Platform Response** | **Emotion / Goal** |
+| --- | --- | --- | --- |
+| **Discovery** | User finds ChanakyaOS via search, social media, or word-of-mouth | Landing page highlights: 'Does this sound like you?' pain points, social proof, free trial CTA | Confusion → Curiosity │ Goal: Understand if this is for me |
+| **Registration** | Creates account (email / Google / LinkedIn SSO) | Welcome email sent. Onboarding wizard immediately initiated. No friction. | Hope → Commitment │ Goal: Get started quickly |
+| **Onboarding** | Completes 7-step wizard: background, resume upload, goals, constraints | AI builds Professional Identity Map. Real-time processing animation builds anticipation. | Vulnerability → Excitement │ Goal: Be seen and understood accurately |
+| **Diagnosis** | Receives AI Profile Diagnosis Report with scores and gap analysis | Full report delivered within 60 seconds. Actionable, specific, non-judgmental language. | Awareness → Motivation │ Goal: Understand exactly what I'm missing |
+| **Pathway Selection** | Browses 4–6 career pathways, saves 2, selects 1 as active | Comparison tool available. Pathway details are rich and credible. | Clarity → Decision │ Goal: Know which direction to go |
+| **Active Growth** | Works through Stage Checklist: certifications, projects, resume, LinkedIn | Dashboard tracks progress. AI assistant guides daily. Market trends inform decisions. | Progress → Confidence │ Goal: Build momentum and see real growth |
+| **Career Outcomes** | Applies for internships/jobs. Gets responses. Lands opportunity. | Platform celebrates milestone. User shares success story. Pathway upgraded for next goal. | Achievement → Advocacy │ Goal: Land opportunity, pay it forward |
+
+## **5.2 Key User Journey — Commerce Student Entering Data Science**
+
+- Ananya uploads her B.Com resume → AI identifies 0 technical skills for Data Analyst roles
+
+- Diagnosis shows: Missing Excel, SQL, Python basics, Power BI, no portfolio
+
+- 3 pathways generated: Business Analyst (easiest entry), Data Analyst (6-month route), Financial Analytics (MBA-first route)
+
+- Ananya selects Data Analyst pathway → Stage 1: Excel Mastery unlocked
+
+- Certifications Tracker shows: Google Data Analytics Certificate (free, 6 months) as top priority
+
+- Project Builder recommends: Financial data analysis project using public datasets
+
+- After 45 days: ATS score up 40 points, LinkedIn score up 28 points, 2 projects completed
+
+- Applies to internships → 3 interview calls within 2 weeks
+
+## **5.3 Critical Retention Touchpoints**
+
+- Day 1: Onboarding completion + first diagnosis report (emotional hook: 'Now I know what I need to do')
+
+- Day 3: First stage task completed → gamification badge unlocked + motivational message
+
+- Day 7: Weekly progress digest email + AI assistant proactive suggestion
+
+- Day 14: Resume score improvement visual → users see tangible progress
+
+- Day 30: 30-day milestone report → retention rate peaks at this point for engaged users
+
+- Day 60: 'You're Career-Ready' score threshold reached → celebration moment + community invite
+
+- Day 90: First external outcome (interview/internship) → user success story collection point
+
+# **6. SUCCESS METRICS ****&**** KPIs**
+
+## **6.1 North Star Metric**
+
+| **North Star: **Number of users who improve Career Readiness Score by ≥ 25 points AND report a career outcome (internship/job/interview) within 90 days |
+| --- |
+
+## **6.2 Metric Targets by Timeline**
+
+| **Metric** | **Target (3 mo)** | **Target (6 mo)** | **Target (12 mo)** |
+| --- | --- | --- | --- |
+| **Registered Users** | 1,000 | 10,000 | 100,000 |
+| **Onboarding Completion Rate** | 75% | 80% | 85% |
+| **Monthly Active Users (MAU)** | 400 | 4,500 | 45,000 |
+| **Pathway Activation Rate** | 60% | 65% | 70% |
+| **Career Readiness Score Avg** | +12 pts/user | +20 pts/user | +28 pts/user |
+| **Resume AI Usage Rate** | 55% | 65% | 75% |
+| **AI Assistant Engagement** | 3 sessions/user/wk | 4 sessions/user/wk | 5 sessions/user/wk |
+| **Internship/Job Success Rate** | 20% of active users | 28% | 35% |
+| **Free → Paid Conversion** | 5% | 8% | 12% |
+| **Monthly Churn (Paid)** | < 20% | < 15% | < 10% |
+| **NPS Score** | > 40 | > 50 | > 60 |
+| **App Store Rating (Mobile)** | N/A | > 4.2 | > 4.5 |
+
+## **6.3 Feature-Level Success Metrics**
+
+- Onboarding: > 85% completion rate; < 12 min average time
+
+- AI Diagnosis: Report viewed fully by > 70%; exported by > 40%
+
+- Career Pathways: > 75% relevance rating; 2.5+ pathways saved per user
+
+- Resume Builder: ATS score improvement avg > 25 pts; 90%+ suggestion acceptance
+
+- AI Assistant: Used weekly by > 65% of users; rating > 4.1/5
+
+- Portfolio Builder: 2+ projects = 40% higher application response rate
+
+- Market Trends: Visited weekly by > 55%; salary tool used by > 60%
+
+# **7. COMPETITIVE ANALYSIS**
+
+Comprehensive analysis of 3 direct competitors across the career guidance, profile optimization, and student career platform landscape — with specific intelligence on what each platform does well, their critical gaps, and ChanakyaOS's clear differentiation opportunities.
+
+| **Competitor 1: Internshala**  India's Largest Student Career Platform — Founded 2010, 32M+ Users |
+| --- |
+| **✅ What They Do Well** Largest database of Indian internships — 250,000+ companies, 200+ job profiles, trusted brand with 32M+ users Free to use for students — very low friction to register and apply, making it the default first platform for Indian students Built-in resume builder — free download, basic but functional for freshers Online training courses — short-term paid courses with placement guarantees across marketing, finance, tech domains College partnerships and rankings — strong institutional credibility and integration with campus placement cells Strong SEO and brand recognition — appears for most 'internship India' searches, massive organic traffic engine Mobile app — solid Android/iOS penetration in Tier 2/3 cities where mobile is the primary device **❌ What They****'****re Missing** ZERO AI personalization — every student sees the same listings, same suggestions, same generic content regardless of background or goals No career pathway planning — Internshala tells you WHERE to apply but never helps you understand IF you're ready or HOW to get ready No skill gap analysis — students apply for roles they are fundamentally unqualified for with no guidance on how to fix it No resume intelligence — basic resume builder with no ATS scoring, no AI suggestions, no role-specific optimization No LinkedIn optimization — profile improvement is not part of the offering at all No AI career assistant — zero contextual guidance; students are left to figure out everything alone after discovering listings Non-technical student blindspot — Commerce, Arts, Humanities students have almost no guidance on how to compete for tech-adjacent roles No market intelligence — no trending skills data, no salary benchmarks in context of user's specific profile Transactional, not transformational — focused on facilitating applications, not building genuinely career-ready candidates **🚀 ChanakyaOS Differentiation** ChanakyaOS is NOT a job board. It tells students what career path to pursue, what they're missing, and exactly how to fix it — before they even apply. Internshala sends them to apply when they're not ready. Background-aware AI — ChanakyaOS specifically addresses the Commerce student, the MBA switcher, the non-technical entrant. Internshala treats all users the same. Readiness score before application — users know their Career Readiness Score before hitting submit, unlike Internshala's spray-and-pray approach AI-powered resume and LinkedIn optimization that Internshala completely lacks Continuous career operating system vs. Internshala's one-time transactional visit model — ChanakyaOS builds habitual engagement through a living dashboard |
+
+| **Competitor 2: Pathrise**  US-Based Career Accelerator — 1:1 Mentorship + ISA Model — Since 2018 |
+| --- |
+| **✅ What They Do Well** High-touch 1:1 mentorship model — dedicated career advisor for each user, deeply personalized guidance that builds real relationships Income Share Agreement (ISA) model — pay 9% of salary for 24 months after getting a job; zero upfront cost removes a major barrier Specialized industry tracks — Software Engineering, Product Management, Data Science, Sales, Marketing — deep domain expertise per track Real career outcomes — reports 2–4x improvement in response rates, 1.5–3x improvement in interview scores Company-specific interview prep — proprietary notes for 60+ tech companies including behavioral question frameworks and technical rubrics Strong community and alumni network — access to a community of successful fellows who've landed at top companies Dedicated interview preparation curriculum — technical interview prep, salary negotiation, company research frameworks **❌ What They****'****re Missing** Extremely expensive — at a $100K salary, the ISA costs up to $18,000 total; completely inaccessible to most Indian students earning ₹3–8 LPA starting salaries No Indian market presence or pricing — product, culture, salary benchmarks, and pathways are 100% US-centric Requires existing baseline skills to apply — rejects applicants without a relevant degree or 1 year experience; zero help for students starting from scratch Not scalable — the 1:1 model has an inherent human bottleneck; quality is mentor-dependent No AI-powered profile optimization — mentors review manually, no automated ATS scoring, no LinkedIn intelligence engine No career pathway discovery — assumes users already know what they want; no assessment for students who are confused about which direction to go No market trend intelligence — advice is mentor-dependent, not data-driven or real-time No portfolio/project builder — assumes users already have projects; no guidance on building proof-of-work No self-serve option — everything requires a mentor, making async learning and self-paced growth impossible **🚀 ChanakyaOS Differentiation** ChanakyaOS is fully self-serve and scalable — AI replaces the need for an expensive human mentor for 90% of career guidance needs, making it accessible to millions of Indian students at 1/100th the cost ChanakyaOS serves students from Day 1 — before they have any skills, projects, or work experience. Pathrise rejects these users. India-first design — pathways, certifications, salary benchmarks, university recommendations, and market data are all India-contextualized Real-time AI market intelligence vs. Pathrise's static curriculum — as markets shift, ChanakyaOS adapts instantly Freemium model with a paid tier at ₹499–1,499/month makes it 50–100x more accessible than Pathrise for Indian students Portfolio and project builder fills the exact gap Pathrise ignores — helping users create the proof-of-work they need to even qualify for programs like Pathrise |
+
+| **Competitor 3: ResumeWorded**  AI-Powered Resume & LinkedIn Optimizer — US-Based, 4.8 Stars (3K+ Reviews) |
+| --- |
+| **✅ What They Do Well** Best-in-class AI resume scoring — instant, detailed ATS score with section-by-section feedback; highly accurate and actionable LinkedIn profile review tool — structured analysis of every LinkedIn section with specific improvement suggestions; widely used and well-reviewed Targeted resume tool — paste a job description and get keyword-optimized resume tailored to that specific role Strong user trust and retention — 4.8/5 Trustpilot rating across 3,000+ reviews indicates consistently high quality Job description keyword analysis — identifies exactly which keywords are missing from resume vs. job requirements ATS template library — clean, tested templates that pass common ATS systems Weekly career insights email — builds a relationship with users beyond the tool itself **❌ What They****'****re Missing** Purely a reactive tool, not a career system — it improves documents you bring to it; it doesn't tell you what career to pursue, what skills to build, or what to do next No career pathway generation — zero guidance on 'where should I be going' or 'what is realistic for my background' No skill gap analysis — doesn't compare user's profile to what market roles actually require No progress tracking or dashboard — each visit is isolated; no career journey, no continuity, no growing relationship with the user No AI career assistant — no conversational guidance, no contextual advice, no proactive suggestions No portfolio or project builder — assumes users already have good experience to optimize; ignores students with thin profiles No market trend intelligence — zero real-time data on what skills are rising or falling in demand No India-specific context — all benchmarks, keywords, and salary data are US/Western market focused Expensive for Indian students — $49/month pricing is inaccessible for most Indian students who earn no income Does not address career confusion — optimizes existing materials but cannot help students who fundamentally don't know what to put IN those materials **🚀 ChanakyaOS Differentiation** ResumeWorded makes a good CV better. ChanakyaOS makes a confused student into a career-ready professional — resume optimization is just one step in a 7-stage transformation journey ChanakyaOS addresses the entire career system: path discovery → skill gap → learning plan → project building → resume → LinkedIn → applications. ResumeWorded only addresses step 5 and 6. India-first pricing and context — ChanakyaOS targets ₹499–1,499/month with Indian job market benchmarks, AmbitionBox salary data, and India-relevant certifications AI Career Assistant provides ongoing coaching that ResumeWorded completely lacks — users get guidance, not just scores ChanakyaOS builds profile strength from the ground up for students who don't yet have experience worth optimizing Progress tracking and gamification creates habitual daily engagement vs. ResumeWorded's one-time visit transactional model |
+
+## **7.4 Competitive Positioning Summary**
+
+| **Feature** | **ChanakyaOS** | **Internshala** | **Pathrise** | **ResumeWorded** |
+| --- | --- | --- | --- | --- |
+| **AI Career Pathway Generation** | ✅ Full | ❌ None | ⚠️ Manual | ❌ None |
+| **Skill Gap Analysis** | ✅ Full AI | ❌ None | ⚠️ Manual | ❌ None |
+| **India-First Design** | ✅ Yes | ✅ Yes | ❌ US Only | ❌ US Only |
+| **Resume AI Optimization** | ✅ Full | ⚠️ Basic | ⚠️ Manual | ✅ Full |
+| **LinkedIn Optimizer** | ✅ Full AI | ❌ None | ⚠️ Manual | ✅ Full |
+| **AI Career Assistant** | ✅ Contextual | ❌ None | ✅ Human | ❌ None |
+| **Portfolio/Project Builder** | ✅ Full | ❌ None | ❌ None | ❌ None |
+| **Career Progress Dashboard** | ✅ Full | ❌ None | ⚠️ Basic | ❌ None |
+| **Market Trend Intelligence** | ✅ Real-time | ❌ None | ❌ None | ❌ None |
+| **Non-Tech Student Pathways** | ✅ Specialized | ⚠️ Limited | ❌ None | ❌ None |
+| **Accessibility (India Price)** | ✅ ₹499–1499/mo | ✅ Free | ❌ $9K+ total | ⚠️ $49/mo USD |
+| **Scalable AI-First Model** | ✅ Yes | ⚠️ Partially | ❌ Human-only | ✅ Yes |
+
+# **8. RECOMMENDED TECHNOLOGY STACK**
+
+| **Layer** | **Recommended Stack** | **Rationale** |
+| --- | --- | --- |
+| **Frontend** | Next.js 14 (React) + Tailwind CSS + Framer Motion | SSR for SEO-critical pages, fast performance, component reuse across dashboard |
+| **Backend** | Node.js + Express or Python FastAPI | FastAPI preferred for AI/ML integration; Node.js for real-time features |
+| **Database** | PostgreSQL (primary) + Redis (cache/sessions) + Pinecone (vector DB) | Relational for user data, Redis for performance, Pinecone for AI semantic search |
+| **AI/LLM** | OpenAI GPT-4 Turbo / Anthropic Claude 3.5 (via API) | GPT-4 for complex reasoning; Claude for long-context profile analysis |
+| **Resume Parsing** | AWS Textract + custom NLP pipeline (SpaCy) | High accuracy on varied resume formats including Indian resume styles |
+| **Authentication** | NextAuth.js / Auth0 with Google + LinkedIn SSO | Industry standard, handles OAuth for LinkedIn import seamlessly |
+| **File Storage** | AWS S3 or Cloudflare R2 | Resume storage, portfolio assets, generated PDFs |
+| **PDF Generation** | Puppeteer (headless Chrome) | High-fidelity resume PDF output matching visual templates exactly |
+| **Email** | Resend or SendGrid | Transactional emails (digest, milestone, alerts) with high deliverability |
+| **Analytics** | Mixpanel or PostHog (self-hosted) | Granular user behavior tracking for feature optimization |
+| **Deployment** | Vercel (frontend) + Railway / AWS (backend) | Vercel for instant frontend deployment; Railway for backend scaling |
+| **Mobile** | React Native (Phase 2) or Progressive Web App (Phase 1) | PWA first for fast launch; native app for Phase 2 mobile push notifications |
+
+# **9. SUGGESTED PRICING MODEL**
+
+|  | **Free** | **Pro — ₹499/mo** | **Premium — ₹1,499/mo** |
+| --- | --- | --- | --- |
+| **Career Pathways** | 1 pathway | 5 pathways | Unlimited |
+| **AI Diagnosis Report** | Once | Monthly refresh | Real-time |
+| **Resume Builder / ATS** | Basic score | Full AI optimization | Unlimited versions |
+| **LinkedIn Optimizer** | ❌ | ✅ | ✅ |
+| **AI Career Assistant** | 15 msgs/day | Unlimited | Unlimited + Priority |
+| **Portfolio Builder** | 1 project | 5 projects | Unlimited |
+| **Market Trends** | ❌ | Basic | Full + Alerts |
+| **Certifications Tracker** | ❌ | ✅ | ✅ |
+| **PDF Export (Resume/Report)** | ❌ | ✅ | ✅ |
+| **Community Access** | ❌ | ❌ | ✅ |
+| **Target Audience** | Students exploring | Committed job seekers | Serious career builders |
+
+# **10. DEVELOPMENT PHASING ROADMAP**
+
+| **Phase** | **Timeline** | **Features to Build** | **Goal** |
+| --- | --- | --- | --- |
+| **Phase 1 — MVP** | Months 1–3 | Landing page, Onboarding wizard, AI Diagnosis, Career Pathway Generator (3 paths), Basic Resume Builder, AI Career Assistant (basic) | 1,000 registered users, 60% onboarding completion |
+| **Phase 2 — Core Platform** | Months 4–6 | Full Dashboard + Stage Tracker, LinkedIn Optimizer, Portfolio Builder, Resume ATS optimization, Certifications Tracker, Email notifications | 10,000 users, free-to-paid conversion 5%+ |
+| **Phase 3 — Intelligence Layer** | Months 7–9 | Market Trends Dashboard, Salary Benchmark Tool, Real-time AI pathway updates, Advanced AI assistant (function calling), Pathway comparison tool | 25,000 users, NPS > 45 |
+| **Phase 4 — Community ****&**** Scale** | Months 10–12 | Community Hub, Alumni mentorship, Mock interview module, Mobile app (React Native), B2B college partnerships, Recruiter dashboard | 100,000 users, revenue positive |
+
+*ChanakyaOS — Product Requirements Document v1.0 | Confidential*
+
+***"******Confusion is Expensive.******"***
+
+ChanakyaOS | AI-Powered Career Operating System | Page
