@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Session } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/client';
 import { Block } from "@blocknote/core";
-import { debounce } from '@/utils/debounce';
+
 
 export interface Pathway {
   title: string;
@@ -20,7 +20,7 @@ interface LmsData {
   active_certs: string[];
   active_projects: string[];
   mastered_skills: string[];
-  curriculum_tracker: Record<string, any>;
+  curriculum_tracker: Record<string, unknown>;
   lms_snippets: { title: string; content: string; link: string }[];
 }
 
@@ -28,9 +28,10 @@ export interface WorkspaceTask {
   id: string;
   title: string;
   status: 'To Do' | 'In Progress' | 'Done';
+  description?: string;
   dueDate?: string;
   tags?: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface WorkspaceColumn {
@@ -85,7 +86,7 @@ interface UserState {
   updateLmsData: (data: Partial<LmsData>) => Promise<void>;
   updateReadinessScore: () => Promise<void>;
   hydrateStore: () => Promise<void>;
-  hydrateWorkspace: (dbData: any) => void;
+  hydrateWorkspace: (dbData: Workspace) => void;
   toggleProjectCompletion: (projectTitle: string) => Promise<void>;
   toggleCertCompletion: (certName: string) => Promise<void>;
 

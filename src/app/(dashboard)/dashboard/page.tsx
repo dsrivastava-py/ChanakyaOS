@@ -80,7 +80,7 @@ export default function DashboardPage() {
       // Update store with new item
       if (locked_pathway) {
         const supabase = createClient();
-        let updatedPathway = { ...locked_pathway };
+        const updatedPathway = { ...locked_pathway };
         
         if (type === 'project') {
           updatedPathway.projects = updatedPathway.projects.map(p => 

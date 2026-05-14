@@ -28,7 +28,7 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('user_profiles')
         .select('name, lms_workspace, lms_data, career_readiness_score, pinned_trends, lms_tasks')
         .eq('user_id', user.id)
