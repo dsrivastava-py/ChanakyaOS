@@ -12,7 +12,7 @@ interface EditProfileModalProps {
 }
 
 export default function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
-  const { profile, hydrateStore } = useUserStore();
+  const { profile, hydrateStore, updateProfile } = useUserStore();
   const [name, setName] = useState(profile?.name || "");
   const [email, setEmail] = useState("");
   const [isSaving, setIsSaving] = useState(false);

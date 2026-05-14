@@ -3,23 +3,17 @@
 import { ArrowRight, IndianRupee, Clock, Zap, CheckCircle2, Sparkles, Loader2, Lock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserStore, Pathway } from "@/store/useUserStore";
 
-interface Pathway {
+interface ExplorerPathway extends Pathway {
   id?: string;
-  title: string;
-  readinessScore: number;
-  reasoning: string;
-  timeline: string;
-  salary: string;
   status?: string;
-  requirements?: { name: string; provider: string; type: string; reason: string }[];
 }
 
 export default function PathwayExplorer() {
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [pathways, setPathways] = useState<Pathway[]>([]);
+  const [pathways, setPathways] = useState<ExplorerPathway[]>([]);
 
   const fetchPathways = async () => {
     setIsLoading(true);

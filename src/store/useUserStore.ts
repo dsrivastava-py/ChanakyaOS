@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 import { Block } from "@blocknote/core";
 import { debounce } from '@/utils/debounce';
 
-interface Pathway {
+export interface Pathway {
   title: string;
   readinessScore: number;
   reasoning: string;
