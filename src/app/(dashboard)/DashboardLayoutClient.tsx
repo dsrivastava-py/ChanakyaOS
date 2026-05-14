@@ -1,19 +1,22 @@
 "use client";
 
-import { LayoutDashboard, Route, FileText, Sparkles, Briefcase, LineChart, BookOpen } from "lucide-react";
+import { LayoutDashboard, Route, FileText, Sparkles, Briefcase, LineChart, BookOpen, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import UserHeader from "@/components/layout/UserHeader";
 
 const NAV_ITEMS = [
-  { name: "Onboarding",         href: "/onboarding", icon: Route },
-  { name: "Pathways",           href: "/pathways",   icon: Route },
-  { name: "Dashboard",          href: "/dashboard",  icon: LayoutDashboard },
-  { name: "Workspace / LMS",    href: "/lms",        icon: BookOpen },
-  { name: "Resume Engine",      href: "/resume",     icon: FileText },
-  { name: "LinkedIN Toolkit",   href: "/linkedin",   icon: Briefcase },
-  { name: "Market Trends",      href: "/trends",     icon: LineChart },
-  { name: "Your Chanakya",      href: "/assistant",  icon: Sparkles },
+  { name: "Onboarding",         href: "/onboarding",   icon: Route },
+  { name: "Pathways",           href: "/pathways",     icon: Route },
+  { name: "Dashboard",          href: "/dashboard",    icon: LayoutDashboard },
+  { name: "Diagnosis Report",   href: "/diagnosis",    icon: Sparkles },
+  { name: "Skills Gap Analyzer",href: "/skills-gap",  icon: LineChart },
+  { name: "Workspace / LMS",    href: "/lms",          icon: BookOpen },
+  { name: "Resume Engine",      href: "/resume",       icon: FileText },
+  { name: "LinkedIN Toolkit",  href: "/linkedin",     icon: Briefcase },
+  { name: "Market Trends",     href: "/trends",       icon: LineChart },
+  { name: "Your Chanakya",      href: "/assistant",    icon: Sparkles },
+  { name: "My Profile",        href: "/profile",      icon: User },
 ];
 
 import { useUserStore } from "@/store/useUserStore";

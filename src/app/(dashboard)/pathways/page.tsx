@@ -131,26 +131,17 @@ export default function PathwayExplorer() {
 
   const handleLockPathway = async (pathwayId: string) => {
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      const selectedPathway = pathways.find(p => p.id === pathwayId);
+      if (!selectedPathway) return;
 
-      // 1. Update status in career_pathways
-      await supabase.from('career_pathways').update({ status: 'active' }).eq('user_id', user.id);
-      await supabase.from('career_pathways').update({ status: 'locked' }).eq('id', pathwayId);
-      
-      // 2. Update user_profiles
-      await supabase.from('user_profiles').update({ locked_pathway_id: pathwayId }).eq('user_id', user.id);
+      const { lockPathway, updateReadinessScore } = useUserStore.getState();
+      lockPathway(selectedPathway);
+      await updateReadinessScore();
 
-      // 3. Refresh local state
       setPathways(prev => prev.map(p => ({
         ...p,
         status: p.id === pathwayId ? 'locked' : 'active'
       })));
-
-      // 4. Hydrate Zustand
-      const { hydrateStore } = useUserStore.getState();
-      await hydrateStore();
 
       alert("Pathway locked successfully!");
     } catch (err) {

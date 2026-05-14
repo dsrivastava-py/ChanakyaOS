@@ -65,6 +65,7 @@ interface UserState {
   isEditProfileModalOpen: boolean;
   hasUnsavedChanges: boolean;
   profile: { name: string } | null;
+  updateProfile: (profile: { name: string }) => void;
   
   // Actions
   setSession: (session: Session | null) => void;
@@ -98,6 +99,7 @@ interface UserState {
   updateColumn: (id: string, updates: Partial<WorkspaceColumn>) => Promise<void>;
   syncWorkspace: (newWorkspace: Workspace) => Promise<void>;
   saveSnippetToNotes: (snippet: { title: string; content: string; link: string }) => Promise<void>;
+  lockPathway: (pathway: Pathway) => void;
 }
 
 
@@ -154,8 +156,10 @@ export const useUserStore = create<UserState>((set, get) => ({
   setHydrated: (status) => set({ isHydrated: status }),
   setEditProfileModalOpen: (open) => set({ isEditProfileModalOpen: open }),
   clearUnsavedChanges: () => set({ hasUnsavedChanges: false }),
+  updateProfile: (profile) => set({ profile, hasUnsavedChanges: true }),
 
   hydrateWorkspace: (dbData) => set({ workspace: dbData, isHydrated: true, hasUnsavedChanges: false }),
+  lockPathway: (pathway) => set({ locked_pathway: pathway, hasUnsavedChanges: true }),
 
   saveSnippetToNotes: async (snippet) => {
     const { lms_data } = get();
@@ -230,18 +234,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     const updatedPathway = { ...locked_pathway, projects: updatedProjects };
     set({ locked_pathway: updatedPathway, hasUnsavedChanges: true });
-
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      await supabase
-        .from('career_pathways')
-        .update({ pathway_data: updatedPathway })
-        .eq('user_id', user.id)
-        .eq('status', 'locked');
-      
-      await get().updateReadinessScore();
-    }
+    await get().updateReadinessScore();
   },
 
   toggleCertCompletion: async (certName) => {
@@ -263,18 +256,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     const updatedPathway = { ...locked_pathway, requirements: updatedCerts };
     set({ locked_pathway: updatedPathway, hasUnsavedChanges: true });
-
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      await supabase
-        .from('career_pathways')
-        .update({ pathway_data: updatedPathway })
-        .eq('user_id', user.id)
-        .eq('status', 'locked');
-      
-      await get().updateReadinessScore();
-    }
+    await get().updateReadinessScore();
   },
 
   addTask: async (task) => {
@@ -318,7 +300,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   hydrateStore: async () => {
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
-    
+
     if (session) {
       const user_id = session.user.id;
       set({ session, user_id });
@@ -336,6 +318,7 @@ export const useUserStore = create<UserState>((set, get) => ({
           lms_data: profile.lms_data || get().lms_data,
           workspace: profile.lms_workspace || get().workspace,
           career_readiness_score: profile.career_readiness_score || 0,
+          linkedin_health_score: profile.linkedin_health_score || 55,
           profile: { name: profile.name || "" },
           hasUnsavedChanges: false
         });

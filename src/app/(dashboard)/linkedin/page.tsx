@@ -1,55 +1,387 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useUserStore } from "@/store/useUserStore";
-import { Sparkles, Briefcase as LinkedinIcon, Target, User, Code2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import {
+  Sparkles,
+  Briefcase as LinkedinIcon,
+  Target,
+  User,
+  Code2,
+  RefreshCw,
+  Loader2,
+  CheckCircle2,
+  ExternalLink,
+  FileText,
+  Eye,
+  Search
+} from "lucide-react";
+
+interface OptimizationSuggestion {
+  type: "headline" | "summary" | "skills";
+  priority: "high" | "medium" | "low";
+  current: string;
+  suggested: string;
+  explanation: string;
+}
 
 export default function LinkedinOptimizer() {
-  const { linkedin_health_score } = useUserStore();
-  
+  const { linkedin_health_score, locked_pathway, session, user_id, setEditProfileModalOpen } = useUserStore();
+  const supabase = createClient();
+
+  const [activeSection, setActiveSection] = useState<"headline" | "summary" | "skills">("headline");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [generatedContent, setGeneratedContent] = useState<{
+    headline: string;
+    summary: string;
+    skills: string[];
+  } | null>(null);
+
+  // Load saved profile data from Supabase
+  useEffect(() => {
+    const loadLinkedInData = async () => {
+      if (!user_id) return;
+      const { data } = await supabase
+        .from('user_profiles')
+        .select('linkedin_data')
+        .eq('user_id', user_id)
+        .maybeSingle();
+
+      if (data?.linkedin_data) {
+        setProfileData(data.linkedin_data);
+      }
+    };
+    loadLinkedInData();
+  }, [user_id, supabase]);
+
+  // Save profile data to Supabase
+  const saveLinkedInData = async () => {
+    if (!user_id) return;
+    setIsSaving(true);
+    try {
+      await supabase
+        .from('user_profiles')
+        .update({
+          linkedin_data: profileData,
+          linkedin_health_score: calculateHealthScore()
+        })
+        .eq('user_id', user_id);
+    } catch (err) {
+      console.error("Error saving LinkedIn data:", err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Calculate health score based on profile completeness
+  const calculateHealthScore = () => {
+    let score = 0;
+    if (profileData.headline && profileData.headline.length > 10) score += 25;
+    if (profileData.summary && profileData.summary.length > 100) score += 25;
+    if (profileData.skills && profileData.skills.length >= 5) score += 25;
+    if (locked_pathway?.skillChecklist) {
+      const matchedSkills = profileData.skills.filter(s =>
+        locked_pathway.skillChecklist.some(ps => ps.skill.toLowerCase().includes(s.toLowerCase()))
+      );
+      score += Math.min(25, matchedSkills.length * 5);
+    }
+    return Math.min(100, score);
+  };
+
+  // Profile data state
+  const [profileData, setProfileData] = useState({
+    headline: "Aspiring Data Analyst",
+    summary: "Passionate about data analytics and visualization. Currently learning Python and SQL.",
+    currentRole: "",
+    targetRole: "Data Analyst",
+    skills: ["Excel", "PowerPoint", "Communication"]
+  });
+
+  // Update targetRole when locked_pathway changes
+  useEffect(() => {
+    if (locked_pathway?.title) {
+      setProfileData(prev => ({ ...prev, targetRole: locked_pathway.title }));
+    }
+  }, [locked_pathway]);
+
   const circumference = 251.2;
   const progressOffset = circumference - (linkedin_health_score / 100) * circumference;
+
+  // Analyze profile and generate suggestions
+  const analyzeProfile = () => {
+    const suggestions: OptimizationSuggestion[] = [];
+
+    // Headline analysis
+    const hasTargetRole = profileData.headline.toLowerCase().includes(profileData.targetRole.toLowerCase());
+    const hasSkills = profileData.headline.toLowerCase().includes("data") || profileData.headline.toLowerCase().includes("analytics");
+
+    if (!hasTargetRole) {
+      suggestions.push({
+        type: "headline",
+        priority: "high",
+        current: profileData.headline,
+        suggested: `${profileData.targetRole} | Data Analytics Enthusiast | Python & SQL`,
+        explanation: "Include your target role and key skills in the headline for better discoverability"
+      });
+    }
+
+    // Summary analysis
+    if (profileData.summary.length < 100) {
+      suggestions.push({
+        type: "summary",
+        priority: "high",
+        current: profileData.summary,
+        suggested: `Driven ${profileData.targetRole} with a strong foundation in data analysis and visualization. Passionate about transforming raw data into actionable insights using Python, SQL, and Tableau. Currently building expertise through practical projects and certifications.`,
+        explanation: "Write a compelling 200+ character summary that highlights your transition and key skills"
+      });
+    }
+
+    // Skills analysis
+    const targetSkills = locked_pathway?.skillChecklist.filter(s => s.status === "missing").map(s => s.skill) || [];
+    const missingSkills = targetSkills.slice(0, 5);
+
+    if (missingSkills.length > 0) {
+      suggestions.push({
+        type: "skills",
+        priority: "medium",
+        current: profileData.skills.join(", "),
+        suggested: [...profileData.skills, ...missingSkills].slice(0, 15).join(", "),
+        explanation: `Add these in-demand skills: ${missingSkills.join(", ")}`
+      });
+    }
+
+    return suggestions;
+  };
+
+  const handleGenerateOptimization = async () => {
+    setIsGenerating(true);
+
+    // Simulate AI generation
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    setGeneratedContent({
+      headline: `${profileData.targetRole} | Data-Driven Professional | Python, SQL, Tableau`,
+      summary: `Passionate ${profileData.targetRole} with expertise in data visualization and analysis. Proven ability to transform complex datasets into actionable insights using Python, SQL, and BI tools. Committed to continuous learning and delivering data-driven solutions that drive business growth.`,
+      skills: [...profileData.skills, ...(locked_pathway?.skillChecklist.filter(s => s.status === "missing").slice(0, 5).map(s => s.skill) || [])].slice(0, 15)
+    });
+
+    setIsGenerating(false);
+  };
+
+  const suggestions = analyzeProfile();
+
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-[#10B981]";
+    if (score >= 60) return "text-[#D4AF37]";
+    return "text-red-400";
+  };
 
   return (
     <div className="flex flex-col gap-8">
       <header className="mb-4">
-        <p className="text-[#3B82F6] text-sm font-medium tracking-[0.12em] uppercase mb-2 flex items-center gap-2">
+        <p className="text-[#0077B5] text-sm font-medium tracking-[0.12em] uppercase mb-2 flex items-center gap-2">
           <LinkedinIcon className="w-4 h-4" />
           LinkedIn AI Optimizer
         </p>
         <h1 className="text-4xl md:text-5xl font-display font-semibold text-white tracking-tight leading-tight max-w-2xl">
-          Stand out to <span className="text-[#3B82F6]">Indian Recruiters</span>
+          Stand out to <span className="text-[#0077B5]">Indian Recruiters</span>
         </h1>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Health Score Ring */}
-        <div className="lg:col-span-1 bg-[#111827]/75 backdrop-blur-md border border-[#3B82F6]/12 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl p-8 flex flex-col items-center justify-center">
-          <h2 className="text-lg font-semibold text-white mb-8 self-start w-full">Profile Health</h2>
-          <div className="relative w-56 h-56 mx-auto">
+        <div className="lg:col-span-1 bg-[#111827]/75 backdrop-blur-md border border-[#0077B5]/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl p-8 flex flex-col items-center justify-center">
+          <h2 className="text-lg font-semibold text-white mb-8 self-start w-full flex items-center gap-2">
+            <Eye className="w-5 h-5 text-[#0077B5]" />
+            Profile Health
+          </h2>
+          <div className="relative w-56 h-56 mx-auto mb-6">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" strokeWidth="8" fill="none" />
-              <circle 
-                cx="50" cy="50" r="40" 
-                stroke="#3B82F6" 
-                strokeWidth="8" 
-                fill="none" 
-                strokeDasharray={circumference} 
-                strokeDashoffset={progressOffset} 
-                strokeLinecap="round" 
-                className="transition-all duration-1000 ease-out drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]"
+              <circle
+                cx="50" cy="50" r="40"
+                stroke="#0077B5"
+                strokeWidth="8"
+                fill="none"
+                strokeDasharray={circumference}
+                strokeDashoffset={progressOffset}
+                strokeLinecap="round"
+                className="transition-all duration-1000 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]"
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-5xl font-bold font-sans text-white tracking-tighter">{linkedin_health_score}<span className="text-3xl text-gray-400">%</span></span>
+              <span className={`text-5xl font-bold ${getScoreColor(linkedin_health_score)}`}>
+                {linkedin_health_score}<span className="text-3xl text-gray-400">%</span>
+              </span>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mt-8 text-center">
-            Your profile lacks ATS-friendly keywords for Data Analytics roles.
+          <p className="text-sm text-gray-400 text-center">
+            {linkedin_health_score >= 80
+              ? "Excellent! Your profile is recruiter-ready"
+              : linkedin_health_score >= 60
+                ? "Good profile. Add more keywords for better visibility"
+                : "Needs optimization to attract recruiters"}
           </p>
         </div>
 
-        {/* Improvement Cards */}
+        {/* Optimization Actions */}
         <div className="lg:col-span-2 space-y-4">
+          {/* Profile Input Section */}
+          <div className="bg-[#111827]/75 backdrop-blur-md border border-[#1F2937] rounded-2xl p-6">
+            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-[#0077B5]" />
+              Current Profile Data
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider mb-1 block">Current Headline</label>
+                <input
+                  value={profileData.headline}
+                  onChange={(e) => setProfileData({ ...profileData, headline: e.target.value })}
+                  className="w-full bg-[#0B0F19] border border-[#1F2937] rounded-xl px-4 py-3 text-white text-sm focus:border-[#0077B5]/50 outline-none"
+                  placeholder="Your current headline"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider mb-1 block">Summary</label>
+                <textarea
+                  value={profileData.summary}
+                  onChange={(e) => setProfileData({ ...profileData, summary: e.target.value })}
+                  className="w-full bg-[#0B0F19] border border-[#1F2937] rounded-xl px-4 py-3 text-white text-sm focus:border-[#0077B5]/50 outline-none resize-none h-24"
+                  placeholder="Your About section"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase tracking-wider mb-1 block">Current Skills (comma separated)</label>
+                <input
+                  value={profileData.skills.join(", ")}
+                  onChange={(e) => setProfileData({ ...profileData, skills: e.target.value.split(",").map(s => s.trim()).filter(Boolean) })}
+                  className="w-full bg-[#0B0F19] border border-[#1F2937] rounded-xl px-4 py-3 text-white text-sm focus:border-[#0077B5]/50 outline-none"
+                  placeholder="Excel, PowerPoint, etc."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* AI Generation & Save Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleGenerateOptimization}
+              disabled={isGenerating}
+              className="flex-1 py-4 bg-gradient-to-r from-[#0077B5] to-[#00A0DC] text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Generate
+                </>
+              )}
+            </button>
+            <button
+              onClick={saveLinkedInData}
+              disabled={isSaving}
+              className="px-6 py-4 bg-[#111827] border border-[#1F2937] text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:border-[#0077B5]/50 transition-all disabled:opacity-50"
+            >
+              {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+              Save
+            </button>
+          </div>
+
+          {/* Generated Content Preview */}
+          {generatedContent && (
+            <div className="bg-[#111827]/75 backdrop-blur-md border border-[#0077B5]/30 rounded-2xl p-6 space-y-4">
+              <h3 className="text-white font-semibold flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-[#10B981]" />
+                AI Generated Optimizations
+              </h3>
+
+              {/* Section Tabs */}
+              <div className="flex gap-2">
+                {(["headline", "summary", "skills"] as const).map((section) => (
+                  <button
+                    key={section}
+                    onClick={() => setActiveSection(section)}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      activeSection === section
+                        ? "bg-[#0077B5] text-white"
+                        : "bg-[#0B0F19] text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    {section.charAt(0).toUpperCase() + section.slice(1)}
+                  </button>
+                ))}
+              </div>
+
+              {/* Content Display */}
+              <div className="bg-[#0B0F19] border border-[#1F2937] rounded-xl p-6">
+                {activeSection === "headline" && (
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-xs text-gray-500 uppercase">Optimized Headline</span>
+                      <span className="text-xs bg-[#10B981]/20 text-[#10B981] px-2 py-1 rounded">High Impact</span>
+                    </div>
+                    <p className="text-white font-semibold text-lg mb-4">{generatedContent.headline}</p>
+                    <div className="p-4 bg-[#1F2937]/50 rounded-xl">
+                      <p className="text-xs text-gray-400">{suggestions.find(s => s.type === "headline")?.explanation}</p>
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === "summary" && (
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-xs text-gray-500 uppercase">Optimized Summary</span>
+                      <span className="text-xs bg-[#10B981]/20 text-[#10B981] px-2 py-1 rounded">High Impact</span>
+                    </div>
+                    <p className="text-white text-sm leading-relaxed mb-4">{generatedContent.summary}</p>
+                    <div className="p-4 bg-[#1F2937]/50 rounded-xl">
+                      <p className="text-xs text-gray-400">{suggestions.find(s => s.type === "summary")?.explanation}</p>
+                    </div>
+                  </div>
+                )}
+
+                {activeSection === "skills" && (
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-xs text-gray-500 uppercase">Recommended Skills</span>
+                      <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-1 rounded">Medium Impact</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {generatedContent.skills.map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className={`px-3 py-1.5 rounded-full text-sm ${
+                            profileData.skills.includes(skill)
+                              ? "bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30"
+                              : "bg-[#0077B5]/20 text-[#0077B5] border border-[#0077B5]/30"
+                          }`}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="p-4 bg-[#1F2937]/50 rounded-xl">
+                      <p className="text-xs text-gray-400">{suggestions.find(s => s.type === "skills")?.explanation}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button className="w-full py-3 border border-[#0077B5] text-[#0077B5] rounded-xl font-medium hover:bg-[#0077B5]/10 transition-all flex items-center justify-center gap-2">
+                <ExternalLink className="w-4 h-4" />
+                Open LinkedIn to Apply Changes
+              </button>
+            </div>
+          )}
+
+          {/* Improvement Cards */}
           <div className="bg-[#111827]/75 backdrop-blur-md border border-[#D4AF37]/20 shadow-md rounded-2xl p-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
             <div className="flex gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0 text-[#D4AF37]">
@@ -57,10 +389,15 @@ export default function LinkedinOptimizer() {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg">Rewrite Headline</h3>
-                <p className="text-sm text-gray-400 mt-1 max-w-md">Your current headline is too generic. Let AI inject high-impact keywords like &quot;Data Analytics&quot; and &quot;SQL&quot;.</p>
+                <p className="text-sm text-gray-400 mt-1 max-w-md">
+                  Your current headline is too generic. Let AI inject high-impact keywords like "{profileData.targetRole}" and relevant skills.
+                </p>
               </div>
             </div>
-            <button className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors font-medium text-sm">
+            <button
+              onClick={() => { handleGenerateOptimization(); setActiveSection("headline"); }}
+              className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-colors font-medium text-sm"
+            >
               <Sparkles className="w-4 h-4" />
               Generate with AI
             </button>
@@ -73,10 +410,15 @@ export default function LinkedinOptimizer() {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg">Optimize Summary</h3>
-                <p className="text-sm text-gray-400 mt-1 max-w-md">Draft a compelling &apos;About&apos; section that highlights your transition into Data Analytics.</p>
+                <p className="text-sm text-gray-400 mt-1 max-w-md">
+                  Draft a compelling "About" section that highlights your transition into {profileData.targetRole}.
+                </p>
               </div>
             </div>
-            <button className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white transition-colors font-medium text-sm">
+            <button
+              onClick={() => { handleGenerateOptimization(); setActiveSection("summary"); }}
+              className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white transition-colors font-medium text-sm"
+            >
               <Sparkles className="w-4 h-4" />
               Generate with AI
             </button>
@@ -89,14 +431,56 @@ export default function LinkedinOptimizer() {
               </div>
               <div>
                 <h3 className="text-white font-semibold text-lg">Tag Skills Effectively</h3>
-                <p className="text-sm text-gray-400 mt-1 max-w-md">Add the top 5 emerging skills in your target field to bypass HR filters.</p>
+                <p className="text-sm text-gray-400 mt-1 max-w-md">
+                  Add the top 5 emerging skills in your target field to bypass HR filters.
+                </p>
               </div>
             </div>
-            <button className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white transition-colors font-medium text-sm">
+            <button
+              onClick={() => { handleGenerateOptimization(); setActiveSection("skills"); }}
+              className="flex-shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-gray-600 text-gray-300 hover:border-gray-400 hover:text-white transition-colors font-medium text-sm"
+            >
               <Sparkles className="w-4 h-4" />
               Generate with AI
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Keyword Research Section */}
+      <div className="bg-[#111827]/75 backdrop-blur-md border border-[#1F2937] rounded-2xl p-6">
+        <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
+          <Search className="w-5 h-5 text-[#0077B5]" />
+          Recruiter Search Keywords
+        </h3>
+        <p className="text-sm text-gray-400 mb-4">
+          These are the keywords recruiters are searching for. Click to add them to your profile:
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {(locked_pathway?.skillChecklist || []).slice(0, 8).map((skill, idx) => {
+            const isAdded = profileData.skills.some(s => s.toLowerCase() === skill.skill.toLowerCase());
+            return (
+              <button
+                key={idx}
+                onClick={() => {
+                  if (!isAdded) {
+                    const newSkills = [...profileData.skills, skill.skill];
+                    setProfileData({ ...profileData, skills: newSkills });
+                    // Auto-save after adding skill
+                    setTimeout(saveLinkedInData, 500);
+                  }
+                }}
+                disabled={isAdded}
+                className={`px-4 py-2 rounded-full text-sm transition-all ${
+                  isAdded
+                    ? "bg-[#10B981]/20 border border-[#10B981]/30 text-[#10B981]"
+                    : "bg-[#0B0F19] border border-[#0077B5]/30 text-[#0077B5] hover:bg-[#0077B5]/10"
+                }`}
+              >
+                {isAdded ? "✓ " : "+ "}{skill.skill}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

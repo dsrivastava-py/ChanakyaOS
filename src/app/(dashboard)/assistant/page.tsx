@@ -1,48 +1,102 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport, type UIMessage } from "ai";
-import { Send, User, Sparkles, Loader2 } from "lucide-react";
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useUserStore } from "@/store/useUserStore";
 import { motion, AnimatePresence } from "framer-motion";
+import { Send, User, Sparkles, Loader2 } from "lucide-react";
+
+interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+}
 
 export default function AIAssistant() {
   const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { locked_pathway, career_readiness_score, pinned_trends } = useUserStore();
 
-  const { messages, sendMessage: originalSendMessage, status } = useChat({
-    transport: new DefaultChatTransport({ api: '/api/ai/chat' }),
-  });
-
-  const isLoading = status === 'submitted' || status === 'streaming';
-
-  const sendMessage = useCallback((options: { text: string }) => {
-    // Defensive fallback for context injection
-    const contextFallback = "User is a new user with no locked pathways or generated profiles yet. Guide them to complete onboarding.";
-    const hasContext = locked_pathway || pinned_trends.length > 0;
-
-    return originalSendMessage(options, {
-      body: {
-        userContext: hasContext ? {
-          locked_pathway,
-          career_readiness_score,
-          pinned_trends
-        } : { 
-          fallback: contextFallback 
-        }
-      }
-    });
-  }, [originalSendMessage, locked_pathway, career_readiness_score, pinned_trends]);
-
-  const allMessages = useMemo(() => [
-    {
-      id: "1",
+  // Initialize with a welcome message
+  useEffect(() => {
+    setMessages([{
+      id: "welcome",
       role: "assistant",
-      parts: [{ type: "text", text: `I am Chanakya. Your profile is ${career_readiness_score}% ready for ${locked_pathway?.title || "your target role"}. State your objective.` }]
-    } as UIMessage,
-    ...messages
-  ], [messages, career_readiness_score, locked_pathway]);
+      content: `I am Chanakya. Your profile is ${career_readiness_score}% ready for ${locked_pathway?.title || "your target role"}. State your objective.`
+    }]);
+  }, [career_readiness_score, locked_pathway]);
+
+  const sendMessage = useCallback(async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: "user",
+      content: text
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const contextFallback = "User is a new user with no locked pathways or generated profiles yet. Guide them to complete onboarding.";
+      const hasContext = locked_pathway || pinned_trends.length > 0;
+      const userContext = hasContext ? {
+        locked_pathway,
+        career_readiness_score,
+        pinned_trends
+      } : { fallback: contextFallback };
+
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content
+          })),
+          userContext
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      // Read the streaming response
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("No response body");
+
+      const decoder = new TextDecoder();
+      let assistantContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        assistantContent += chunk;
+      }
+
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: assistantContent
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("Chat error:", error);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "I apologize, but I encountered an error. Please try again. If the issue persists, try refreshing the page."
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [locked_pathway, career_readiness_score, pinned_trends, messages, isLoading]);
 
   const [showMentions, setShowMentions] = useState(false);
   const mentionOptions = ['pathways', 'resume', 'trends', 'dashboard', 'market_trends'];
@@ -79,13 +133,7 @@ export default function AIAssistant() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    
-    sendMessage({ 
-      text: input,
-      // Pass context in the request if transport supports it, 
-      // or rely on the server-side session/context we set up.
-    });
-    setInput('');
+    sendMessage(input);
   };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -97,14 +145,6 @@ export default function AIAssistant() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const quickActions = [
-    "Analyze my skills",
-    "Suggest a portfolio project",
-    "How do I improve my ATS score?",
-    "Draft a cold email",
-    "Check market trends for Data Analytics"
-  ];
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] w-full max-w-5xl mx-auto bg-background relative border-x border-[#1F2937]/50 shadow-2xl">
@@ -124,10 +164,10 @@ export default function AIAssistant() {
 
       {/* Message History */}
       <div className="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col gap-8 custom-scrollbar scroll-smooth">
-        {allMessages.map((msg: UIMessage) => (
+        {messages.map((msg) => (
           <div key={msg.id} className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`flex gap-3 md:gap-4 max-w-[90%] md:max-w-[75%] ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-              
+
               {/* Avatar */}
               <div className="flex-shrink-0 mt-1">
                 {msg.role === "assistant" ? (
@@ -143,19 +183,17 @@ export default function AIAssistant() {
 
               {/* Bubble */}
               <div className={`flex flex-col gap-1.5 ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                <div 
+                <div
                   className={`px-5 py-4 rounded-2xl shadow-sm text-[15px] leading-relaxed ${
-                    msg.role === "user" 
-                      ? "bg-[#D4AF37]/[0.08] text-white rounded-tr-sm border border-[#D4AF37]/20" 
+                    msg.role === "user"
+                      ? "bg-[#D4AF37]/[0.08] text-white rounded-tr-sm border border-[#D4AF37]/20"
                       : "bg-[#111827] text-gray-200 border border-[#1F2937] rounded-tl-sm"
                   }`}
                 >
-                  <p className="whitespace-pre-wrap">
-                    {msg.parts?.map((part: { type: string; text?: string }) => part.type === "text" ? part.text : "").join("")}
-                  </p>
+                  <p className="whitespace-pre-wrap">{msg.content}</p>
                 </div>
               </div>
-              
+
             </div>
           </div>
         ))}
@@ -174,10 +212,10 @@ export default function AIAssistant() {
         
         {/* Quick Actions Scrollable Row */}
         <div className="flex gap-2.5 overflow-x-auto pb-3 mb-2 custom-scrollbar hide-scroll-buttons mask-fade-edges">
-          {quickActions.map((action, idx) => (
-            <button 
+          {["Analyze my skills", "Suggest a portfolio project", "How do I improve my ATS score?", "Draft a cold email", "Check market trends for Data Analytics"].map((action, idx) => (
+            <button
               key={idx}
-              onClick={() => sendMessage({ text: action })}
+              onClick={() => sendMessage(action)}
               className="flex-shrink-0 px-4 py-2 bg-[#1A2236] border border-[#1F2937] hover:border-[#3B82F6]/50 hover:bg-[#3B82F6]/10 text-sm font-medium text-gray-300 hover:text-[#3B82F6] rounded-full transition-colors whitespace-nowrap"
             >
               {action}

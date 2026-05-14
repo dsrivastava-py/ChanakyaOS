@@ -2,16 +2,17 @@
 
 ## Current Position
 - **Phase**: 1 (Foundation Hardening)
-- **Task**: Planning complete
-- **Status**: Ready for execution
+- **Task**: Execution complete
+- **Status**: Ready for Phase 2
 
 ## Last Session Summary
-- Mapped codebase and identified core components (`src/app`, `src/components`).
-- Distilled project specification from PRD and Design Doc.
-- Created ARCHITECTURE.md, STACK.md, and ROADMAP.md.
-- Created `1-PLAN.md` for Phase 1: Foundation Hardening.
+- Centralized persistence logic in `SyncProvider.tsx`.
+- Removed ad-hoc Supabase calls from `useUserStore.ts`, `EditProfileModal.tsx`, and `pathways/page.tsx`.
+- Added a `isSaving` guard using `useRef` to prevent race conditions.
+- Implemented `updateProfile` and `lockPathway` actions in the store.
+- Created migration `00006_harden_pathways_unique.sql` to enforce unique locked pathways.
+- Created verification playbook `1-VERIFICATION.md`.
 
 ## Next Steps
-1. /execute 1 -- Implement the centralized persistence logic in SyncProvider.
-2. Remove ad-hoc Supabase calls from useUserStore.
-3. Verify the hardened sync mechanism.
+1. /complete-milestone -- Mark Phase 1 as complete.
+2. /plan 2 -- Begin planning Phase 2: Core User Experience (Dashboard & Pathway Explorer).

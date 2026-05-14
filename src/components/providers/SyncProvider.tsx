@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { createClient } from "@/utils/supabase/client";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -60,49 +60,63 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
     locked_pathway,
     lms_data,
     pinned_trends,
-    lms_tasks
+    lms_tasks,
+    profile
   }, 2000);
+
+  const isSaving = useRef(false);
 
   // The Write Effect (Guarded)
   useEffect(() => {
     const saveToDatabase = async () => {
-      if (!isHydrated || !hasUnsavedChanges || !debouncedState || !user_id) return;
+      if (!isHydrated || !hasUnsavedChanges || !debouncedState || !user_id || isSaving.current) return;
       
+      isSaving.current = true;
       console.log("💾 Intentional change detected. UPSERTING to DB...");
       const supabase = createClient();
       
-      const { error } = await supabase
-        .from('user_profiles')
-        .upsert({
-          user_id: user_id,
-          name: profile?.name || "",
-          lms_workspace: debouncedState.workspace,
-          lms_data: debouncedState.lms_data,
-          career_readiness_score: debouncedState.career_readiness_score,
-          pinned_trends: debouncedState.pinned_trends,
-          lms_tasks: debouncedState.lms_tasks
-        }, { 
-          onConflict: 'user_id' 
-        });
+      try {
+        // 1. Sync User Profile (Primary Table)
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .upsert({
+            user_id: user_id,
+            name: debouncedState.profile?.name || "",
+            lms_workspace: debouncedState.workspace,
+            lms_data: debouncedState.lms_data,
+            career_readiness_score: debouncedState.career_readiness_score,
+            pinned_trends: debouncedState.pinned_trends,
+            lms_tasks: debouncedState.lms_tasks
+          }, { 
+            onConflict: 'user_id' 
+          });
 
-      if (error) {
-        console.error("🚨 UPSERT ERROR:", JSON.stringify(error, null, 2));
-      } else {
+        if (profileError) throw profileError;
+
+        // 2. Sync Career Pathway (Secondary Table - if locked pathway exists)
+        if (debouncedState.locked_pathway) {
+          const { error: pathwayError } = await supabase
+            .from('career_pathways')
+            .update({
+              pathway_data: debouncedState.locked_pathway
+            })
+            .eq('user_id', user_id)
+            .eq('status', 'locked');
+          
+          if (pathwayError) throw pathwayError;
+        }
+
         console.log("✅ Successfully UPSERTED all data!");
         clearUnsavedChanges(); 
-      }
-
-      if (debouncedState.locked_pathway) {
-        await supabase
-          .from('career_pathways')
-          .update({ pathway_data: debouncedState.locked_pathway })
-          .eq('user_id', user_id)
-          .eq('status', 'locked');
+      } catch (error) {
+        console.error("🚨 SYNC ERROR:", JSON.stringify(error, null, 2));
+      } finally {
+        isSaving.current = false;
       }
     };
 
     saveToDatabase();
-  }, [debouncedState, isHydrated, hasUnsavedChanges, user_id, clearUnsavedChanges, profile?.name]);
+  }, [debouncedState, isHydrated, hasUnsavedChanges, user_id, clearUnsavedChanges]);
 
   return <>{children}</>;
 }
