@@ -6,6 +6,8 @@ import Link from "next/link";
 /* ─── Config ─────────────────────────────────────────────── */
 const TOTAL_FRAMES = 240;
 const IMAGE_BASE   = "/landing_page_images/frame_";
+// OPTIMIZATION: Initial batch size - load fewer frames upfront, lazy load the rest on scroll
+const INITIAL_BATCH = 8;
 
 function pad(n: number): string {
   return String(n).padStart(5, "0");
@@ -19,13 +21,13 @@ function pad(n: number): string {
  *  0.00–0.20  0–140vh        Hold: hero centered, full-size title, canvas hidden
  *  0.20–0.32  140–224vh      DISSOLVE OUT: content fades to 0; container starts sliding right→left
  *  0.32–0.44  224–308vh      REAPPEAR: repositioned left-col content fades back in; canvas fades in right
- *  0.44–0.71  308–497vh      Locked split; frame animation plays (frame 0 → 239)
+ *  0.44–0.71  308–497vh      Locked split; frame animation plays (frame 0 → 59)
  *  0.71–1.00  497–700vh      Hold last frame
  *
  * The key insight:
  *   • overlayRef  = the position container (right edge slides 0% → 50%)
- *   • contentRef  = inner div whose opacity dissolves then reappears
- *   Between 0.32 and start of reappear, we silently update:
+ *   • contentRef  = inner div whose opacity dissolves then reappear
+ * Between 0.32 and start of reappear, we silently update:
  *     - title font size (large → small)
  *     - alignment (center → left)
  *     - CTA justification
@@ -38,20 +40,59 @@ const P_ANIM_END    = 0.71;   // frame animation complete
 export default function HeroCanvasAnimation() {
   const scrollZoneRef = useRef<HTMLDivElement>(null);
   const canvasRef     = useRef<HTMLCanvasElement>(null);
-  const overlayRef    = useRef<HTMLDivElement>(null);   // position layer
-  const contentRef    = useRef<HTMLDivElement>(null);   // opacity layer (dissolve/reappear)
+  const overlayRef    = useRef<HTMLDivElement>(null);
+  const contentRef    = useRef<HTMLDivElement>(null);
   const titleRef      = useRef<HTMLHeadingElement>(null);
   const subRef        = useRef<HTMLParagraphElement>(null);
   const ctaRef        = useRef<HTMLDivElement>(null);
   const scrollCueRef  = useRef<HTMLDivElement>(null);
 
-  const imagesRef   = useRef<HTMLImageElement[]>([]);
+  const imagesRef   = useRef<(HTMLImageElement | null)[]>([]);
   const frameRef    = useRef(0);
   const loadedRef   = useRef(0);
+  const lazyLoadDoneRef = useRef(false);
+  const requestedFramesRef = useRef<Set<number>>(new Set());
+
   const [ready, setReady] = useState(false);
   const [loadCount, setLoadCount] = useState(0);
+  const [animationProgress, setAnimationProgress] = useState(0);
 
   const isDesktopRef    = useRef(false);
+
+  /* ─── Lazy load frames in batches ────────────────────────── */
+  const lazyLoadFrames = useCallback((startIdx: number, count: number) => {
+    const endIdx = Math.min(startIdx + count, TOTAL_FRAMES);
+    for (let i = startIdx; i < endIdx; i++) {
+      if (imagesRef.current[i] || requestedFramesRef.current.has(i)) continue;
+      requestedFramesRef.current.add(i);
+
+      const img = new window.Image();
+      img.decoding = "async";
+      img.src = `${IMAGE_BASE}${pad(i)}.png`;
+      img.onload = () => {
+        loadedRef.current += 1;
+        setLoadCount(loadedRef.current);
+        imagesRef.current[i] = img;
+        // Paint immediately when first frame loads
+        if (i === 0 && frameRef.current === 0) paintFrame(0);
+        if (loadedRef.current >= 10) setReady(true);
+      };
+      img.onerror = () => {
+        loadedRef.current += 1;
+        setLoadCount(loadedRef.current);
+        imagesRef.current[i] = img;
+        if (loadedRef.current >= 10) setReady(true);
+      };
+      imagesRef.current[i] = img;
+    }
+  }, []);
+
+  /* ─── Initial quick load (first few frames only) ──────────── */
+  useEffect(() => {
+    imagesRef.current = new Array(TOTAL_FRAMES).fill(null);
+    // Only preload first few frames upfront, lazy load the rest on scroll
+    lazyLoadFrames(0, INITIAL_BATCH);
+  }, [lazyLoadFrames]);
 
   /* ─── Paint ─────────────────────────────────────────────── */
   const paintFrame = useCallback((idx: number) => {
@@ -71,7 +112,6 @@ export default function HeroCanvasAnimation() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, (canvas.width - sw) / 2, (canvas.height - sh) / 2, sw, sh);
     } else {
-      // Mobile: strictly fit width to prevent horizontal overflow, perfectly centered vertically
       const scale = canvas.width / img.naturalWidth;
       const sw = img.naturalWidth * scale;
       const sh = img.naturalHeight * scale;
@@ -81,10 +121,10 @@ export default function HeroCanvasAnimation() {
     }
   }, []);
 
-
-
-  /* ─── Scroll driver ──────────────────────────────────────── */
+  /* ─── Scroll driver with lazy loading ───────────────────── */
   useEffect(() => {
+    let ticking = false;
+
     const onScroll = () => {
       const zone      = scrollZoneRef.current;
       const overlay   = overlayRef.current;
@@ -99,6 +139,18 @@ export default function HeroCanvasAnimation() {
       const rect     = zone.getBoundingClientRect();
       const progress = Math.max(0, Math.min(1, -rect.top / zone.offsetHeight));
       const desktop  = isDesktopRef.current;
+
+      setAnimationProgress(progress);
+
+      // OPTIMIZATION: Lazy load more frames when entering animation zone
+      if (!lazyLoadDoneRef.current && progress > 0.35 && progress < 0.75) {
+        const currentFrame = Math.round(((progress - P_FADE_IN) / (P_ANIM_END - P_FADE_IN)) * TOTAL_FRAMES);
+        // Load a batch around the current frame
+        const startBatch = Math.max(0, currentFrame - 15);
+        lazyLoadFrames(startBatch, 30);
+        // Mark as done after first lazy load batch
+        if (loadedRef.current >= 30) lazyLoadDoneRef.current = true;
+      }
 
       /* ──────── MOBILE PATH ──────── */
       if (!desktop) {
@@ -115,8 +167,8 @@ export default function HeroCanvasAnimation() {
           content.style.opacity = "0";
           canvas.style.opacity  = "1";
         }
-        if (ready) {
-          const t   = progress <= FADE_END ? 0 : Math.min(1, (progress - FADE_END) / (ANIM_END - FADE_END));
+        if (ready && progress >= FADE_END) {
+          const t   = Math.min(1, (progress - FADE_END) / (ANIM_END - FADE_END));
           const idx = Math.round(t * (TOTAL_FRAMES - 1));
           if (idx !== frameRef.current) { frameRef.current = idx; paintFrame(idx); }
         }
@@ -142,7 +194,7 @@ export default function HeroCanvasAnimation() {
 
       /* ── Phase 2: Dissolve UP & OUT ── P_HOLD_END → P_FADE_OUT */
       if (progress <= P_FADE_OUT) {
-        const t = (progress - P_HOLD_END) / (P_FADE_OUT - P_HOLD_END); // 0→1
+        const t = (progress - P_HOLD_END) / (P_FADE_OUT - P_HOLD_END);
         overlay.style.transform   = "translateX(0%)";
         overlay.style.alignItems  = "center";
         overlay.style.textAlign   = "center";
@@ -157,17 +209,16 @@ export default function HeroCanvasAnimation() {
       }
 
       /* ── Phase 3: Reappear UP ── P_FADE_OUT → P_FADE_IN */
-      // Silently update layout while opacity is 0
-      overlay.style.transform   = "translateX(-25%)"; // Shift to left half
+      overlay.style.transform   = "translateX(-25%)";
       overlay.style.alignItems  = "flex-start";
       overlay.style.textAlign   = "left";
       content.style.alignItems  = "flex-start";
-      if (titleEl) titleEl.style.transform = "scale(0.8)"; // Adjust size via scale instead of fontSize
+      if (titleEl) titleEl.style.transform = "scale(0.8)";
       if (ctaEl)   ctaEl.style.justifyContent = "flex-start";
       if (scrollCue) scrollCue.style.opacity = "0";
 
       if (progress <= P_FADE_IN) {
-        const t = (progress - P_FADE_OUT) / (P_FADE_IN - P_FADE_OUT); // 0→1
+        const t = (progress - P_FADE_OUT) / (P_FADE_IN - P_FADE_OUT);
         content.style.opacity   = String(t);
         content.style.transform = `translateY(${36 * (1 - t)}px) scale(1)`;
         canvas.style.opacity    = String(0.25 + t * 0.75);
@@ -186,36 +237,20 @@ export default function HeroCanvasAnimation() {
       }
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [ready, paintFrame]);
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          onScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-  /* ─── Preload frames ───────────────────────────────────── */
-  useEffect(() => {
-    const frames: HTMLImageElement[] = new Array(TOTAL_FRAMES);
-    imagesRef.current = frames;
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      const img = new window.Image();
-      img.decoding = "async";
-      img.src = `${IMAGE_BASE}${pad(i)}.png`;
-      img.onload = () => {
-        loadedRef.current += 1;
-        setLoadCount(loadedRef.current);
-        if (i === 0) paintFrame(0);
-        if (loadedRef.current === TOTAL_FRAMES) {
-          setReady(true);
-          paintFrame(frameRef.current);
-        }
-      };
-      img.onerror = () => {
-        loadedRef.current += 1;
-        setLoadCount(loadedRef.current);
-        if (loadedRef.current === TOTAL_FRAMES) setReady(true);
-      };
-      frames[i] = img;
-    }
-  }, [paintFrame]);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [ready, paintFrame, lazyLoadFrames]);
 
   /* ─── Resize & Desktop detect ──────────────────────────── */
   useEffect(() => {
@@ -236,12 +271,12 @@ export default function HeroCanvasAnimation() {
         canvas.style.width  = `${window.innerWidth}px`;
         canvas.style.height = `${window.innerHeight}px`;
       }
-      paintFrame(frameRef.current);
+      if (ready) paintFrame(frameRef.current);
     };
     resize();
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
-  }, [paintFrame]);
+  }, [ready, paintFrame]);
 
   /* ─── JSX ──────────────────────────────────────────────── */
   return (
@@ -321,11 +356,11 @@ export default function HeroCanvasAnimation() {
           <h1
             ref={titleRef}
             className="font-display"
-            style={{ 
-              fontWeight: 700, 
-              lineHeight: 1.06, 
-              letterSpacing: "-0.03em", 
-              fontSize: "clamp(40px, 7vw, 80px)", 
+            style={{
+              fontWeight: 700,
+              lineHeight: 1.06,
+              letterSpacing: "-0.03em",
+              fontSize: "clamp(40px, 7vw, 80px)",
               margin: 0,
               transformOrigin: "center center",
               willChange: "transform",
@@ -338,13 +373,12 @@ export default function HeroCanvasAnimation() {
           {/* Subtitle */}
           <p
             ref={subRef}
-            style={{ 
-              color: "#9CA3AF", 
-              marginTop: "24px", 
-              maxWidth: "520px", 
-              lineHeight: 1.7, 
+            style={{
+              color: "#9CA3AF",
+              marginTop: "24px",
+              maxWidth: "520px",
+              lineHeight: 1.7,
               fontSize: "clamp(16px, 2vw, 20px)",
-              transition: "max-width 0.3s ease-out", // Still layout-triggering but limited to snap points
             }}
           >
             ChanakyaOS analyzes your profile, identifies your gaps, and builds the smartest pathway to your career goals.
@@ -377,14 +411,14 @@ export default function HeroCanvasAnimation() {
         {/* Scroll cue — outside contentRef so it fades separately */}
         <div
           ref={scrollCueRef}
-          style={{ 
-            position: "absolute", 
-            bottom: "32px", 
-            left: "50%", 
-            transform: "translateX(-50%)", 
-            display: "flex", 
-            flexDirection: "column", 
-            alignItems: "center", 
+          style={{
+            position: "absolute",
+            bottom: "32px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             gap: "8px",
             willChange: "opacity",
           }}
@@ -403,8 +437,8 @@ export default function HeroCanvasAnimation() {
         style={{ height: "700vh", position: "relative", zIndex: 3, pointerEvents: "none" }}
       />
 
-      {/* Loading indicator */}
-      {!ready && (
+      {/* Loading indicator - only show if not ready AND user has scrolled toward animation */}
+      {!ready && animationProgress > 0.3 && (
         <div style={{ position: "fixed", bottom: "24px", right: "24px", display: "flex", alignItems: "center", gap: "10px", zIndex: 10, pointerEvents: "none" }}>
           <div className="gold-spinner" style={{ width: "18px", height: "18px", borderWidth: "2px" }} />
           <span style={{ fontSize: "11px", color: "#6B7280", fontFamily: "monospace" }}>
