@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Loader2, Sparkles, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -63,13 +64,14 @@ export default function SignUpPage() {
 
         <div className="relative z-10">
           <div className="flex flex-col items-center mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#D4AF37] to-[#B8972A] rounded-xl flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(212,175,55,0.3)]">
-              <Sparkles className="text-[#0B0F19] w-6 h-6" />
-            </div>
-            <h2 className="text-3xl font-display font-bold text-white">
-              Join <span className="text-[#D4AF37]">ChanakyaOS</span>
-            </h2>
-            <p className="text-gray-400 text-sm mt-2">Start your strategic career journey today.</p>
+            <Image
+              src="/logo.png"
+              alt="ChanakyaOS"
+              width={180}
+              height={56}
+              className="object-contain mb-4"
+            />
+            <p className="text-gray-400 text-sm">Start your strategic career journey today.</p>
           </div>
           
           <form onSubmit={handleSignUp} className="space-y-5">

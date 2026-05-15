@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
@@ -39,18 +40,13 @@ export default function MarketingNav() {
         <div className="container-marketing h-full flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            {/* Geometric mark */}
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-[#0B0F19] font-bold text-xs"
-              style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8972A 100%)" }}
-            >
-              ◆
-            </div>
-            <span
-              className="text-[22px] font-bold font-display text-[#F3F4F6] tracking-tight"
-            >
-              Chanakya<span className="text-[#D4AF37]">OS</span>
-            </span>
+            <Image
+              src="/logo.png"
+              alt="ChanakyaOS"
+              width={140}
+              height={44}
+              className="object-contain"
+            />
           </Link>
 
           {/* Desktop Nav Links */}

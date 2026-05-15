@@ -303,6 +303,7 @@ export default function HeroCanvasAnimation() {
             width: "100%",
             willChange: "transform, opacity",
           }}
+          className="will-change-transform"
         >
           {/* Eyebrow badge */}
           <div style={{
@@ -420,6 +421,9 @@ export default function HeroCanvasAnimation() {
         @keyframes bounce {
           0%, 100% { transform: translateY(0); }
           50%       { transform: translateY(8px); }
+        }
+        .will-change-transform {
+          will-change: transform;
         }
       `}</style>
     </>

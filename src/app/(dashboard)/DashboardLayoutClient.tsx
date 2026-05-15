@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { LayoutDashboard, Route, FileText, Sparkles, Briefcase, LineChart, BookOpen, User, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -32,11 +33,15 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
       
       {/* Desktop Sidebar (Strictly hidden on mobile) */}
       <aside className="hidden md:flex flex-col w-64 bg-[#111827] border-r border-[#1F2937] flex-shrink-0">
-        <div className="p-8">
+        <div className="p-6">
           <Link href="/" className="group">
-            <h2 className="text-2xl font-bold font-display text-[#D4AF37]">
-              Chanakya<span className="text-[#F3F4F6]">OS</span>
-            </h2>
+            <Image
+              src="/logo.png"
+              alt="ChanakyaOS"
+              width={120}
+              height={40}
+              className="object-contain"
+            />
           </Link>
         </div>
         <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
@@ -70,9 +75,13 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
         {/* Mobile Header (Simplified, no hamburger) */}
         <div className="md:hidden flex items-center justify-between px-6 py-4 bg-[#111827] border-b border-white/5">
           <Link href="/" className="group">
-            <h2 className="text-xl font-bold font-display text-[#D4AF37]">
-              Chanakya<span className="text-[#F3F4F6]">OS</span>
-            </h2>
+            <Image
+              src="/logo.png"
+              alt="ChanakyaOS"
+              width={100}
+              height={32}
+              className="object-contain"
+            />
           </Link>
           <UserHeader />
         </div>

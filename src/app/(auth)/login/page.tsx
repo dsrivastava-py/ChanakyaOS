@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -37,9 +38,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] text-[#F3F4F6] p-4">
       <div className="w-full max-w-md bg-[#111827] border border-[#1F2937] rounded-2xl p-8 shadow-2xl">
-        <h2 className="text-3xl font-display font-bold text-[#D4AF37] mb-6 text-center">
-          Chanakya<span className="text-white">OS</span>
-        </h2>
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/logo.png"
+            alt="ChanakyaOS"
+            width={180}
+            height={56}
+            className="object-contain"
+          />
+        </div>
         
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
