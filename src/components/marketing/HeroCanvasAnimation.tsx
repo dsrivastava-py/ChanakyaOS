@@ -103,8 +103,7 @@ export default function HeroCanvasAnimation() {
       /* ──────── MOBILE PATH ──────── */
       if (!desktop) {
         const HOLD = 0.30, FADE_END = 0.50, ANIM_END = 0.80;
-        overlay.style.right = "0";
-        content.style.transform = "none";
+        overlay.style.transform = "none";
         if (progress <= HOLD) {
           content.style.opacity = "1";
           canvas.style.opacity  = "0";
@@ -126,71 +125,58 @@ export default function HeroCanvasAnimation() {
 
       /* ──────── DESKTOP PATH ──────── */
 
-      /* ─────────────────────────────────────────────────────────────────
-       * THE GOLDEN RULE: the overlay container NEVER moves while content
-       * is visible. It snaps to its new position only when opacity = 0.
-       * ───────────────────────────────────────────────────────────────── */
-
       /* ── Phase 1: Hold ── 0 → P_HOLD_END */
       if (progress <= P_HOLD_END) {
-        // Full-width centered, fully visible
-        overlay.style.right       = "0";
+        overlay.style.transform   = "translateX(0%)";
         overlay.style.alignItems  = "center";
         overlay.style.textAlign   = "center";
         content.style.opacity     = "1";
-        content.style.transform   = "translateY(0px)";
+        content.style.transform   = "translateY(0px) scale(1)";
         content.style.alignItems  = "center";
         canvas.style.opacity      = "0";
-        if (titleEl) titleEl.style.fontSize       = "clamp(40px, 7vw, 80px)";
-        if (subEl)   subEl.style.maxWidth         = "520px";
-        if (ctaEl)   ctaEl.style.justifyContent   = "center";
-        if (scrollCue) scrollCue.style.opacity    = "1";
+        if (titleEl) titleEl.style.transform = "scale(1)";
+        if (ctaEl)   ctaEl.style.justifyContent = "center";
+        if (scrollCue) scrollCue.style.opacity  = "1";
         return;
       }
 
-      /* ── Phase 2: Dissolve UP & OUT ── P_HOLD_END → P_FADE_OUT
-       *   Container stays RIGHT:0 (full width). Only content fades & floats.
-       *   Styles are ALWAYS set here so scroll-up reverse path is also correct. */
+      /* ── Phase 2: Dissolve UP & OUT ── P_HOLD_END → P_FADE_OUT */
       if (progress <= P_FADE_OUT) {
         const t = (progress - P_HOLD_END) / (P_FADE_OUT - P_HOLD_END); // 0→1
-        overlay.style.right       = "0";           // ← STAYS FULL WIDTH
+        overlay.style.transform   = "translateX(0%)";
         overlay.style.alignItems  = "center";
         overlay.style.textAlign   = "center";
         content.style.opacity     = String(1 - t);
-        content.style.transform   = `translateY(${-36 * t}px)`;  // float up (reverses naturally on scroll-up)
+        content.style.transform   = `translateY(${-36 * t}px) scale(1)`;
         content.style.alignItems  = "center";
-        canvas.style.opacity      = String(t * 0.25);  // ghost preview
-        // Always reset to center/full-size styles so reverse scroll shows correctly
-        if (titleEl) titleEl.style.fontSize     = "clamp(40px, 7vw, 80px)";
-        if (subEl)   subEl.style.maxWidth       = "520px";
+        canvas.style.opacity      = String(t * 0.25);
+        if (titleEl) titleEl.style.transform = "scale(1)";
         if (ctaEl)   ctaEl.style.justifyContent = "center";
-        if (scrollCue) scrollCue.style.opacity = String(1 - t * 2); // fade faster
+        if (scrollCue) scrollCue.style.opacity = String(1 - t * 2);
         return;
       }
 
-      /* ── INSTANT SNAP (opacity is 0 here, user sees nothing) ──
-       *   NOW we can reposition. Set left-column layout silently. */
-      overlay.style.right       = "50%";         // ← SNAP to left half
+      /* ── Phase 3: Reappear UP ── P_FADE_OUT → P_FADE_IN */
+      // Silently update layout while opacity is 0
+      overlay.style.transform   = "translateX(-25%)"; // Shift to left half
       overlay.style.alignItems  = "flex-start";
       overlay.style.textAlign   = "left";
       content.style.alignItems  = "flex-start";
-      if (titleEl) titleEl.style.fontSize       = "clamp(28px, 3.5vw, 52px)";
-      if (subEl)   subEl.style.maxWidth         = "none";
-      if (ctaEl)   ctaEl.style.justifyContent   = "flex-start";
-      if (scrollCue) scrollCue.style.opacity    = "0";
+      if (titleEl) titleEl.style.transform = "scale(0.8)"; // Adjust size via scale instead of fontSize
+      if (ctaEl)   ctaEl.style.justifyContent = "flex-start";
+      if (scrollCue) scrollCue.style.opacity = "0";
 
-      /* ── Phase 3: Reappear UP from below ── P_FADE_OUT → P_FADE_IN */
       if (progress <= P_FADE_IN) {
         const t = (progress - P_FADE_OUT) / (P_FADE_IN - P_FADE_OUT); // 0→1
         content.style.opacity   = String(t);
-        content.style.transform = `translateY(${36 * (1 - t)}px)`;  // rise up
-        canvas.style.opacity    = String(0.25 + t * 0.75);           // 0.25→1
+        content.style.transform = `translateY(${36 * (1 - t)}px) scale(1)`;
+        canvas.style.opacity    = String(0.25 + t * 0.75);
         return;
       }
 
       /* ── Phase 4 & 5: Locked split + frame animation ── */
       content.style.opacity   = "1";
-      content.style.transform = "translateY(0px)";
+      content.style.transform = "translateY(0px) scale(1)";
       canvas.style.opacity    = "1";
 
       if (ready) {
@@ -284,7 +270,7 @@ export default function HeroCanvasAnimation() {
           <canvas
             ref={canvasRef}
             id="hero-canvas"
-            style={{ display: "block", opacity: 0 }}
+            style={{ display: "block", opacity: 0, willChange: "opacity" }}
           />
         </div>
       </div>
@@ -298,11 +284,12 @@ export default function HeroCanvasAnimation() {
           zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",         /* JS will flip to flex-start */
+          alignItems: "center",
           justifyContent: "center",
           padding: "0 clamp(24px, 6vw, 80px)",
-          textAlign: "center",          /* JS will flip to left */
-          pointerEvents: "none",        /* let content layer handle pointer events */
+          textAlign: "center",
+          pointerEvents: "none",
+          willChange: "transform",
         }}
       >
         {/* ── OPACITY LAYER (contentRef) — controls dissolve/reappear ─── */}
@@ -311,9 +298,10 @@ export default function HeroCanvasAnimation() {
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",       /* JS will flip to flex-start */
+            alignItems: "center",
             pointerEvents: "auto",
             width: "100%",
+            willChange: "transform, opacity",
           }}
         >
           {/* Eyebrow badge */}
@@ -332,7 +320,15 @@ export default function HeroCanvasAnimation() {
           <h1
             ref={titleRef}
             className="font-display"
-            style={{ fontWeight: 700, lineHeight: 1.06, letterSpacing: "-0.03em", fontSize: "clamp(40px, 7vw, 80px)", margin: 0 }}
+            style={{ 
+              fontWeight: 700, 
+              lineHeight: 1.06, 
+              letterSpacing: "-0.03em", 
+              fontSize: "clamp(40px, 7vw, 80px)", 
+              margin: 0,
+              transformOrigin: "center center",
+              willChange: "transform",
+            }}
           >
             <span style={{ color: "#F3F4F6" }}>Confusion is </span>
             <span className="text-gradient-gold">Expensive.</span>
@@ -341,7 +337,14 @@ export default function HeroCanvasAnimation() {
           {/* Subtitle */}
           <p
             ref={subRef}
-            style={{ color: "#9CA3AF", marginTop: "24px", maxWidth: "520px", lineHeight: 1.7, fontSize: "clamp(16px, 2vw, 20px)" }}
+            style={{ 
+              color: "#9CA3AF", 
+              marginTop: "24px", 
+              maxWidth: "520px", 
+              lineHeight: 1.7, 
+              fontSize: "clamp(16px, 2vw, 20px)",
+              transition: "max-width 0.3s ease-out", // Still layout-triggering but limited to snap points
+            }}
           >
             ChanakyaOS analyzes your profile, identifies your gaps, and builds the smartest pathway to your career goals.
           </p>
@@ -373,7 +376,17 @@ export default function HeroCanvasAnimation() {
         {/* Scroll cue — outside contentRef so it fades separately */}
         <div
           ref={scrollCueRef}
-          style={{ position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}
+          style={{ 
+            position: "absolute", 
+            bottom: "32px", 
+            left: "50%", 
+            transform: "translateX(-50%)", 
+            display: "flex", 
+            flexDirection: "column", 
+            alignItems: "center", 
+            gap: "8px",
+            willChange: "opacity",
+          }}
         >
           <span className="eyebrow" style={{ fontSize: "10px", color: "#6B7280" }}>Scroll to reveal</span>
           <div style={{ width: "20px", height: "32px", borderRadius: "9999px", border: "1px solid #4B5563", display: "flex", justifyContent: "center", paddingTop: "6px" }}>

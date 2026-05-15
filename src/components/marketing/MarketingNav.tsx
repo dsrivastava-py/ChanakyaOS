@@ -13,7 +13,6 @@ const NAV_LINKS = [
 
 export default function MarketingNav() {
   const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -84,62 +83,17 @@ export default function MarketingNav() {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            id="mobile-menu-toggle"
-            aria-label="Toggle menu"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden p-2 text-[#9CA3AF] hover:text-white transition-colors"
-          >
-            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Drawer */}
-      <div
-        className="lg:hidden fixed inset-0 z-40 transition-opacity duration-300"
-        style={{
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? "auto" : "none",
-        }}
-      >
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-[#0B0F19]/90"
-          onClick={() => setMenuOpen(false)}
-        />
-        {/* Drawer */}
-        <div
-          className="absolute top-0 right-0 w-full h-full bg-[#0B0F19] flex flex-col pt-20 px-8 transition-transform duration-300"
-          style={{ transform: menuOpen ? "translateX(0)" : "translateX(100%)" }}
-        >
-          <nav className="flex flex-col gap-6">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="text-[20px] font-medium text-[#F3F4F6] py-2 border-b border-[#1F2937]"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="mt-12 flex flex-col gap-4">
-            <Link href="/login" onClick={() => setMenuOpen(false)}
-              className="w-full btn-secondary h-12 px-6 text-base text-center rounded-xl"
+          {/* Mobile CTA (Minimal) */}
+          <div className="lg:hidden flex items-center gap-3">
+             <Link
+              href="/login"
+              className="text-sm font-medium text-[#D4AF37]"
             >
               Sign In
             </Link>
-            <Link href="/login?mode=signup" onClick={() => setMenuOpen(false)}
-              className="w-full btn-primary h-12 px-6 text-base text-center rounded-xl"
-            >
-              Sign Up
-            </Link>
           </div>
         </div>
-      </div>
+      </header>
     </>
   );
 }

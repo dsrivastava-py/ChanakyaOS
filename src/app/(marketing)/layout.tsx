@@ -19,7 +19,12 @@ export default function MarketingLayout({
   return (
     <>
       <MarketingNav />
-      <main style={{ position: "relative", zIndex: 3 }}>{children}</main>
+      <main 
+        className="pb-24 md:pb-0"
+        style={{ position: "relative", zIndex: 3 }}
+      >
+        {children}
+      </main>
       <MarketingFooter />
     </>
   );

@@ -1,9 +1,13 @@
 "use client";
 
-import { LayoutDashboard, Route, FileText, Sparkles, Briefcase, LineChart, BookOpen, User } from "lucide-react";
+import { LayoutDashboard, Route, FileText, Sparkles, Briefcase, LineChart, BookOpen, User, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import UserHeader from "@/components/layout/UserHeader";
+import { useUserStore } from "@/store/useUserStore";
+import EditProfileModal from "@/components/layout/EditProfileModal";
+import SettingsModal from "@/components/layout/SettingsModal";
 
 const NAV_ITEMS = [
   { name: "Onboarding",         href: "/onboarding",   icon: Route },
@@ -19,22 +23,18 @@ const NAV_ITEMS = [
   { name: "My Profile",        href: "/profile",      icon: User },
 ];
 
-import { useUserStore } from "@/store/useUserStore";
-import EditProfileModal from "@/components/layout/EditProfileModal";
-import SettingsModal from "@/components/layout/SettingsModal";
-
 export function DashboardLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { isEditProfileModalOpen, setEditProfileModalOpen } = useUserStore();
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden bg-[#0B0F19] text-[#F3F4F6]">
+    <div className="flex h-[100dvh] overflow-hidden bg-[#0B0F19] text-[#F3F4F6] flex-col md:flex-row">
       
-      {/* Sidebar for Desktop */}
+      {/* Desktop Sidebar (Strictly hidden on mobile) */}
       <aside className="hidden md:flex flex-col w-64 bg-[#111827] border-r border-[#1F2937] flex-shrink-0">
-        <div className="p-6">
+        <div className="p-8">
           <Link href="/" className="group">
-            <h2 className="text-xl font-bold font-display text-[#D4AF37]">
+            <h2 className="text-2xl font-bold font-display text-[#D4AF37]">
               Chanakya<span className="text-[#F3F4F6]">OS</span>
             </h2>
           </Link>
@@ -61,37 +61,26 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 relative">
-        {/* Top Navigation / Header */}
-        <header className="h-20 flex items-center justify-end px-8 md:px-12 bg-[#0B0F19]/50 backdrop-blur-md border-b border-white/5 sticky top-0 z-[100]">
+      <main className="flex-1 flex flex-col min-w-0 relative h-full pb-24 md:pb-8">
+        {/* Desktop Header */}
+        <header className="hidden md:flex h-20 items-center justify-end px-12 bg-[#0B0F19]/50 backdrop-blur-md border-b border-white/5 sticky top-0 z-[100]">
           <UserHeader />
         </header>
 
-        <div className="flex-1 overflow-y-auto bg-[#0B0F19] pb-24 md:pb-0 custom-scrollbar">
-          <div className="p-6 md:p-12 mx-auto max-w-[1280px]">
-            {children}
-          </div>
+        {/* Mobile Header (Simplified, no hamburger) */}
+        <div className="md:hidden flex items-center justify-between px-6 py-4 bg-[#111827] border-b border-white/5">
+          <Link href="/" className="group">
+            <h2 className="text-xl font-bold font-display text-[#D4AF37]">
+              Chanakya<span className="text-[#F3F4F6]">OS</span>
+            </h2>
+          </Link>
+          <UserHeader />
         </div>
 
-        {/* Mobile Navigation Bar */}
-        <div className="md:hidden fixed bottom-6 left-6 right-6">
-          <nav className="bg-[#111827]/80 backdrop-blur-xl border border-[#D4AF37]/30 rounded-2xl p-2 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`p-3 rounded-xl transition-all ${
-                    isActive ? "bg-[#D4AF37] text-black" : "text-gray-400"
-                  }`}
-                  title={item.name}
-                >
-                  <item.icon className="w-5 h-5" />
-                </Link>
-              );
-            })}
-          </nav>
+        <div className="flex-1 overflow-y-auto bg-[#0B0F19] custom-scrollbar">
+          <div className="p-4 md:p-12 mx-auto max-w-[1280px]">
+            {children}
+          </div>
         </div>
       </main>
 
@@ -113,6 +102,7 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: #D4AF37;
+          border-radius: 10px;
         }
       `}</style>
     </div>

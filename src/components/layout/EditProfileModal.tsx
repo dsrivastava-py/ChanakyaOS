@@ -46,35 +46,35 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-[#0B0F19]/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-[#0B0F19]/90 backdrop-blur-md"
           />
           <motion.div 
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-md bg-[#111827] border border-[#D4AF37]/20 rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+            className="relative w-full max-w-[95vw] md:max-w-md bg-[#111827] border border-[#D4AF37]/20 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-8">
+            <div className="p-6 md:p-8">
+              <div className="flex justify-between items-center mb-6 md:mb-8">
                 <div>
-                  <h2 className="text-xl font-bold text-white">Edit Profile</h2>
-                  <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">Update your strategist identity</p>
+                  <h2 className="text-xl md:text-2xl font-bold text-white">Edit Profile</h2>
+                  <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-[0.15em] font-bold">Update strategist identity</p>
                 </div>
                 <button 
                   onClick={onClose}
                   className="p-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
                 <div>
                   <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Full Name</label>
                   <div className="relative group">
@@ -84,7 +84,7 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Your Strategic Name"
-                      className="w-full bg-[#0B0F19] border border-[#1F2937] focus:border-[#D4AF37]/50 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder:text-gray-600 outline-none transition-all"
+                      className="w-full bg-[#0B0F19] border border-[#1F2937] focus:border-[#D4AF37]/50 rounded-xl md:rounded-2xl py-3.5 pl-12 pr-4 text-xs md:text-sm text-white placeholder:text-gray-600 outline-none transition-all"
                       required
                     />
                   </div>
@@ -98,7 +98,7 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
                       type="email"
                       value={email}
                       disabled
-                      className="w-full bg-[#0B0F19] border border-[#1F2937] rounded-2xl py-3.5 pl-12 pr-4 text-sm text-gray-500 outline-none cursor-not-allowed"
+                      className="w-full bg-[#0B0F19] border border-[#1F2937] rounded-xl md:rounded-2xl py-3.5 pl-12 pr-4 text-xs md:text-sm text-gray-500 outline-none cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
                   <button 
                     type="submit"
                     disabled={isSaving}
-                    className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#B8972A] text-[#0B0F19] font-bold shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 md:py-4 rounded-xl md:rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#B8972A] text-[#0B0F19] font-bold text-sm shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all disabled:opacity-50"
                   >
                     {isSaving ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
