@@ -64,12 +64,10 @@ export default function SignUpPage() {
 
         <div className="relative z-10">
           <div className="flex flex-col items-center mb-8">
-            <Image
+            <img
               src="/logo.png"
               alt="ChanakyaOS"
-              width={180}
-              height={56}
-              className="object-contain mb-4"
+              className="h-20 object-contain mb-4"
             />
             <p className="text-gray-400 text-sm">Start your strategic career journey today.</p>
           </div>

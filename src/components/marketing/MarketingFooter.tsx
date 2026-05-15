@@ -26,15 +26,11 @@ export default function MarketingFooter() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-6">
-              <div
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-[#0B0F19] font-bold text-sm"
-                style={{ background: "linear-gradient(135deg, #D4AF37 0%, #B8972A 100%)" }}
-              >
-                ◆
-              </div>
-              <span className="text-[22px] font-bold font-display text-[#F3F4F6]">
-                Chanakya<span className="text-[#D4AF37]">OS</span>
-              </span>
+              <img
+                src="/logo.png"
+                alt="ChanakyaOS"
+                className="h-11 object-contain"
+              />
             </Link>
             <p className="text-[#9CA3AF] text-base leading-relaxed max-w-xs">
               An elite AI command center for career strategy. Stop guessing. Start building.

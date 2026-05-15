@@ -40,12 +40,10 @@ export default function MarketingNav() {
         <div className="container-marketing h-full flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Image
+            <img
               src="/logo.png"
               alt="ChanakyaOS"
-              width={140}
-              height={44}
-              className="object-contain"
+              className="h-14 object-contain"
             />
           </Link>
 

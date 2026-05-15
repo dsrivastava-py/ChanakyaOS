@@ -35,12 +35,10 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
       <aside className="hidden md:flex flex-col w-64 bg-[#111827] border-r border-[#1F2937] flex-shrink-0">
         <div className="p-6">
           <Link href="/" className="group">
-            <Image
+            <img
               src="/logo.png"
               alt="ChanakyaOS"
-              width={120}
-              height={40}
-              className="object-contain"
+              className="h-12 object-contain"
             />
           </Link>
         </div>
@@ -75,12 +73,10 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
         {/* Mobile Header (Simplified, no hamburger) */}
         <div className="md:hidden flex items-center justify-between px-6 py-4 bg-[#111827] border-b border-white/5">
           <Link href="/" className="group">
-            <Image
+            <img
               src="/logo.png"
               alt="ChanakyaOS"
-              width={100}
-              height={32}
-              className="object-contain"
+              className="h-10 object-contain"
             />
           </Link>
           <UserHeader />

@@ -6,19 +6,20 @@ import { createClient } from "@/utils/supabase/client";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function SyncProvider({ children }: { children: React.ReactNode }) {
-  const { 
-    workspace, 
-    career_readiness_score, 
-    locked_pathway, 
-    user_id, 
-    isHydrated, 
+  const {
+    workspace,
+    career_readiness_score,
+    locked_pathway,
+    user_id,
+    isHydrated,
     setHydrated,
     hasUnsavedChanges,
     clearUnsavedChanges,
     lms_data,
     profile,
     pinned_trends,
-    lms_tasks
+    lms_tasks,
+    resumeData
   } = useUserStore();
   
   // The Read Effect (Run Once)
@@ -30,7 +31,7 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
 
       const { data } = await supabase
         .from('user_profiles')
-        .select('name, lms_workspace, lms_data, career_readiness_score, pinned_trends, lms_tasks')
+        .select('name, lms_workspace, lms_data, career_readiness_score, pinned_trends, lms_tasks, resume_schema')
         .eq('user_id', user.id)
         .maybeSingle();
 
@@ -43,11 +44,12 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
           pinned_trends: data.pinned_trends || [],
           lms_tasks: data.lms_tasks || [],
           profile: { name: data.name || "" },
+          resumeData: data.resume_schema || useUserStore.getState().resumeData,
           isHydrated: true,
-          hasUnsavedChanges: false 
+          hasUnsavedChanges: false
         });
       } else {
-        setHydrated(true); 
+        setHydrated(true);
       }
     };
     fetchInitialData();
@@ -61,7 +63,8 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
     lms_data,
     pinned_trends,
     lms_tasks,
-    profile
+    profile,
+    resumeData
   }, 2000);
 
   const isSaving = useRef(false);
@@ -86,9 +89,10 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
             lms_data: debouncedState.lms_data,
             career_readiness_score: debouncedState.career_readiness_score,
             pinned_trends: debouncedState.pinned_trends,
-            lms_tasks: debouncedState.lms_tasks
-          }, { 
-            onConflict: 'user_id' 
+            lms_tasks: debouncedState.lms_tasks,
+            resume_schema: debouncedState.resumeData
+          }, {
+            onConflict: 'user_id'
           });
 
         if (profileError) throw profileError;

@@ -142,20 +142,19 @@ export default function HeroCanvasAnimation() {
 
       setAnimationProgress(progress);
 
-      // OPTIMIZATION: Lazy load more frames when entering animation zone
-      if (!lazyLoadDoneRef.current && progress > 0.35 && progress < 0.75) {
+      // Restore full frame loading - load batches as user scrolls
+      if (progress > 0.05) {
         const currentFrame = Math.round(((progress - P_FADE_IN) / (P_ANIM_END - P_FADE_IN)) * TOTAL_FRAMES);
-        // Load a batch around the current frame
-        const startBatch = Math.max(0, currentFrame - 15);
-        lazyLoadFrames(startBatch, 30);
-        // Mark as done after first lazy load batch
-        if (loadedRef.current >= 30) lazyLoadDoneRef.current = true;
+        const startBatch = Math.max(0, Math.min(currentFrame - 20, TOTAL_FRAMES - 60));
+        // Load a larger batch to ensure smoothness
+        lazyLoadFrames(startBatch, 60);
       }
 
       /* ──────── MOBILE PATH ──────── */
       if (!desktop) {
         const HOLD = 0.30, FADE_END = 0.50, ANIM_END = 0.80;
         overlay.style.transform = "none";
+        overlay.style.width = "100%";
         if (progress <= HOLD) {
           content.style.opacity = "1";
           canvas.style.opacity  = "0";
@@ -179,6 +178,7 @@ export default function HeroCanvasAnimation() {
 
       /* ── Phase 1: Hold ── 0 → P_HOLD_END */
       if (progress <= P_HOLD_END) {
+        overlay.style.width       = "100%";
         overlay.style.transform   = "translateX(0%)";
         overlay.style.alignItems  = "center";
         overlay.style.textAlign   = "center";
@@ -195,6 +195,7 @@ export default function HeroCanvasAnimation() {
       /* ── Phase 2: Dissolve UP & OUT ── P_HOLD_END → P_FADE_OUT */
       if (progress <= P_FADE_OUT) {
         const t = (progress - P_HOLD_END) / (P_FADE_OUT - P_HOLD_END);
+        overlay.style.width       = "100%";
         overlay.style.transform   = "translateX(0%)";
         overlay.style.alignItems  = "center";
         overlay.style.textAlign   = "center";
@@ -209,12 +210,14 @@ export default function HeroCanvasAnimation() {
       }
 
       /* ── Phase 3: Reappear UP ── P_FADE_OUT → P_FADE_IN */
-      overlay.style.transform   = "translateX(-25%)";
-      overlay.style.alignItems  = "flex-start";
-      overlay.style.textAlign   = "left";
-      content.style.alignItems  = "flex-start";
-      if (titleEl) titleEl.style.transform = "scale(0.8)";
-      if (ctaEl)   ctaEl.style.justifyContent = "flex-start";
+      // Center content within the left 50% column
+      overlay.style.width       = "50%";
+      overlay.style.transform   = "translateX(0%)";
+      overlay.style.alignItems  = "center";
+      overlay.style.textAlign   = "center";
+      content.style.alignItems  = "center";
+      if (titleEl) titleEl.style.transform = "scale(0.85)";
+      if (ctaEl)   ctaEl.style.justifyContent = "center";
       if (scrollCue) scrollCue.style.opacity = "0";
 
       if (progress <= P_FADE_IN) {

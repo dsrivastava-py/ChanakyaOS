@@ -39,12 +39,10 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] text-[#F3F4F6] p-4">
       <div className="w-full max-w-md bg-[#111827] border border-[#1F2937] rounded-2xl p-8 shadow-2xl">
         <div className="flex justify-center mb-6">
-          <Image
+          <img
             src="/logo.png"
             alt="ChanakyaOS"
-            width={180}
-            height={56}
-            className="object-contain"
+            className="h-20 object-contain"
           />
         </div>
         

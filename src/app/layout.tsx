@@ -7,6 +7,10 @@ import MobileBottomNav from "@/components/layout/MobileBottomNav";
 export const metadata: Metadata = {
   title: "ChanakyaOS — AI Career Intelligence",
   description: "An elite AI command center for career strategy. Stop guessing. Start strategizing.",
+  icons: {
+    icon: "/logo-single.png",
+    apple: "/logo-single.png",
+  },
 };
 
 export default function RootLayout({

@@ -4,6 +4,122 @@ import { createClient } from '@/utils/supabase/client';
 import { Block } from "@blocknote/core";
 
 
+// Resume Data Types
+export interface ResumeBullet {
+  id: string;
+  text: string;
+}
+
+export interface ResumeItem {
+  id: string;
+  heading: string;
+  subHeading: string;
+  date: string;
+  bullets: ResumeBullet[];
+}
+
+export interface ResumeSection {
+  id: string;
+  title: string;
+  items: ResumeItem[];
+}
+
+export interface ResumePersonalInfo {
+  name: string;
+  email: string;
+  phone: string;
+  links: {
+    linkedin?: string;
+    github?: string;
+    portfolio?: string;
+  };
+}
+
+export interface ResumeData {
+  personalInfo: ResumePersonalInfo;
+  summary: string;
+  sections: ResumeSection[];
+}
+
+export const createDefaultResumeData = (pathwayTitle?: string): ResumeData => ({
+  personalInfo: {
+    name: "Devansh Srivastava",
+    email: "devansh@example.com",
+    phone: "+91 9876543210",
+    links: {
+      linkedin: "linkedin.com/in/devansh",
+      github: "github.com/devansh",
+      portfolio: ""
+    }
+  },
+  summary: `Passionate about ${pathwayTitle || 'building great products'}. Dedicated to continuous learning and delivering impactful solutions.`,
+  sections: [
+    {
+      id: crypto.randomUUID(),
+      title: "Experience",
+      items: [
+        {
+          id: crypto.randomUUID(),
+          heading: "Tech Solutions",
+          subHeading: "Intern",
+          date: "2023 - Present",
+          bullets: [
+            { id: crypto.randomUUID(), text: "Developing cloud-native applications" }
+          ]
+        }
+      ]
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "Projects",
+      items: []
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "Skills",
+      items: []
+    }
+  ]
+});
+
+
+// LinkedIn Optimizer Types
+export interface LinkedInElement {
+  originalText: string;
+  aiScore: number;
+  aiFeedback: string;
+  optimizedVersion: string | null;
+}
+
+export interface LinkedInElements {
+  headline: LinkedInElement;
+  about: LinkedInElement;
+  experience: LinkedInElement;
+  skills: LinkedInElement;
+  banner: LinkedInElement;
+  pfp: LinkedInElement;
+}
+
+export interface LinkedInData {
+  parsedPdfText: string;
+  profileHealthScore: number;
+  elements: LinkedInElements;
+}
+
+export const createDefaultLinkedInData = (): LinkedInData => ({
+  parsedPdfText: "",
+  profileHealthScore: 0,
+  elements: {
+    headline: { originalText: "", aiScore: 0, aiFeedback: "", optimizedVersion: null },
+    about: { originalText: "", aiScore: 0, aiFeedback: "", optimizedVersion: null },
+    experience: { originalText: "", aiScore: 0, aiFeedback: "", optimizedVersion: null },
+    skills: { originalText: "", aiScore: 0, aiFeedback: "", optimizedVersion: null },
+    banner: { originalText: "", aiScore: 0, aiFeedback: "", optimizedVersion: null },
+    pfp: { originalText: "", aiScore: 0, aiFeedback: "", optimizedVersion: null },
+  }
+});
+
+
 export interface Pathway {
   title: string;
   readinessScore: number;
@@ -66,8 +182,27 @@ interface UserState {
   isEditProfileModalOpen: boolean;
   hasUnsavedChanges: boolean;
   profile: { name: string } | null;
+  resumeData: ResumeData;
   updateProfile: (profile: { name: string }) => void;
-  
+
+  // Resume Actions
+  updatePersonalInfo: (info: Partial<ResumePersonalInfo>) => void;
+  updateSummary: (summary: string) => void;
+  addSection: (title: string) => void;
+  deleteSection: (sectionId: string) => void;
+  addSectionItem: (sectionId: string, item: Omit<ResumeItem, 'id'>) => void;
+  updateSectionItem: (sectionId: string, itemId: string, updates: Partial<ResumeItem>) => void;
+  deleteSectionItem: (sectionId: string, itemId: string) => void;
+  addBullet: (sectionId: string, itemId: string, text: string) => void;
+  updateBullet: (sectionId: string, itemId: string, bulletId: string, text: string) => void;
+  deleteBullet: (sectionId: string, itemId: string, bulletId: string) => void;
+  setFullResumeData: (data: ResumeData) => void;
+
+  // LinkedIn Optimizer State
+  linkedInData: LinkedInData;
+  setLinkedInData: (data: Partial<LinkedInData>) => void;
+  updateLinkedInElement: (elementKey: keyof LinkedInElements, updates: Partial<LinkedInElement>) => void;
+
   // Actions
   setSession: (session: Session | null) => void;
   setCareerReadinessScore: (score: number) => void;
@@ -144,7 +279,9 @@ export const useUserStore = create<UserState>((set, get) => ({
   isEditProfileModalOpen: false,
   hasUnsavedChanges: false,
   profile: null,
-  
+  resumeData: createDefaultResumeData(),
+  linkedInData: createDefaultLinkedInData(),
+
   setSession: (session) => set({ session, user_id: session?.user?.id || null }),
   setCareerReadinessScore: (score) => set({ career_readiness_score: score, hasUnsavedChanges: true }),
   setActivePathway: (pathway) => set({ active_pathway: pathway, hasUnsavedChanges: true }),
@@ -158,6 +295,162 @@ export const useUserStore = create<UserState>((set, get) => ({
   setEditProfileModalOpen: (open) => set({ isEditProfileModalOpen: open }),
   clearUnsavedChanges: () => set({ hasUnsavedChanges: false }),
   updateProfile: (profile) => set({ profile, hasUnsavedChanges: true }),
+
+  // Resume Actions
+  updatePersonalInfo: (info) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      personalInfo: { ...state.resumeData.personalInfo, ...info }
+    },
+    hasUnsavedChanges: true
+  })),
+
+  updateSummary: (summary) => set((state) => ({
+    resumeData: { ...state.resumeData, summary },
+    hasUnsavedChanges: true
+  })),
+
+  addSection: (title) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: [...state.resumeData.sections, {
+        id: crypto.randomUUID(),
+        title,
+        items: []
+      }]
+    },
+    hasUnsavedChanges: true
+  })),
+
+  deleteSection: (sectionId) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.filter(s => s.id !== sectionId)
+    },
+    hasUnsavedChanges: true
+  })),
+
+  addSectionItem: (sectionId, item) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.map(section =>
+        section.id === sectionId
+          ? { ...section, items: [...section.items, { ...item, id: crypto.randomUUID() }] }
+          : section
+      )
+    },
+    hasUnsavedChanges: true
+  })),
+
+  updateSectionItem: (sectionId, itemId, updates) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              items: section.items.map(item =>
+                item.id === itemId ? { ...item, ...updates } : item
+              )
+            }
+          : section
+      )
+    },
+    hasUnsavedChanges: true
+  })),
+
+  deleteSectionItem: (sectionId, itemId) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.map(section =>
+        section.id === sectionId
+          ? { ...section, items: section.items.filter(item => item.id !== itemId) }
+          : section
+      )
+    },
+    hasUnsavedChanges: true
+  })),
+
+  addBullet: (sectionId, itemId, text) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              items: section.items.map(item =>
+                item.id === itemId
+                  ? { ...item, bullets: [...item.bullets, { id: crypto.randomUUID(), text }] }
+                  : item
+              )
+            }
+          : section
+      )
+    },
+    hasUnsavedChanges: true
+  })),
+
+  updateBullet: (sectionId, itemId, bulletId, text) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              items: section.items.map(item =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      bullets: item.bullets.map(bullet =>
+                        bullet.id === bulletId ? { ...bullet, text } : bullet
+                      )
+                    }
+                  : item
+              )
+            }
+          : section
+      )
+    },
+    hasUnsavedChanges: true
+  })),
+
+  deleteBullet: (sectionId, itemId, bulletId) => set((state) => ({
+    resumeData: {
+      ...state.resumeData,
+      sections: state.resumeData.sections.map(section =>
+        section.id === sectionId
+          ? {
+              ...section,
+              items: section.items.map(item =>
+                item.id === itemId
+                  ? { ...item, bullets: item.bullets.filter(bullet => bullet.id !== bulletId) }
+                  : item
+              )
+            }
+          : section
+      )
+    },
+    hasUnsavedChanges: true
+  })),
+
+  setFullResumeData: (data) => set({ resumeData: data, hasUnsavedChanges: true }),
+
+  // LinkedIn Optimizer Actions
+  setLinkedInData: (data) => set((state) => ({
+    linkedInData: { ...state.linkedInData, ...data },
+    hasUnsavedChanges: true
+  })),
+
+  updateLinkedInElement: (elementKey, updates) => set((state) => ({
+    linkedInData: {
+      ...state.linkedInData,
+      elements: {
+        ...state.linkedInData.elements,
+        [elementKey]: { ...state.linkedInData.elements[elementKey], ...updates }
+      }
+    },
+    hasUnsavedChanges: true
+  })),
 
   hydrateWorkspace: (dbData) => set({ workspace: dbData, isHydrated: true, hasUnsavedChanges: false }),
   lockPathway: (pathway) => set({ locked_pathway: pathway, hasUnsavedChanges: true }),
