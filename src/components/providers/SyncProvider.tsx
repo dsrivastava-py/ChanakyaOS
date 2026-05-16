@@ -4,13 +4,19 @@ import { useEffect, useRef } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { createClient } from "@/utils/supabase/client";
 import { useDebounce } from "@/hooks/useDebounce";
+import { parseUserName } from "@/utils/authUtils";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function SyncProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const {
     workspace,
     career_readiness_score,
     locked_pathway,
     user_id,
+    isGuest,
     isHydrated,
     setHydrated,
     hasUnsavedChanges,
@@ -25,10 +31,41 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
   // The Read Effect (Run Once)
   useEffect(() => {
     const fetchInitialData = async () => {
+      // GUEST MODE LOGIC
+      const isGuestCookie = document.cookie.includes("guest_mode=true");
+      const isFreshGuestEntry = searchParams.get("mode") === "guest";
+      
+      if (isGuestCookie) {
+        if (isFreshGuestEntry || isGuest) {
+          // Keep the guest session active
+          useUserStore.setState({ 
+            isGuest: true, 
+            isHydrated: true,
+            profile: { name: "GUEST" }
+          });
+          
+          // Clean up the URL if we just entered
+          if (isFreshGuestEntry) {
+            window.history.replaceState({}, '', pathname);
+          }
+          return;
+        } else {
+          // This is a REFRESH (cookie exists but Zustand state was lost)
+          // Wipe the cookie and kick to home
+          document.cookie = "guest_mode=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          window.location.href = "/";
+          return;
+        }
+      }
+
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
+      
+      if (!user) {
+        useUserStore.setState({ isGuest: true, isHydrated: true, profile: { name: "GUEST" } });
+        return;
+      }
+      
       const { data } = await supabase
         .from('user_profiles')
         .select('name, lms_workspace, lms_data, career_readiness_score, pinned_trends, lms_tasks, resume_schema')
@@ -36,24 +73,29 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
         .maybeSingle();
 
       if (data) {
-        // Hydrate the store with DB data
         useUserStore.setState({
           workspace: data.lms_workspace || useUserStore.getState().workspace,
           lms_data: data.lms_data || useUserStore.getState().lms_data,
           career_readiness_score: data.career_readiness_score || 0,
           pinned_trends: data.pinned_trends || [],
           lms_tasks: data.lms_tasks || [],
-          profile: { name: data.name || "" },
+          profile: { name: data.name || parseUserName(user) },
           resumeData: data.resume_schema || useUserStore.getState().resumeData,
+          isGuest: false,
           isHydrated: true,
           hasUnsavedChanges: false
         });
       } else {
-        setHydrated(true);
+        // Even if no profile data exists, if they have a user session, they are NOT a guest
+        useUserStore.setState({ 
+          isGuest: false, 
+          isHydrated: true,
+          profile: { name: parseUserName(user) } 
+        });
       }
     };
     fetchInitialData();
-  }, [setHydrated]);
+  }, [isGuest, pathname]);
 
   // Debounce the entire relevant state by 2000ms
   const debouncedState = useDebounce({
@@ -72,6 +114,9 @@ export default function SyncProvider({ children }: { children: React.ReactNode }
   // The Write Effect (Guarded)
   useEffect(() => {
     const saveToDatabase = async () => {
+      // TASK 1: Strict guard for Guest Mode
+      if (isGuest) return;
+
       if (!isHydrated || !hasUnsavedChanges || !debouncedState || !user_id || isSaving.current) return;
       
       isSaving.current = true;

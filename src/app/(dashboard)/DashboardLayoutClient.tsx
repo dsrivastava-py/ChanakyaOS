@@ -9,6 +9,7 @@ import UserHeader from "@/components/layout/UserHeader";
 import { useUserStore } from "@/store/useUserStore";
 import EditProfileModal from "@/components/layout/EditProfileModal";
 import SettingsModal from "@/components/layout/SettingsModal";
+import GuestWarningPopup from "@/components/ui/GuestWarningPopup";
 
 const NAV_ITEMS = [
   { name: "Onboarding",         href: "/onboarding",   icon: Route },
@@ -93,6 +94,8 @@ export function DashboardLayoutClient({ children }: { children: React.ReactNode 
         isOpen={isEditProfileModalOpen} 
         onClose={() => setEditProfileModalOpen(false)} 
       />
+
+      <GuestWarningPopup />
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {

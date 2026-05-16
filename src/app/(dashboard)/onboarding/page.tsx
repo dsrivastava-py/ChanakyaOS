@@ -59,6 +59,7 @@ export default function OnboardingWizard() {
   const [newSkill, setNewSkill] = useState("");
   const [newLink, setNewLink] = useState("");
 
+  const { isGuest } = useUserStore();
   const {
     register,
     handleSubmit,
@@ -89,7 +90,7 @@ export default function OnboardingWizard() {
     const checkExistingProfile = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user || isGuest) return;
 
       const { data: profile } = await supabase
         .from('user_profiles')
@@ -155,32 +156,34 @@ export default function OnboardingWizard() {
     setIsExtracting(true);
     
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("No user session");
+      if (!isGuest) {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("No user session");
 
-      // 1. Upload to Supabase Storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      const filePath = `resumes/${fileName}`;
+        // 1. Upload to Supabase Storage
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+        const filePath = `resumes/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('resumes')
-        .upload(filePath, file);
+        const { error: uploadError } = await supabase.storage
+          .from('resumes')
+          .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('resumes')
-        .getPublicUrl(filePath);
+        const { data: { publicUrl } } = supabase.storage
+          .from('resumes')
+          .getPublicUrl(filePath);
 
-      // 2. Save to user_profiles and resumes table
-      await supabase.from('user_profiles').update({ resume_url: publicUrl }).eq('user_id', user.id);
-      await supabase.from('resumes').insert({
-        user_id: user.id,
-        file_url: publicUrl,
-        version_name: file.name
-      });
+        // 2. Save to user_profiles and resumes table
+        await supabase.from('user_profiles').update({ resume_url: publicUrl }).eq('user_id', user.id);
+        await supabase.from('resumes').insert({
+          user_id: user.id,
+          file_url: publicUrl,
+          version_name: file.name
+        });
+      }
 
       // 3. Extract data via API
       const formData = new FormData();
@@ -229,28 +232,30 @@ export default function OnboardingWizard() {
           const generatedPathways = data.pathways || [];
           setPathways(generatedPathways);
 
-          // Save to Supabase
-          const supabase = createClient();
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user && generatedPathways.length > 0) {
-            // Delete old active ones
-            await supabase.from('career_pathways').delete().eq('user_id', user.id).eq('status', 'active');
-            
-            const insertData = generatedPathways.map((pw: Pathway) => ({
-              user_id: user.id,
-              pathway_name: pw.title,
-              pathway_data: pw,
-              compatibility_score: pw.readinessScore,
-              status: 'active'
-            }));
-            await supabase.from('career_pathways').insert(insertData);
-            
-            // Update profile skills
-            await supabase.from('user_profiles').update({ 
-              skills: watch('skills'),
-              background: watch('currentStatus'),
-              current_education: watch('education')?.[0]?.degree || ""
-            }).eq('user_id', user.id);
+          // Save to Supabase (only if not guest)
+          if (!isGuest) {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user && generatedPathways.length > 0) {
+              // Delete old active ones
+              await supabase.from('career_pathways').delete().eq('user_id', user.id).eq('status', 'active');
+              
+              const insertData = generatedPathways.map((pw: Pathway) => ({
+                user_id: user.id,
+                pathway_name: pw.title,
+                pathway_data: pw,
+                compatibility_score: pw.readinessScore,
+                status: 'active'
+              }));
+              await supabase.from('career_pathways').insert(insertData);
+              
+              // Update profile skills
+              await supabase.from('user_profiles').update({ 
+                skills: watch('skills'),
+                background: watch('currentStatus'),
+                current_education: watch('education')?.[0]?.degree || ""
+              }).eq('user_id', user.id);
+            }
           }
         } catch (err) {
           console.error(err);
@@ -277,31 +282,34 @@ export default function OnboardingWizard() {
 
   const handleLockPathway = async (pathway: Pathway) => {
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("No user session");
+      if (!isGuest) {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("No user session");
 
-      // 1. Update status in career_pathways
-      // We need the ID if it exists, otherwise we'll have to find it or it's a new generation
-      // For now, let's assume we want to mark THIS one as locked and others as active
-      const { data: dbPathways } = await supabase
-        .from('career_pathways')
-        .select('id, pathway_name')
-        .eq('user_id', user.id);
+        // 1. Update status in career_pathways
+        const { data: dbPathways } = await supabase
+          .from('career_pathways')
+          .select('id, pathway_name')
+          .eq('user_id', user.id);
 
-      const dbMatch = dbPathways?.find(p => p.pathway_name === pathway.title);
-      
-      if (dbMatch) {
-        await supabase.from('career_pathways').update({ status: 'active' }).eq('user_id', user.id);
-        await supabase.from('career_pathways').update({ status: 'locked' }).eq('id', dbMatch.id);
+        const dbMatch = dbPathways?.find(p => p.pathway_name === pathway.title);
         
-        // 2. Update user_profiles
-        await supabase.from('user_profiles').update({ 
-          locked_pathway_id: dbMatch.id,
-          onboarding_completed: true // wait, onboarding_completed is in 'users' table
-        }).eq('user_id', user.id);
+        if (dbMatch) {
+          await supabase.from('career_pathways').update({ status: 'active' }).eq('user_id', user.id);
+          await supabase.from('career_pathways').update({ status: 'locked' }).eq('id', dbMatch.id);
+          
+          // 2. Update user_profiles
+          await supabase.from('user_profiles').update({ 
+            locked_pathway_id: dbMatch.id,
+          }).eq('user_id', user.id);
 
-        await supabase.from('users').update({ onboarding_completed: true }).eq('id', user.id);
+          await supabase.from('users').update({ onboarding_completed: true }).eq('id', user.id);
+        }
+      } else {
+        // Guest mode: just set it in Zustand
+        const { setLockedPathway } = useUserStore.getState();
+        setLockedPathway(pathway);
       }
 
       // 3. Hydrate Zustand

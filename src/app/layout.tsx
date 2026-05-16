@@ -3,6 +3,7 @@ import "./globals.css";
 
 import SyncProvider from "@/components/providers/SyncProvider";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
+import GuestWarningPopup from "@/components/ui/GuestWarningPopup";
 
 export const metadata: Metadata = {
   title: "ChanakyaOS — AI Career Intelligence",
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en" className="antialiased">
       <body className="min-h-full bg-[#0B0F19] text-[#F3F4F6]">
         <SyncProvider>
+          <GuestWarningPopup />
           {children}
           <MobileBottomNav />
         </SyncProvider>

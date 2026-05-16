@@ -24,8 +24,8 @@ export default function AboutPage() {
               className="font-display font-bold text-[#F3F4F6] tracking-tight leading-[1.08] mb-8"
               style={{ fontSize: "clamp(36px, 5vw, 60px)" }}
             >
-              Built by those who lost<br />
-              <span className="text-gradient-gold">years to confusion.</span>
+              Built by those who lost
+              <span className="text-gradient-gold"> years to confusion.</span>
             </h1>
             <div className="space-y-5 text-[#9CA3AF] text-base leading-relaxed">
               <p>

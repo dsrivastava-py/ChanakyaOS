@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Session } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/client';
 import { Block } from "@blocknote/core";
+import { parseUserName } from '@/utils/authUtils';
 
 
 // Resume Data Types
@@ -43,12 +44,12 @@ export interface ResumeData {
 
 export const createDefaultResumeData = (pathwayTitle?: string): ResumeData => ({
   personalInfo: {
-    name: "Devansh Srivastava",
-    email: "devansh@example.com",
-    phone: "+91 9876543210",
+    name: "Full Name",
+    email: "email@example.com",
+    phone: "+91 0000000000",
     links: {
-      linkedin: "linkedin.com/in/devansh",
-      github: "github.com/devansh",
+      linkedin: "linkedin.com/in/username",
+      github: "github.com/username",
       portfolio: ""
     }
   },
@@ -60,11 +61,11 @@ export const createDefaultResumeData = (pathwayTitle?: string): ResumeData => ({
       items: [
         {
           id: crypto.randomUUID(),
-          heading: "Tech Solutions",
-          subHeading: "Intern",
-          date: "2023 - Present",
+          heading: "Company Name",
+          subHeading: "Your Role",
+          date: "MM/YYYY - Present",
           bullets: [
-            { id: crypto.randomUUID(), text: "Developing cloud-native applications" }
+            { id: crypto.randomUUID(), text: "Add your key responsibilities and achievements here" }
           ]
         }
       ]
@@ -183,7 +184,9 @@ interface UserState {
   hasUnsavedChanges: boolean;
   profile: { name: string } | null;
   resumeData: ResumeData;
+  isGuest: boolean;
   updateProfile: (profile: { name: string }) => void;
+  setGuestMode: (status: boolean) => void;
 
   // Resume Actions
   updatePersonalInfo: (info: Partial<ResumePersonalInfo>) => void;
@@ -279,6 +282,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   isEditProfileModalOpen: false,
   hasUnsavedChanges: false,
   profile: null,
+  isGuest: false,
   resumeData: createDefaultResumeData(),
   linkedInData: createDefaultLinkedInData(),
 
@@ -295,6 +299,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   setEditProfileModalOpen: (open) => set({ isEditProfileModalOpen: open }),
   clearUnsavedChanges: () => set({ hasUnsavedChanges: false }),
   updateProfile: (profile) => set({ profile, hasUnsavedChanges: true }),
+  setGuestMode: (status) => set({ isGuest: status }),
 
   // Resume Actions
   updatePersonalInfo: (info) => set((state) => ({
@@ -597,7 +602,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     if (session) {
       const user_id = session.user.id;
-      set({ session, user_id });
+      set({ session, user_id, isGuest: false });
 
       const { data: profile } = await supabase
         .from('user_profiles')
@@ -613,7 +618,8 @@ export const useUserStore = create<UserState>((set, get) => ({
           workspace: profile.lms_workspace || get().workspace,
           career_readiness_score: profile.career_readiness_score || 0,
           linkedin_health_score: profile.linkedin_health_score || 55,
-          profile: { name: profile.name || "" },
+          profile: { name: profile.name || parseUserName(session.user) },
+          isGuest: false,
           hasUnsavedChanges: false
         });
       }
@@ -633,6 +639,8 @@ export const useUserStore = create<UserState>((set, get) => ({
       }
 
       set({ isHydrated: true });
+    } else {
+      set({ isGuest: true, isHydrated: true, profile: { name: "GUEST" } });
     }
   }
 }));

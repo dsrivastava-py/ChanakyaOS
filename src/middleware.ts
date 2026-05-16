@@ -32,14 +32,16 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
+  const isGuestMode = request.cookies.get('guest_mode')?.value === 'true';
 
   // Define protected routes
-  const protectedRoutes = ['/dashboard', '/lms', '/pathways', '/resume', '/linkedin', '/trends', '/diagnosis', '/skills-gap', '/assistant', '/profile', '/portfolio'];
+  const protectedRoutes = ['/dashboard', '/lms', '/pathways', '/resume', '/linkedin', '/trends', '/diagnosis', '/skills-gap', '/assistant', '/profile', '/portfolio', '/onboarding'];
 
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
   const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/auth') || pathname === '/';
 
-  if (isProtectedRoute && !user) {
+  // Strict enforcement: Allow if user exists OR if guest_mode cookie is strictly 'true'
+  if (isProtectedRoute && !user && !isGuestMode) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     url.searchParams.set('redirect', pathname);
