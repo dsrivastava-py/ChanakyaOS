@@ -19,7 +19,7 @@
 - [Getting Started](#getting-started)
 - [Project Architecture](#project-architecture)
 - [Contributing](#contributing)
-- [License & Credits](#license--credits)
+- [Credits](#credits)
 
 ---
 
