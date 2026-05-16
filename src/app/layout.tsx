@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
 import SyncProvider from "@/components/providers/SyncProvider";
@@ -22,11 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased">
       <body className="min-h-full bg-[#0B0F19] text-[#F3F4F6]">
-        <SyncProvider>
-          <GuestWarningPopup />
-          {children}
-          <MobileBottomNav />
-        </SyncProvider>
+        <Suspense fallback={null}>
+          <SyncProvider>
+            <GuestWarningPopup />
+            {children}
+            <MobileBottomNav />
+          </SyncProvider>
+        </Suspense>
       </body>
     </html>
   );

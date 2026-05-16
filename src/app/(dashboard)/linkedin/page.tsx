@@ -386,7 +386,7 @@ export default function LinkedinOptimizer() {
               Important Note
             </h3>
             <p className="text-gray-400 text-sm">
-              Due to Vercel's serverless function limits, PDF uploads are capped at 4MB. If your LinkedIn export is larger, please:
+              Due to Vercel&apos;s serverless function limits, PDF uploads are capped at 4MB. If your LinkedIn export is larger, please:
             </p>
             <ul className="text-gray-400 text-sm mt-3 space-y-2 list-disc list-inside">
               <li>Remove images from your LinkedIn PDF export</li>
@@ -591,7 +591,7 @@ export default function LinkedinOptimizer() {
             ) : (
               <div className="text-center py-8">
                 <p className="text-gray-500 text-sm">
-                  Click "Generate Strategic Post Ideas" to get AI-powered content suggestions for your LinkedIn
+                  Click &quot;Generate Strategic Post Ideas&quot; to get AI-powered content suggestions for your LinkedIn
                 </p>
               </div>
             )}
