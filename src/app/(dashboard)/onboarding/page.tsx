@@ -304,7 +304,11 @@ export default function OnboardingWizard() {
             locked_pathway_id: dbMatch.id,
           }).eq('user_id', user.id);
 
-          await supabase.from('users').update({ onboarding_completed: true }).eq('id', user.id);
+          try {
+            await supabase.from('users').update({ onboarding_completed: true }).eq('id', user.id);
+          } catch (err) {
+            console.warn("Could not update users table onboarding status:", err);
+          }
         }
       } else {
         // Guest mode: just set it in Zustand

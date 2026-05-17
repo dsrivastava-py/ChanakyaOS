@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/dashboard";
@@ -20,9 +21,10 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg("");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      alert(error.message);
+      setErrorMsg(error.message);
       setLoading(false);
     } else {
       router.push("/onboarding");
@@ -57,17 +59,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] text-[#F3F4F6] p-4">
-      <div className="w-full max-w-md bg-[#111827] border border-[#1F2937] rounded-2xl p-8 shadow-2xl">
-        <div className="flex justify-center mb-6">
-          <img
-            src="/logo.png"
-            alt="ChanakyaOS"
-            className="h-20 object-contain"
-          />
-        </div>
-        
-        <form onSubmit={handleLogin} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#0B0F19] text-[#F3F4F6] p-4 font-sans">
+      <div className="w-full max-w-[400px] bg-[#111827]/80 backdrop-blur-xl border border-[#1F2937] rounded-2xl p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+        {/* Ambient Glow */}
+        <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#D4AF37]/10 blur-[100px] rounded-full"></div>
+        <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-[#D4AF37]/10 blur-[100px] rounded-full"></div>
+
+        <div className="relative z-10">
+          <div className="flex flex-col items-center mb-5">
+            <img
+              src="/logo.png"
+              alt="ChanakyaOS"
+              className="h-14 object-contain mb-2"
+            />
+            <p className="text-gray-400 text-xs text-center">Start your strategic career journey today.</p>
+          </div>
+
+          {/* Premium Notifications */}
+          {errorMsg && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-xs flex items-center gap-2 mb-4 animate-in fade-in slide-in-from-top-1 duration-200">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0"></span>
+              <span>{errorMsg}</span>
+            </div>
+          )}
+          
+          <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
             <input 
@@ -132,6 +148,7 @@ export default function LoginPage() {
             Create Account
           </Link>
         </p>
+        </div>
       </div>
     </div>
   );
