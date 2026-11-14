@@ -5,7 +5,9 @@ import Link from "next/link";
 
 /* ─── Config ─────────────────────────────────────────────── */
 const TOTAL_FRAMES = 240;
-const IMAGE_BASE   = "/landing_page_images/frame_";
+const IMAGE_BASE   = "/landing_page_images/webp/frame_";
+// Original PNGs are kept as a per-frame fallback if a WebP fails to load
+const PNG_BASE     = "/landing_page_images/frame_";
 // OPTIMIZATION: Initial batch size - load fewer frames upfront, lazy load the rest on scroll
 const INITIAL_BATCH = 8;
 
@@ -68,7 +70,7 @@ export default function HeroCanvasAnimation() {
 
       const img = new window.Image();
       img.decoding = "async";
-      img.src = `${IMAGE_BASE}${pad(i)}.png`;
+      img.src = `${IMAGE_BASE}${pad(i)}.webp`;
       img.onload = () => {
         loadedRef.current += 1;
         setLoadCount(loadedRef.current);
@@ -78,6 +80,11 @@ export default function HeroCanvasAnimation() {
         if (loadedRef.current >= 10) setReady(true);
       };
       img.onerror = () => {
+        // Retry once with the original PNG before counting the frame as failed
+        if (!img.src.endsWith(".png")) {
+          img.src = `${PNG_BASE}${pad(i)}.png`;
+          return;
+        }
         loadedRef.current += 1;
         setLoadCount(loadedRef.current);
         imagesRef.current[i] = img;

@@ -3,27 +3,26 @@ export const runtime = 'nodejs';
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { authorize, readPdfUpload, serverError } from "@/lib/api-guard";
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   // Switched to pdf-extraction to avoid canvas issues
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const pdfExtract = require('pdf-extraction');
   
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-    }
+    const auth = await authorize(req, { route: "extractResume", limit: 10, guestLimit: 3 });
+    if (!auth.ok) return auth.response;
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const upload = await readPdfUpload(req);
+    if (!upload.ok) return upload.response;
+    const buffer = upload.buffer;
     
     // Local extraction using pdf-extraction
     const pdfData = await pdfExtract(buffer);
-    const extractedText = pdfData.text;
+    const extractedText = String(pdfData.text ?? "").slice(0, 60000);
 
     if (!extractedText || extractedText.trim().length === 0) {
       return NextResponse.json({ error: "Could not extract text from PDF" }, { status: 422 });
@@ -59,6 +58,6 @@ export async function POST(req: Request) {
 
   } catch (error: unknown) {
     console.error("Extraction error:", error);
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
+    return serverError("extractResume", error, "Failed to extract resume");
   }
 }

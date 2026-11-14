@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — ChanakyaOS",
+  title: "Privacy Policy",
   description: "How ChanakyaOS collects, uses, and protects your personal data.",
 };
 

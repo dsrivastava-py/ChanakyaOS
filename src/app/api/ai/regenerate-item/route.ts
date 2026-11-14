@@ -1,11 +1,20 @@
 import { groq } from '@ai-sdk/groq';
 import { generateText } from 'ai';
+import { z } from 'zod';
+import { guardJson, jsonError } from '@/lib/api-guard';
+
+const bodySchema = z.object({
+  type: z.enum(['project', 'cert']),
+  currentList: z.array(z.any()).max(100).optional(),
+});
 
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
   try {
-    const { type, currentList } = await req.json();
+    const guard = await guardJson(req, bodySchema, { route: 'regenerateItem', limit: 20, guestLimit: 4, maxBytes: 50_000 });
+    if (!guard.ok) return guard.response;
+    const { type, currentList } = guard.data;
 
     const prompt = `
       You are an elite career strategist. 
@@ -34,6 +43,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("REGENERATE ERROR:", error);
-    return new Response(JSON.stringify({ error: "Failed to regenerate item" }), { status: 500 });
+    return jsonError("Failed to regenerate item", 500);
   }
 }

@@ -1,29 +1,16 @@
 import { NextResponse } from "next/server";
 import pdf from "pdf-extraction";
+import { authorize, readPdfUpload, serverError } from "@/lib/api-guard";
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File | null;
+    const auth = await authorize(req, { route: "parseLinkedinPdf", limit: 10, guestLimit: 3 });
+    if (!auth.ok) return auth.response;
 
-    if (!file) {
-      return NextResponse.json(
-        { error: "No file provided" },
-        { status: 400 }
-      );
-    }
-
-    // Validate file type
-    if (!file.type.includes("pdf")) {
-      return NextResponse.json(
-        { error: "File must be a PDF" },
-        { status: 400 }
-      );
-    }
-
-    // Convert File to Buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // Validates size (5MB), content type and %PDF magic bytes
+    const upload = await readPdfUpload(req);
+    if (!upload.ok) return upload.response;
+    const buffer = upload.buffer;
 
     // Parse PDF using pdf-extraction (stable pure-JS)
     const data = await pdf(buffer);
@@ -49,9 +36,6 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("PDF parsing error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to parse PDF. Please ensure the PDF is not password protected and contains text." },
-      { status: 500 }
-    );
+    return serverError("parseLinkedinPdf", error, "Failed to parse PDF. Please ensure the PDF is not password protected and contains text.");
   }
 }

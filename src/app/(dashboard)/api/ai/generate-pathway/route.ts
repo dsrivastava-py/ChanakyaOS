@@ -1,12 +1,18 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { guardJson, serverError } from "@/lib/api-guard";
+
+const generatePathwaySchema = z.object({ profile: z.record(z.string(), z.any()) });
 
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
-    const { profile } = await req.json();
+    const guard = await guardJson(req, generatePathwaySchema, { route: "generatePathway", limit: 10, guestLimit: 3, maxBytes: 100_000 });
+    if (!guard.ok) return guard.response;
+    const { profile } = guard.data;
 
     const { text } = await generateText({
       model: groq("llama-3.3-70b-versatile"),
@@ -58,8 +64,6 @@ export async function POST(req: Request) {
 
   } catch (error: unknown) {
     console.error("Pathway generation error:", error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : "Failed to generate pathways" 
-    }, { status: 500 });
+    return serverError("generatePathway", error, "Failed to generate pathways");
   }
 }
