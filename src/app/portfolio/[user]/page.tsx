@@ -113,7 +113,7 @@ export default function PublicPortfolio() {
     return (
       <div className="min-h-screen bg-[#0B0F19] flex flex-col items-center justify-center p-8">
         <h1 className="text-4xl font-bold text-white mb-4">Portfolio Not Found</h1>
-        <p className="text-gray-400 mb-8">This profile doesn't exist or hasn't been made public yet.</p>
+        <p className="text-gray-400 mb-8">This profile doesn&apos;t exist or hasn&apos;t been made public yet.</p>
         <Link href="/" className="text-[#D4AF37] hover:underline">
           Return to ChanakyaOS
         </Link>

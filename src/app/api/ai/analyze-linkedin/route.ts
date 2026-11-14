@@ -100,7 +100,7 @@ Return the JSON object:`;
 
     try {
       // Clean and parse the response
-      let cleanJson = text.replace(/```json|```/g, '').trim();
+      const cleanJson = text.replace(/```json|```/g, '').trim();
 
       const parsedData = JSON.parse(cleanJson);
 

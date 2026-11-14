@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request) {
   // Switched to pdf-extraction to avoid canvas issues
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const pdfExtract = require('pdf-extraction');
   
   try {

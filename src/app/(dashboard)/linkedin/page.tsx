@@ -390,7 +390,7 @@ export default function LinkedinOptimizer() {
             </p>
             <ul className="text-gray-400 text-sm mt-3 space-y-2 list-disc list-inside">
               <li>Remove images from your LinkedIn PDF export</li>
-              <li>Use "Save as PDF" with minimal formatting</li>
+              <li>Use &quot;Save as PDF&quot; with minimal formatting</li>
               <li>Compress existing PDF before uploading</li>
             </ul>
           </div>

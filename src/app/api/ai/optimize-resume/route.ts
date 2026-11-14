@@ -74,7 +74,7 @@ Return the complete JSON with optimized text:`;
 
     try {
       // Clean and parse the response
-      let cleanJson = text.replace(/```json|```/g, '').trim();
+      const cleanJson = text.replace(/```json|```/g, '').trim();
 
       // Handle potential JSON parsing issues
       const parsedData = JSON.parse(cleanJson);

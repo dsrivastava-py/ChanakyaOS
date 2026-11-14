@@ -25,7 +25,7 @@ export default function PricingPage() {
 
         {/* Main Heading */}
         <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-bold mb-8 tracking-tight max-w-4xl mx-auto leading-[1.1]">
-          Can't wait to reward us? <br />
+          Can&apos;t wait to reward us? <br />
           <span className="text-gradient-gold">We know ;)</span>
         </h1>
 

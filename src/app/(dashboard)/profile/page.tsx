@@ -137,7 +137,7 @@ export default function MyProfilePage() {
           Pro Tips for Sharing Your Profile
         </h3>
         <ul className="space-y-3 text-gray-400">
-          <li>• Add your portfolio link to your LinkedIn profile's "Contact info"</li>
+          <li>• Add your portfolio link to your LinkedIn profile&apos;s &quot;Contact info&quot;</li>
           <li>• Include it in your email signature when applying to jobs</li>
           <li>• Share it on LinkedIn after completing major certifications</li>
           <li>• Add it to your resume header as a clickable link</li>

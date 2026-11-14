@@ -106,7 +106,7 @@ QUALITY STANDARDS:
     });
 
     try {
-      let cleanJson = text.replace(/```json|```/g, '').trim();
+      const cleanJson = text.replace(/```json|```/g, '').trim();
       const parsedData = JSON.parse(cleanJson);
 
       if (!parsedData.optimizedVersion) {
