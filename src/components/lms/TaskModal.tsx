@@ -54,7 +54,7 @@ export default function TaskModal({ task, isOpen, onClose }: TaskModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md">
+    <div role="dialog" aria-modal="true" aria-label="Task details" onKeyDown={(e) => { if (e.key === "Escape") onClose(); }} className="fixed inset-0 z-[300] flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md">
       <div 
         className="bg-[#0B0F19] border border-white/10 rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-[0_32px_64px_rgba(0,0,0,0.8)]"
         onClick={(e) => e.stopPropagation()}
@@ -81,6 +81,8 @@ export default function TaskModal({ task, isOpen, onClose }: TaskModalProps) {
               </button>
             )}
             <button 
+              type="button"
+              aria-label="Close"
               onClick={onClose}
               className="p-2 rounded-xl hover:bg-white/5 text-gray-500 hover:text-white transition-all"
             >

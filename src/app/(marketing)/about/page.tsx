@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — ChanakyaOS",
+  title: "About",
   description: "The story behind ChanakyaOS — built for the students and professionals who refuse to leave their careers to chance.",
 };
 

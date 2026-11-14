@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Pricing | ChanakyaOS",
+  title: "Pricing",
   description: "Pricing models are currently in stealth mode. Early operators get in free.",
 };
 

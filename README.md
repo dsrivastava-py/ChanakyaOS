@@ -91,17 +91,29 @@ Named after **Chanakya** — India's ancient master of strategy — the platform
     ```
 
 3.  **Setup Environment Variables**
-    Create a `.env.local` file in the root and add the following:
+    Copy `.env.example` to `.env.local` and fill in the values:
 
-    | Key | Description |
-    | :--- | :--- |
-    | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL |
-    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anonymous key |
-    | `SUPABASE_SERVICE_ROLE_KEY` | (Server-side only) Your Supabase service role key |
-    | `GROQ_API_KEY` | Your Groq Cloud API key |
-    | `GOOGLE_GENERATIVE_AI_API_KEY` | Your Google AI Studio API key |
+    | Key | Required | Description |
+    | :--- | :--- | :--- |
+    | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Your Supabase project URL |
+    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Your Supabase anonymous key |
+    | `SUPABASE_SERVICE_ROLE_KEY` | Yes | (Server-side only) Supabase service role key, used by `/api/auth/check-user` |
+    | `GROQ_API_KEY` | Yes | Your Groq Cloud API key |
+    | `GEMINI_API_KEY` | No | Your Google AI Studio API key (not used by the current code paths) |
+    | `NEXT_PUBLIC_SITE_URL` | Recommended | Public site URL for canonical links, sitemap and OpenGraph |
 
-4.  **Run the development server**
+    Environment values are validated at runtime (`src/config/env.ts`). A missing value fails the request that needs it with a clear message.
+
+4.  **Apply database migrations**
+    Run every file in `supabase/migrations/` in numeric order (00001 to 00009) in the Supabase SQL editor or with the Supabase CLI.
+
+5.  **Verify before pushing**
+    ```bash
+    npm run lint && npm run typecheck && npm test && npm run build
+    ```
+    `next build` needs the environment variables above to be set (dummy values are fine, see `.github/workflows/ci.yml`). The repo ships an `.npmrc` with `legacy-peer-deps=true` because `react-latex-next` still declares a React 18 peer range.
+
+6.  **Run the development server**
     ```bash
     npm run dev
     ```

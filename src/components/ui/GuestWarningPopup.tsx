@@ -27,7 +27,7 @@ export default function GuestWarningPopup() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div role="dialog" aria-modal="true" aria-labelledby="guest-warning-title" onKeyDown={(e) => { if (e.key === "Escape") closeWarning(); }} className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -38,6 +38,9 @@ export default function GuestWarningPopup() {
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#D4AF37]/10 rounded-full blur-3xl"></div>
             
             <button 
+              type="button"
+              aria-label="Close"
+              autoFocus
               onClick={closeWarning}
               className="absolute top-4 right-4 p-2 text-gray-500 hover:text-white transition-colors"
             >
@@ -49,7 +52,7 @@ export default function GuestWarningPopup() {
                 <AlertTriangle className="w-8 h-8 text-[#D4AF37]" />
               </div>
               
-              <h2 className="text-2xl font-display font-semibold text-white mb-2">Welcome to Guest Mode!</h2>
+              <h2 id="guest-warning-title" className="text-2xl font-display font-semibold text-white mb-2">Welcome to Guest Mode!</h2>
               <p className="text-gray-400 mb-8">
                 You can explore all premium features, but your data is <span className="text-white font-bold">temporary</span> and will vanish if you refresh the page.
               </p>
