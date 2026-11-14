@@ -5,7 +5,10 @@ import { guardJson, jsonError } from '@/lib/api-guard';
 
 export const runtime = 'edge';
 
-const MAX_MESSAGES = 40;
+/** Most recent messages kept per request. Older turns are dropped to bound token cost. */
+const MAX_MESSAGES = 30;
+/** Upper bound on what the client may send before the route trims it. */
+const MAX_INCOMING_MESSAGES = 500;
 const MAX_MESSAGE_CHARS = 12000;
 const MAX_CONTEXT_FIELD_CHARS = 4000;
 
@@ -18,7 +21,7 @@ const bodySchema = z.object({
       })
     )
     .min(1)
-    .max(MAX_MESSAGES),
+    .max(MAX_INCOMING_MESSAGES),
   userContext: z.record(z.string(), z.any()).optional(),
 });
 
@@ -37,7 +40,9 @@ export async function POST(req: Request) {
   try {
     const guard = await guardJson(req, bodySchema, { route: 'chat', limit: 30, guestLimit: 8, maxBytes: 200_000 });
     if (!guard.ok) return guard.response;
-    const { messages, userContext } = guard.data;
+    const { userContext } = guard.data;
+    // Trim long histories to the most recent turns instead of rejecting them.
+    const messages = guard.data.messages.slice(-MAX_MESSAGES);
 
     const lastMessageContent = messages[messages.length - 1]?.content || "";
     const readiness = Number(userContext?.career_readiness_score);

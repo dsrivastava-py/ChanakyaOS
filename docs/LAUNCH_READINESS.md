@@ -47,6 +47,19 @@ Status of the production-readiness audit, known gaps, and what the owner must de
 | Lint warnings | About 140 warnings remain (`no-explicit-any`, React compiler rules downgraded to warn) | Fix gradually, then restore the rules to error |
 | Dependency audit | `npm audit` reports advisories in transitive packages | Review before launch, avoid `--force` |
 
+### Review follow-ups (second pass)
+
+Fixed:
+- Chat history cap: the route now trims to the last 30 messages instead of returning 400, and the assistant page sends only recent messages, clips each to 12,000 characters, and shows specific messages for 401 and 429.
+- Signup trigger: `handle_new_user` skips null emails and catches insert errors with a warning, so it cannot abort `auth.users` creation. A profile row missing after a swallowed conflict is the accepted trade-off.
+
+Not fixed, with reasons:
+- Existing live trigger: cannot be checked from the repo. Before applying 00009, run `select tgname from pg_trigger where tgrelid = 'auth.users'::regclass and not tgisinternal;` and `select prosrc from pg_proc where proname = 'handle_new_user';` on the live project. If custom logic exists, merge it into the migration first. A note is in the migration header.
+- Guest limits keyed by IP and held in instance memory: guest mode must stay stateless and open per the PRD. Before launch, replace `src/lib/rate-limit.ts` with Upstash or add a daily cap, and set Groq spend alerts.
+- Shared "unknown" IP bucket: Vercel always sets `x-forwarded-for`, so the fallback is only hit in local development or behind an unsupported proxy. If you move off Vercel, confirm the platform sets the header.
+- 401 handling in the client: a shared fetch wrapper touches about a dozen call sites on unrelated pages, which is outside this hardening scope. Page navigation is already redirected to login by `src/proxy.ts`; only in-page API calls after expiry show generic errors. Chat now reports expiry explicitly. Track the wrapper as a follow-up.
+- HSTS preload and CSP: preload is only effective after submitting the domain to the preload list, which is a manual owner decision. Remove `preload` from `next.config.ts` if you do not want that commitment. A nonce-based script CSP needs testing against Next.js inline scripts and BlockNote, so it is deferred.
+
 ## 4. PRD coverage (section 3 pages, section 4 features)
 
 Implemented routes: landing, about, pricing, blog (waitlist stub), careers (stub), contact, privacy, terms, login, signup, onboarding, dashboard, diagnosis, pathways, skills-gap, resume, linkedin, assistant, lms, trends, profile, portfolio.

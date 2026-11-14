@@ -52,15 +52,23 @@ export default function AIAssistant() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMessage].map(m => ({
+          // Send only recent turns; the API also trims, this keeps payloads small.
+          messages: [...messages, userMessage].slice(-30).map(m => ({
             role: m.role,
-            content: m.content
+            // Keep each message within the API limit (e.g. a very long earlier reply).
+            content: m.content.slice(0, 12000)
           })),
           userContext
         })
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("AUTH");
+        }
+        if (response.status === 429) {
+          throw new Error("RATE_LIMIT");
+        }
         throw new Error(`API error: ${response.status}`);
       }
 
@@ -90,7 +98,12 @@ export default function AIAssistant() {
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "I apologize, but I encountered an error. Please try again. If the issue persists, try refreshing the page."
+        content:
+          error instanceof Error && error.message === "AUTH"
+            ? "Your session has expired. Please sign in again to continue."
+            : error instanceof Error && error.message === "RATE_LIMIT"
+              ? "You are sending messages too quickly. Please wait a moment and try again."
+              : "I apologize, but I encountered an error. Please try again. If the issue persists, try refreshing the page."
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {

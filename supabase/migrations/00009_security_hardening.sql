@@ -50,7 +50,10 @@ DROP POLICY IF EXISTS "Users can delete their own messages" ON chat_messages;
 CREATE POLICY "Users can delete their own messages" ON chat_messages
   FOR DELETE USING (auth.uid() = user_id);
 
--- 4. Create the public.users row automatically on signup. career_pathways,
+-- 4. Create the public.users row automatically on signup.
+--    Before applying, check the live project for an existing on_auth_user_created
+--    trigger or handle_new_user function: this migration replaces both.
+--    career_pathways,
 --    user_profiles etc. reference users(id), and no earlier migration creates it.
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
@@ -59,13 +62,23 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO public.users (id, email, name)
-  VALUES (
-    NEW.id,
-    NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name')
-  )
-  ON CONFLICT DO NOTHING;
+  -- public.users.email is NOT NULL, so phone or anonymous signups are skipped.
+  IF NEW.email IS NULL THEN
+    RETURN NEW;
+  END IF;
+
+  -- Never let a failure here abort account creation in auth.users.
+  BEGIN
+    INSERT INTO public.users (id, email, name)
+    VALUES (
+      NEW.id,
+      NEW.email,
+      COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name')
+    )
+    ON CONFLICT DO NOTHING;
+  EXCEPTION WHEN OTHERS THEN
+    RAISE WARNING 'handle_new_user failed for %: %', NEW.id, SQLERRM;
+  END;
   RETURN NEW;
 END;
 $$;
