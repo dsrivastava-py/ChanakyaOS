@@ -1,6 +1,10 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { guardJson, serverError } from "@/lib/api-guard";
+
+const generatePostIdeasSchema = z.object({ globalContext: z.any().optional() });
 
 interface ResumeData {
   personalInfo?: { name?: string; email?: string; phone?: string; links?: Record<string, string> };
@@ -21,7 +25,9 @@ interface GlobalContext {
 
 export async function POST(req: Request) {
   try {
-    const { globalContext } = await req.json();
+    const guard = await guardJson(req, generatePostIdeasSchema, { route: "generatePostIdeas", limit: 10, guestLimit: 3, maxBytes: 150_000 });
+    if (!guard.ok) return guard.response;
+    const { globalContext } = guard.data;
 
     // Parse global context
     let contextData: GlobalContext = {};
@@ -161,9 +167,6 @@ Return exactly 3 ideas in the specified JSON format:`;
 
   } catch (error: unknown) {
     console.error("Generate post ideas error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to generate post ideas" },
-      { status: 500 }
-    );
+    return serverError("generatePostIdeas", error, "Failed to generate post ideas");
   }
 }

@@ -1,10 +1,16 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { guardJson, serverError } from "@/lib/api-guard";
+
+const analyzeLinkedinSchema = z.object({ parsedText: z.string().min(1).max(60000) });
 
 export async function POST(req: Request) {
   try {
-    const { parsedText } = await req.json();
+    const guard = await guardJson(req, analyzeLinkedinSchema, { route: "analyzeLinkedin", limit: 10, guestLimit: 3, maxBytes: 100_000 });
+    if (!guard.ok) return guard.response;
+    const { parsedText } = guard.data;
 
     if (!parsedText || typeof parsedText !== "string") {
       return NextResponse.json(
@@ -132,9 +138,6 @@ Return the JSON object:`;
 
   } catch (error: unknown) {
     console.error("LinkedIn analysis error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to analyze LinkedIn profile" },
-      { status: 500 }
-    );
+    return serverError("analyzeLinkedin", error, "Failed to analyze LinkedIn profile");
   }
 }

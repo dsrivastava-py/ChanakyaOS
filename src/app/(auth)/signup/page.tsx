@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { Loader2, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { safeRedirectPath } from "@/lib/safe-redirect";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export default function SignUpPage() {
   const [successMsg, setSuccessMsg] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const redirectTo = safeRedirectPath(searchParams.get("redirect"));
   const supabase = createClient();
 
   const handleSignUp = async (e: React.FormEvent) => {

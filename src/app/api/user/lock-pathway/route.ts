@@ -1,10 +1,22 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { jsonError, parseJson, serverError } from "@/lib/api-guard";
+
+const lockPathwaySchema = z.object({
+  pathway: z
+    .looseObject({
+      title: z.string().min(1).max(200),
+      readinessScore: z.number().min(0).max(100).optional(),
+    }),
+});
 
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
-    const { pathway } = await req.json();
+    const body = await parseJson(req, lockPathwaySchema, 200_000);
+    if (!body.ok) return body.response;
+    const { pathway } = body.data;
 
     const { data: { user } } = await supabase.auth.getUser();
     
@@ -44,7 +56,7 @@ export async function POST(req: Request) {
       if (process.env.NODE_ENV === 'development') {
         return NextResponse.json({ success: true, mock: true });
       }
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return jsonError("Failed to save pathway", 500);
     }
 
     // 3. Update user profile
@@ -58,6 +70,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, data });
   } catch (err: unknown) {
     console.error("Lock pathway error:", err);
-    return NextResponse.json({ error: err instanceof Error ? err.message : "Unknown error" }, { status: 500 });
+    return serverError("lockPathway", err, "Failed to save pathway");
   }
 }

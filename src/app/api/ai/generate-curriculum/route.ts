@@ -1,11 +1,17 @@
 import { groq } from '@ai-sdk/groq';
 import { generateText } from 'ai';
+import { z } from 'zod';
+import { guardJson, jsonError } from '@/lib/api-guard';
+
+const bodySchema = z.object({ courseName: z.string().trim().min(1).max(200) });
 
 export const runtime = 'edge';
 
 export async function POST(req: Request) {
   try {
-    const { courseName } = await req.json();
+    const guard = await guardJson(req, bodySchema, { route: 'generateCurriculum', limit: 20, guestLimit: 4, maxBytes: 5_000 });
+    if (!guard.ok) return guard.response;
+    const { courseName } = guard.data;
 
     const prompt = `
       Generate a 4-week study curriculum for the course: "${courseName}".
@@ -28,6 +34,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("CURRICULUM ERROR:", error);
-    return new Response(JSON.stringify({ error: "Failed to generate curriculum" }), { status: 500 });
+    return jsonError("Failed to generate curriculum", 500);
   }
 }

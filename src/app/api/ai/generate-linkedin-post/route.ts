@@ -1,10 +1,16 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { guardJson, serverError } from "@/lib/api-guard";
+
+const generateLinkedinPostSchema = z.object({ topic: z.string().max(2000).optional(), context: z.any().optional() });
 
 export async function POST(req: Request) {
   try {
-    const { topic, context } = await req.json();
+    const guard = await guardJson(req, generateLinkedinPostSchema, { route: "generateLinkedinPost", limit: 15, guestLimit: 3, maxBytes: 100_000 });
+    if (!guard.ok) return guard.response;
+    const { topic, context } = guard.data;
 
     // Universal Groq Patch: Using generateText for structured JSON delivery
     const { text } = await generateText({
@@ -54,8 +60,6 @@ export async function POST(req: Request) {
 
   } catch (error: unknown) {
     console.error("LinkedIn generation error:", error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : "Failed to generate post" 
-    }, { status: 500 });
+    return serverError("generateLinkedinPost", error, "Failed to generate post");
   }
 }

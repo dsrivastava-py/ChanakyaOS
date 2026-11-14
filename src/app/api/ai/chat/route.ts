@@ -1,17 +1,48 @@
 import { groq } from '@ai-sdk/groq';
 import { streamText } from 'ai';
+import { z } from 'zod';
+import { guardJson, jsonError } from '@/lib/api-guard';
 
 export const runtime = 'edge';
 
+const MAX_MESSAGES = 40;
+const MAX_MESSAGE_CHARS = 12000;
+const MAX_CONTEXT_FIELD_CHARS = 4000;
+
+const bodySchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(['user', 'assistant']),
+        content: z.string().max(MAX_MESSAGE_CHARS),
+      })
+    )
+    .min(1)
+    .max(MAX_MESSAGES),
+  userContext: z.record(z.string(), z.any()).optional(),
+});
+
+/** Serialize untrusted context to a bounded JSON string for the prompt. */
+function boundedJson(value: unknown, fallback: unknown): string {
+  let out: string;
+  try {
+    out = JSON.stringify(value ?? fallback) ?? JSON.stringify(fallback);
+  } catch {
+    out = JSON.stringify(fallback);
+  }
+  return out.slice(0, MAX_CONTEXT_FIELD_CHARS);
+}
+
 export async function POST(req: Request) {
   try {
-    const { messages, userContext } = await req.json();
-
-    if (!messages || !Array.isArray(messages)) {
-      throw new Error("Invalid messages array");
-    }
+    const guard = await guardJson(req, bodySchema, { route: 'chat', limit: 30, guestLimit: 8, maxBytes: 200_000 });
+    if (!guard.ok) return guard.response;
+    const { messages, userContext } = guard.data;
 
     const lastMessageContent = messages[messages.length - 1]?.content || "";
+    const readiness = Number(userContext?.career_readiness_score);
+    const readinessScore = Number.isFinite(readiness) ? Math.min(100, Math.max(0, readiness)) : 0;
+    const pathwayTitle = typeof userContext?.locked_pathway?.title === "string" ? userContext.locked_pathway.title.slice(0, 200) : "None";
     
     let dynamicContext = "";
     
@@ -19,9 +50,9 @@ export async function POST(req: Request) {
     if (lastMessageContent.includes("@dashboard")) {
       dynamicContext += `
 [DASHBOARD CONTEXT ACTIVE]
-- Current Readiness Score: ${userContext?.career_readiness_score || 0}%
-- Skill Acquisition Status: ${JSON.stringify(userContext?.locked_pathway?.skillChecklist || [])}
-- Strategic Projects: ${JSON.stringify(userContext?.locked_pathway?.projects || [])}
+- Current Readiness Score: ${readinessScore}%
+- Skill Acquisition Status: ${boundedJson(userContext?.locked_pathway?.skillChecklist, [])}
+- Strategic Projects: ${boundedJson(userContext?.locked_pathway?.projects, [])}
       `;
     }
 
@@ -29,7 +60,7 @@ export async function POST(req: Request) {
     if (lastMessageContent.includes("@market_trends") || lastMessageContent.includes("@trends")) {
       dynamicContext += `
 [MARKET TRENDS CONTEXT ACTIVE]
-- Pinned Market Insights: ${JSON.stringify(userContext?.pinned_trends || [])}
+- Pinned Market Insights: ${boundedJson(userContext?.pinned_trends, [])}
       `;
     }
 
@@ -38,7 +69,7 @@ Your name is 'Your Chanakya'. You are an elite, strategic career operating syste
 Provide direct, highly tactical advice based on the user's provided state. Do not use generic pleasantries.
 
 User Profile Context:
-- Locked Pathway: ${JSON.stringify(userContext?.locked_pathway?.title || "None")}
+- Locked Pathway: ${JSON.stringify(pathwayTitle)}
 ${dynamicContext}
 
 Instructions:
@@ -49,10 +80,8 @@ Instructions:
     `.trim();
 
     // Map messages to ensure compatibility with ModelMessage schema
-    const coreMessages = messages.map((m: any) => ({
-      role: m.role === 'user' || m.role === 'assistant' || m.role === 'system' ? m.role : 'user',
-      content: m.content || (Array.isArray(m.parts) ? m.parts[0]?.text : "") || "",
-    }));
+    // Client-supplied "system" messages are rejected by the schema (prompt injection surface).
+    const coreMessages = messages.map((m) => ({ role: m.role, content: m.content }));
 
     const result = await streamText({
       model: groq('llama-3.3-70b-versatile'),
@@ -64,12 +93,6 @@ Instructions:
     return result.toTextStreamResponse();
   } catch (error) {
     console.error("GROQ CHAT ERROR:", error);
-    return new Response(JSON.stringify({ 
-      error: "Failed to generate response",
-      details: error instanceof Error ? error.message : String(error)
-    }), { 
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return jsonError("Failed to generate response", 500);
   }
 }

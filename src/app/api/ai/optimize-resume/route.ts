@@ -1,10 +1,16 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { guardJson, serverError } from "@/lib/api-guard";
+
+const optimizeResumeSchema = z.record(z.string(), z.any());
 
 export async function POST(req: Request) {
   try {
-    const resumeData = await req.json();
+    const guard = await guardJson(req, optimizeResumeSchema, { route: "optimizeResume", limit: 10, guestLimit: 3, maxBytes: 150_000 });
+    if (!guard.ok) return guard.response;
+    const resumeData = guard.data;
 
     // Construct the system prompt for ATS optimization
     const systemPrompt = `You are an elite ATS Resume Coach and Career Strategist. Your mission is to optimize resumes for maximum compatibility with Applicant Tracking Systems (ATS) while maintaining human readability.
@@ -92,8 +98,6 @@ Return the complete JSON with optimized text:`;
 
   } catch (error: unknown) {
     console.error("Resume optimization error:", error);
-    return NextResponse.json({
-      error: error instanceof Error ? error.message : "Failed to optimize resume"
-    }, { status: 500 });
+    return serverError("optimizeResume", error, "Failed to optimize resume");
   }
 }
