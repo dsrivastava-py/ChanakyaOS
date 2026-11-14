@@ -12,7 +12,7 @@ Status of the production-readiness audit, known gaps, and what the owner must de
 | Redirects | `safeRedirectPath` on login, signup and `/auth/callback` (open redirect fix) |
 | Config | `src/config/env.ts` lazy zod validation, `.env.example`, `.env*` ignored |
 | Headers | nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy, HSTS, minimal CSP in `next.config.ts` |
-| Database | Migration `00009_security_hardening.sql` (plan self-upgrade block, WITH CHECK clauses, delete policies, `handle_new_user` trigger, contact message limits) |
+| Database | Migration `00009_security_hardening.sql` (plan self-upgrade block, WITH CHECK clauses, delete policies, `handle_new_user` trigger, contact message limits), `00010_public_portfolio.sql` (`username`, `is_public`, `get_public_portfolio` function; **owner must apply it**) |
 | Tests | Vitest, 43 tests for rate limiter, redirect guard, env, API guard, PDF upload, utils, sitemap and robots |
 | CI | `.github/workflows/ci.yml`: Node 22, `npm ci`, lint, typecheck, test, build with dummy env |
 | Error handling | `error.tsx`, `global-error.tsx`, `not-found.tsx`, dashboard `loading.tsx` |
@@ -24,7 +24,7 @@ Status of the production-readiness audit, known gaps, and what the owner must de
 1. **Production secrets** (set in Vercel, never commit): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GROQ_API_KEY`, optional `GEMINI_API_KEY`.
 2. **`NEXT_PUBLIC_SITE_URL`**: the final domain. Without it sitemap, robots and OpenGraph use `http://localhost:3000`.
 3. **Rate limiting backend**: the limiter is in memory per serverless instance. Choose whether to adopt Upstash Redis (`@upstash/ratelimit`, same call shape) before paid traffic. Needs an Upstash account and two env vars.
-4. **Public portfolio sharing (PRD F8)**: decide the product behavior (see gaps).
+4. **Apply migration `00010_public_portfolio.sql`** in Supabase. Portfolios are opt-in: users set a username and turn on `is_public` (default private) on the Profile page.
 5. **Resume PDF rendering**: decide whether to keep the third party LaTeX service (see gaps).
 6. **Email enumeration vs duplicate-signup UX**: `/api/auth/check-user` tells callers whether an email exists. Keep it (better UX, rate limited) or remove it and rely on Supabase's own signup response.
 7. **OpenGraph image**: `/logo.png` is used as a placeholder. Provide a 1200x630 image for better link previews.
@@ -35,7 +35,7 @@ Status of the production-readiness audit, known gaps, and what the owner must de
 
 | Gap | Detail | Suggested fix |
 | :--- | :--- | :--- |
-| Public portfolio broken | `/portfolio/[user]` is protected by `src/proxy.ts`, and the client query is limited by RLS to the owner's row, so recruiter sharing does not work. The page also builds a PostgREST `.or()` filter from the URL param | Add `username` and `is_public` columns, a server route returning only safe fields, and exempt the route in the proxy |
+| ~~Public portfolio broken~~ (fixed) | Public sharing now uses `/portfolio/<username>`, exempt from the proxy auth redirect only for a single valid username segment. Data comes from the `get_public_portfolio` SECURITY DEFINER function (migration 00010), which returns an allow-list of fields and never email or ids | Apply migration 00010 |
 | No script CSP | The CSP only sets `frame-ancestors`, `base-uri`, `object-src`, `form-action`. A strict `script-src` needs per-request nonces | Add nonce handling in `src/proxy.ts`, test with BlockNote and framer-motion |
 | Per-instance rate limiter | Counters reset on cold start and are not shared across instances | Upstash Redis |
 | Resume LaTeX privacy | `resume/page.tsx` sends resume LaTeX to `latexonline.cc` via a GET URL. The third party sees the resume and URLs can be logged | Self-hosted or server-side LaTeX compile, or client-side PDF generation |
@@ -75,7 +75,7 @@ Implemented routes: landing, about, pricing, blog (waitlist stub), careers (stub
 | 23 Certifications Tracker | No dedicated route found |
 | 24 Profile and Settings: notification preferences, subscription management | Profile and a settings modal exist. Billing and notification preferences absent (no payment provider) |
 | 25, 26 Community Hub, Mentorship | Marked Future in the PRD. Not built |
-| F8 Portfolio and Project Builder | Page exists, public sharing broken (see gaps) |
+| F8 Portfolio and Project Builder | Public sharing implemented, requires migration 00010 |
 | Pricing tiers (PRD section 9) | Pricing page is a "stealth mode" placeholder. No payment integration. `users.plan` is now protected from client edits, so a payment webhook using the service role is the only safe way to change it |
 
 ## 5. Deployment checklist

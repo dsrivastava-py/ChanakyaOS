@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { isPublicPortfolioPath } from '@/lib/portfolio';
 
 export async function proxy(request: NextRequest) {
   const response = NextResponse.next({
@@ -37,7 +38,8 @@ export async function proxy(request: NextRequest) {
   // Define protected routes
   const protectedRoutes = ['/dashboard', '/lms', '/pathways', '/resume', '/linkedin', '/trends', '/diagnosis', '/skills-gap', '/assistant', '/profile', '/portfolio', '/onboarding'];
 
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  const isProtectedRoute =
+    !isPublicPortfolioPath(pathname) && protectedRoutes.some(route => pathname.startsWith(route));
   const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/auth') || pathname === '/';
 
   // Strict enforcement: Allow if user exists OR if guest_mode cookie is strictly 'true'

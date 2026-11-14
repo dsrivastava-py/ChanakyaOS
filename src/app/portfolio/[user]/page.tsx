@@ -5,32 +5,16 @@ import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import {
   User,
-  Mail,
-  Globe,
   ExternalLink,
   Code,
   BookOpen,
   Award,
   Sparkles,
   Calendar,
-  MapPin,
   Briefcase
 } from "lucide-react";
 import Link from "next/link";
-
-interface PortfolioData {
-  name: string;
-  email: string;
-  headline: string;
-  bio: string;
-  location: string;
-  education: { institution: string; degree: string; year: string }[];
-  skills: string[];
-  projects: { title: string; description: string; techStack: string[]; link?: string }[];
-  certifications: { name: string; provider: string; year: string }[];
-  linkedin?: string;
-  github?: string;
-}
+import { isValidUsername, mapPublicPortfolio, type PortfolioData } from "@/lib/portfolio";
 
 export default function PublicPortfolio() {
   const params = useParams();
@@ -41,53 +25,20 @@ export default function PublicPortfolio() {
   useEffect(() => {
     async function fetchPortfolio() {
       try {
-        const supabase = createClient();
-
-        // Find user by name or username
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .or(`name.ilike.%${params.user}%,username.eq.${params.user}`)
-          .maybeSingle();
-
-        if (!profile) {
+        const username = Array.isArray(params.user) ? params.user[0] : params.user;
+        if (!isValidUsername(username)) {
           setNotFound(true);
-          setIsLoading(false);
           return;
         }
 
-        // Get locked pathway for portfolio data
-        const { data: pathway } = await supabase
-          .from('career_pathways')
-          .select('*')
-          .eq('user_id', profile.user_id)
-          .eq('status', 'locked')
-          .maybeSingle();
-
-        // Build portfolio data
-        const portfolioData: PortfolioData = {
-          name: profile.name || "Professional",
-          email: profile.email || "",
-          headline: profile.headline || pathway?.pathway_data?.title || "Career Professional",
-          bio: profile.bio || `Passionate professional specializing in ${pathway?.pathway_data?.title || "technology"}`,
-          location: profile.location || "India",
-          education: profile.education || [],
-          skills: profile.skills || pathway?.pathway_data?.skillChecklist?.filter((s: { status: string }) => s.status === 'acquired').map((s: { skill: string }) => s.skill) || [],
-          projects: pathway?.pathway_data?.projects?.filter((p: { completed?: boolean }) => p.completed).map((p: { title: string; description: string; techStack: string[] }) => ({
-            title: p.title,
-            description: p.description,
-            techStack: p.techStack
-          })) || [],
-          certifications: pathway?.pathway_data?.requirements?.filter((r: { completed?: boolean }) => r.completed).map((r: { name: string; provider: string }) => ({
-            name: r.name,
-            provider: r.provider,
-            year: new Date().getFullYear().toString()
-          })) || [],
-          linkedin: profile.linkedin_url,
-          github: profile.github_url
-        };
-
-        setPortfolio(portfolioData);
+        const supabase = createClient();
+        const { data, error } = await supabase.rpc('get_public_portfolio', { p_username: username });
+        const mapped = error ? null : mapPublicPortfolio(data);
+        if (!mapped) {
+          setNotFound(true);
+          return;
+        }
+        setPortfolio(mapped);
       } catch (error) {
         console.error("Error fetching portfolio:", error);
         setNotFound(true);
@@ -135,39 +86,9 @@ export default function PublicPortfolio() {
               <h1 className="text-4xl font-bold text-white mb-2">{portfolio.name}</h1>
               <p className="text-xl text-[#D4AF37] mb-2">{portfolio.headline}</p>
               <div className="flex flex-wrap gap-4 text-gray-400 text-sm">
-                {portfolio.location && (
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" /> {portfolio.location}
-                  </span>
-                )}
-                {portfolio.email && (
-                  <span className="flex items-center gap-1">
-                    <Mail className="w-4 h-4" /> {portfolio.email}
-                  </span>
-                )}
               </div>
             </div>
             <div className="flex gap-3">
-              {portfolio.linkedin && (
-                <a
-                  href={portfolio.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-[#0077B5] rounded-xl hover:opacity-90 transition-opacity"
-                >
-                  <Globe className="w-5 h-5" />
-                </a>
-              )}
-              {portfolio.github && (
-                <a
-                  href={portfolio.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-[#111827] border border-[#1F2937] rounded-xl hover:border-[#D4AF37]/30 transition-all"
-                >
-                  <Code className="w-5 h-5" />
-                </a>
-              )}
             </div>
           </div>
         </div>
