@@ -1,12 +1,15 @@
 {
-  "name": "temp-app",
+  "name": "chanakyaos",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "optimize:hero": "node scripts/optimize-hero-frames.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.72",
@@ -50,7 +53,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
   }
 }

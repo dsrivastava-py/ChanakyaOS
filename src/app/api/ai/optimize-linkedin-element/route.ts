@@ -1,6 +1,10 @@
 import { groq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { guardJson, serverError } from "@/lib/api-guard";
+
+const optimizeLinkedinElementSchema = z.object({ elementName: z.string().min(1).max(200), originalText: z.string().min(1).max(10000), globalContext: z.any().optional() });
 
 interface ResumeData {
   personalInfo?: { name?: string; email?: string; phone?: string; links?: Record<string, string> };
@@ -21,7 +25,9 @@ interface GlobalContext {
 
 export async function POST(req: Request) {
   try {
-    const { elementName, originalText, globalContext } = await req.json();
+    const guard = await guardJson(req, optimizeLinkedinElementSchema, { route: "optimizeLinkedinElement", limit: 20, guestLimit: 4, maxBytes: 150_000 });
+    if (!guard.ok) return guard.response;
+    const { elementName, originalText, globalContext } = guard.data;
 
     if (!elementName || !originalText) {
       return NextResponse.json(
@@ -106,7 +112,7 @@ QUALITY STANDARDS:
     });
 
     try {
-      let cleanJson = text.replace(/```json|```/g, '').trim();
+      const cleanJson = text.replace(/```json|```/g, '').trim();
       const parsedData = JSON.parse(cleanJson);
 
       if (!parsedData.optimizedVersion) {
@@ -130,9 +136,6 @@ QUALITY STANDARDS:
 
   } catch (error: unknown) {
     console.error("Optimize LinkedIn element error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to optimize element" },
-      { status: 500 }
-    );
+    return serverError("optimizeLinkedinElement", error, "Failed to optimize element");
   }
 }

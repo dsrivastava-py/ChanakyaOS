@@ -388,12 +388,12 @@ export default function OnboardingWizard() {
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">Name</label>
-                  <input {...register("name")} className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-2 text-white" />
+                  <label htmlFor="onb-name" className="block text-sm text-gray-400 mb-1">Name</label>
+                  <input id="onb-name" {...register("name")} className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-2 text-white" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-400 mb-1">DOB</label>
-                  <input {...register("dob")} placeholder="YYYY-MM-DD" className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-2 text-white" />
+                  <label htmlFor="onb-dob" className="block text-sm text-gray-400 mb-1">DOB</label>
+                  <input id="onb-dob" {...register("dob")} placeholder="YYYY-MM-DD" className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-2 text-white" />
                 </div>
               </div>
 
@@ -404,9 +404,9 @@ export default function OnboardingWizard() {
                 </div>
                 {eduFields.map((field, index) => (
                   <div key={field.id} className="flex gap-2 mb-2">
-                    <input {...register(`education.${index}.institution`)} placeholder="Institution" className="flex-1 bg-[#1A2236] border border-[#1F2937] rounded-lg px-3 py-1.5 text-sm text-white" />
-                    <input {...register(`education.${index}.degree`)} placeholder="Degree" className="w-1/4 bg-[#1A2236] border border-[#1F2937] rounded-lg px-3 py-1.5 text-sm text-white" />
-                    <input {...register(`education.${index}.year`)} placeholder="Year" className="w-1/4 bg-[#1A2236] border border-[#1F2937] rounded-lg px-3 py-1.5 text-sm text-white" />
+                    <input {...register(`education.${index}.institution`)} placeholder="Institution" aria-label="Institution" className="flex-1 bg-[#1A2236] border border-[#1F2937] rounded-lg px-3 py-1.5 text-sm text-white" />
+                    <input {...register(`education.${index}.degree`)} placeholder="Degree" aria-label="Degree" className="w-1/4 bg-[#1A2236] border border-[#1F2937] rounded-lg px-3 py-1.5 text-sm text-white" />
+                    <input {...register(`education.${index}.year`)} placeholder="Year" aria-label="Year" className="w-1/4 bg-[#1A2236] border border-[#1F2937] rounded-lg px-3 py-1.5 text-sm text-white" />
                     <button onClick={() => removeEdu(index)} className="text-red-400 p-1"><Trash2 className="w-4 h-4"/></button>
                   </div>
                 ))}
@@ -420,11 +420,11 @@ export default function OnboardingWizard() {
                 {expFields.map((field, index) => (
                   <div key={field.id} className="bg-[#1A2236] border border-[#1F2937] rounded-lg p-3 mb-3">
                     <div className="flex gap-2 mb-2">
-                      <input {...register(`experience.${index}.company`)} placeholder="Company" className="flex-1 bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white" />
-                      <input {...register(`experience.${index}.role`)} placeholder="Role" className="flex-1 bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white" />
+                      <input {...register(`experience.${index}.company`)} placeholder="Company" aria-label="Company" className="flex-1 bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white" />
+                      <input {...register(`experience.${index}.role`)} placeholder="Role" aria-label="Role" className="flex-1 bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white" />
                       <button onClick={() => removeExp(index)} className="text-red-400 p-1"><Trash2 className="w-4 h-4"/></button>
                     </div>
-                    <input {...register(`experience.${index}.duration`)} placeholder="Duration" className="w-full bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white mb-2" />
+                    <input {...register(`experience.${index}.duration`)} placeholder="Duration" aria-label="Duration" className="w-full bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white mb-2" />
                     <textarea {...register(`experience.${index}.description`)} placeholder="Description" className="w-full bg-[#0B0F19] border border-[#1F2937] rounded px-3 py-1.5 text-sm text-white h-20 resize-none" />
                   </div>
                 ))}
@@ -435,7 +435,7 @@ export default function OnboardingWizard() {
                 <div className="flex flex-wrap gap-2 mb-2">
                   {currentSkills.map((skill) => (
                     <span key={skill} className="bg-[#D4AF37]/20 text-[#D4AF37] px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                      {skill} <button onClick={() => removeSkill(skill)} className="hover:text-red-400">&times;</button>
+                      {skill} <button type="button" aria-label={`Remove ${skill}`} onClick={() => removeSkill(skill)} className="hover:text-red-400">&times;</button>
                     </span>
                   ))}
                 </div>
@@ -444,7 +444,7 @@ export default function OnboardingWizard() {
                     value={newSkill} 
                     onChange={e => setNewSkill(e.target.value)} 
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addSkill(); } }}
-                    placeholder="Add a skill and press Enter" 
+                    placeholder="Add a skill and press Enter" aria-label="Add a skill" 
                     className="flex-1 bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-2 text-white text-sm" 
                   />
                   <button onClick={addSkill} type="button" className="bg-[#D4AF37] text-black px-4 py-2 rounded-lg text-sm font-semibold">Add</button>
@@ -456,7 +456,7 @@ export default function OnboardingWizard() {
                 <div className="flex flex-wrap gap-2 mb-2">
                   {currentLinks.map((link) => (
                     <span key={link} className="bg-[#D4AF37]/20 text-[#D4AF37] px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                      {link} <button onClick={() => removeLink(link)} className="hover:text-red-400">&times;</button>
+                      {link} <button type="button" aria-label={`Remove link ${link}`} onClick={() => removeLink(link)} className="hover:text-red-400">&times;</button>
                     </span>
                   ))}
                 </div>
@@ -465,7 +465,7 @@ export default function OnboardingWizard() {
                     value={newLink} 
                     onChange={e => setNewLink(e.target.value)} 
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addLink(); } }}
-                    placeholder="Add a link (LinkedIn, Portfolio) and press Enter" 
+                    placeholder="Add a link (LinkedIn, Portfolio) and press Enter" aria-label="Add a link" 
                     className="flex-1 bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-2 text-white text-sm" 
                   />
                   <button onClick={addLink} type="button" className="bg-[#D4AF37] text-black px-4 py-2 rounded-lg text-sm font-semibold">Add</button>
@@ -484,8 +484,8 @@ export default function OnboardingWizard() {
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Current Status</label>
-                <select {...register("currentStatus")} className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-3 text-white">
+                <label htmlFor="onb-status" className="block text-sm text-gray-400 mb-1">Current Status</label>
+                <select id="onb-status" {...register("currentStatus")} className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-3 text-white">
                   <option value="">Select status...</option>
                   <option value="student">Student</option>
                   <option value="employed">Employed</option>
@@ -496,14 +496,14 @@ export default function OnboardingWizard() {
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Target Career</label>
-                <input {...register("targetCareer")} placeholder="e.g. Full Stack Developer" className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-3 text-white" />
+                <label htmlFor="onb-target" className="block text-sm text-gray-400 mb-1">Target Career</label>
+                <input id="onb-target" {...register("targetCareer")} placeholder="e.g. Full Stack Developer" className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-3 text-white" />
                 {errors.targetCareer && <p className="text-red-500 text-xs mt-1">{errors.targetCareer.message}</p>}
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-1">Transition Goals</label>
-                <textarea {...register("transitionGoals")} placeholder="What do you want to achieve?" className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-3 text-white h-24 resize-none" />
+                <label htmlFor="onb-goals" className="block text-sm text-gray-400 mb-1">Transition Goals</label>
+                <textarea id="onb-goals" {...register("transitionGoals")} placeholder="What do you want to achieve?" className="w-full bg-[#1A2236] border border-[#1F2937] rounded-lg px-4 py-3 text-white h-24 resize-none" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

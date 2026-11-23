@@ -12,19 +12,80 @@ import {
   Share2,
   Link as LinkIcon
 } from "lucide-react";
-import Link from "next/link";
+import { isValidUsername, normalizeUsername } from "@/lib/portfolio";
 
 export default function MyProfilePage() {
-  const { profile, locked_pathway } = useUserStore();
+  const { locked_pathway } = useUserStore();
   const [copied, setCopied] = useState(false);
-  const [publicUrl, setPublicUrl] = useState("");
+  const [origin, setOrigin] = useState("https://chanakyaos.com");
+  const [userId, setUserId] = useState<string | null>(null);
+  const [username, setUsername] = useState("");
+  const [savedUsername, setSavedUsername] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
+  const [savedPublic, setSavedPublic] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
 
   useEffect(() => {
-    // Generate public portfolio URL based on user name
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chanakyaos.com';
-    const username = profile?.name?.toLowerCase().replace(/\s+/g, '-') || 'user';
-    setPublicUrl(`${baseUrl}/portfolio/${username}`);
-  }, [profile]);
+    setOrigin(window.location.origin);
+    async function load() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      setUserId(user.id);
+      const { data } = await supabase
+        .from("users")
+        .select("username, is_public")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (data) {
+        setUsername(data.username ?? "");
+        setSavedUsername(data.username ?? "");
+        setIsPublic(!!data.is_public);
+        setSavedPublic(!!data.is_public);
+      }
+    }
+    load();
+  }, []);
+
+  const isLive = savedPublic && isValidUsername(savedUsername);
+  const publicUrl = savedUsername ? `${origin}/portfolio/${savedUsername}` : "";
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMessage(null);
+    const normalized = normalizeUsername(username);
+    if (normalized && !isValidUsername(normalized)) {
+      setMessage({ type: "error", text: "Username must be 3-30 characters: lowercase letters, numbers and hyphens, starting and ending with a letter or number." });
+      return;
+    }
+    if (isPublic && !normalized) {
+      setMessage({ type: "error", text: "Choose a username before making your portfolio public." });
+      return;
+    }
+    if (!userId) {
+      setMessage({ type: "error", text: "Sign in to publish your portfolio." });
+      return;
+    }
+    setSaving(true);
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("users")
+      .update({ username: normalized || null, is_public: isPublic })
+      .eq("id", userId);
+    setSaving(false);
+    if (error) {
+      setMessage({
+        type: "error",
+        text: error.code === "23505" ? "That username is already taken." : "Could not save. Please try again.",
+      });
+      return;
+    }
+    setUsername(normalized);
+    setSavedUsername(normalized);
+    setSavedPublic(isPublic);
+    setMessage({ type: "success", text: "Saved." });
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(publicUrl);
@@ -60,40 +121,82 @@ export default function MyProfilePage() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 items-center">
-          <div className="flex-1 bg-[#0B0F19] border border-[#1F2937] rounded-xl px-6 py-4 overflow-hidden">
-            <code className="text-[#D4AF37] text-lg truncate block">{publicUrl}</code>
-          </div>
+        <form onSubmit={handleSave} className="flex flex-col gap-4 mb-6">
+          <label htmlFor="username" className="text-sm text-gray-300">Username</label>
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            maxLength={30}
+            autoComplete="off"
+            placeholder="your-name"
+            className="bg-[#0B0F19] border border-[#1F2937] rounded-xl px-4 py-3 text-white"
+          />
+          <label className="flex items-center gap-3 text-gray-300">
+            <input
+              type="checkbox"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              className="w-4 h-4"
+            />
+            Make my portfolio public (anyone with the link can view it)
+          </label>
           <button
-            onClick={copyToClipboard}
-            className={`flex items-center gap-2 px-6 py-4 rounded-xl font-bold transition-all ${
-              copied
-                ? "bg-[#10B981] text-white"
-                : "bg-[#D4AF37] text-black hover:scale-105"
-            }`}
+            type="submit"
+            disabled={saving}
+            className="self-start px-6 py-3 rounded-xl font-bold bg-[#D4AF37] text-black disabled:opacity-50"
           >
-            {copied ? (
-              <>
-                <CheckCircle2 className="w-5 h-5" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="w-5 h-5" />
-                Copy Link
-              </>
-            )}
+            {saving ? "Saving..." : "Save"}
           </button>
-          <a
-            href={publicUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-4 rounded-xl border border-[#1F2937] text-gray-400 hover:text-white hover:border-[#D4AF37]/30 transition-all"
-          >
-            <ExternalLink className="w-5 h-5" />
-            Preview
-          </a>
-        </div>
+          {message && (
+            <p
+              role={message.type === "error" ? "alert" : "status"}
+              className={message.type === "error" ? "text-red-400 text-sm" : "text-[#10B981] text-sm"}
+            >
+              {message.text}
+            </p>
+          )}
+        </form>
+
+        {isLive ? (
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="flex-1 bg-[#0B0F19] border border-[#1F2937] rounded-xl px-6 py-4 overflow-hidden">
+              <code className="text-[#D4AF37] text-lg truncate block">{publicUrl}</code>
+            </div>
+            <button
+              onClick={copyToClipboard}
+              className={`flex items-center gap-2 px-6 py-4 rounded-xl font-bold transition-all ${
+                copied
+                  ? "bg-[#10B981] text-white"
+                  : "bg-[#D4AF37] text-black hover:scale-105"
+              }`}
+            >
+              {copied ? (
+                <>
+                  <CheckCircle2 className="w-5 h-5" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-5 h-5" />
+                  Copy Link
+                </>
+              )}
+            </button>
+            <a
+              href={publicUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-6 py-4 rounded-xl border border-[#1F2937] text-gray-400 hover:text-white hover:border-[#D4AF37]/30 transition-all"
+            >
+              <ExternalLink className="w-5 h-5" />
+              Preview
+            </a>
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">Your portfolio is private. Save a username and turn on sharing to get a link.</p>
+        )}
       </div>
 
       {/* What's Included */}
@@ -105,7 +208,7 @@ export default function MyProfilePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-3 p-4 bg-[#0B0F19] border border-[#1F2937] rounded-xl">
             <CheckCircle2 className="w-5 h-5 text-[#10B981]" />
-            <span className="text-gray-300">Your name and professional headline</span>
+            <span className="text-gray-300">Your name and pathway title (your email is never shown)</span>
           </div>
           <div className="flex items-center gap-3 p-4 bg-[#0B0F19] border border-[#1F2937] rounded-xl">
             <CheckCircle2 className="w-5 h-5 text-[#10B981]" />
@@ -119,14 +222,6 @@ export default function MyProfilePage() {
             <CheckCircle2 className="w-5 h-5 text-[#10B981]" />
             <span className="text-gray-300">Education background</span>
           </div>
-          <div className="flex items-center gap-3 p-4 bg-[#0B0F19] border border-[#1F2937] rounded-xl">
-            <CheckCircle2 className="w-5 h-5 text-[#10B981]" />
-            <span className="text-gray-300">Links to LinkedIn & GitHub</span>
-          </div>
-          <div className="flex items-center gap-3 p-4 bg-[#0B0F19] border border-[#1F2937] rounded-xl">
-            <CheckCircle2 className="w-5 h-5 text-[#10B981]" />
-            <span className="text-gray-300">Your career bio</span>
-          </div>
         </div>
       </div>
 
@@ -137,7 +232,7 @@ export default function MyProfilePage() {
           Pro Tips for Sharing Your Profile
         </h3>
         <ul className="space-y-3 text-gray-400">
-          <li>• Add your portfolio link to your LinkedIn profile's "Contact info"</li>
+          <li>• Add your portfolio link to your LinkedIn profile&apos;s &quot;Contact info&quot;</li>
           <li>• Include it in your email signature when applying to jobs</li>
           <li>• Share it on LinkedIn after completing major certifications</li>
           <li>• Add it to your resume header as a clickable link</li>

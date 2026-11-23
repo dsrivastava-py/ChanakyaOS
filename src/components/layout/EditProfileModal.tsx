@@ -46,7 +46,7 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+        <div role="dialog" aria-modal="true" aria-label="Edit profile" onKeyDown={(e) => { if (e.key === "Escape") onClose(); }} className="fixed inset-0 z-[300] flex items-center justify-center p-4">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -76,10 +76,11 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
 
               <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Full Name</label>
+                  <label htmlFor="edit-profile-name" className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Full Name</label>
                   <div className="relative group">
                     <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-accent transition-colors" />
                     <input 
+                      id="edit-profile-name"
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -91,10 +92,11 @@ export default function EditProfileModal({ isOpen, onClose }: EditProfileModalPr
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Email Address (Locked)</label>
+                  <label htmlFor="edit-profile-email" className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 px-1">Email Address (Locked)</label>
                   <div className="relative opacity-60">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                     <input 
+                      id="edit-profile-email"
                       type="email"
                       value={email}
                       disabled

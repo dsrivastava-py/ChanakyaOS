@@ -84,7 +84,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+        <div role="dialog" aria-modal="true" aria-label="System Settings" onKeyDown={(e) => { if (e.key === "Escape") onClose(); }} className="fixed inset-0 z-[150] flex items-center justify-center p-4">
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -105,6 +105,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <p className="text-xs text-gray-500 mt-1 uppercase tracking-widest">Configure your mission control</p>
                 </div>
                 <button 
+                  type="button"
+                  aria-label="Close settings"
+                  autoFocus
                   onClick={onClose}
                   className="p-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-all"
                 >
